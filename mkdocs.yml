@@ -1,0 +1,29 @@
+site_name: Jacob Prometheus Book
+site_description: "Jacob's Prometheus 技术实战教程"
+site_author: "Jacob Xi"
+copyright: "Copyright &copy; 2021-9999 Jacob Xi"
+
+plugins:
+  - search # necessary for search to work
+  - awesome-pages
+
+nav:
+  - 'Welcome': "index.md"
+
+repo_url: https://github.com/Chao-Xi/jxprombook.git
+repo_name: "jxprombook"
+
+theme: 
+  language: zh
+  name: 'material'
+  include_sidebar: true
+  logo: 'images/logo.png'
+  favicon: 'images/logo.png'
+  feature:
+    tabs: false
+  palette:
+    primary: 'deep orange'
+    accent: 'deep orange'
+  i18n:
+    prev: 'Previous'
+    next: 'Next'
