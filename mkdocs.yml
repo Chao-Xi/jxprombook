@@ -9,7 +9,9 @@ plugins:
 
 nav:
   - 'Welcome': "index.md"
-
+  - 'Prometheus 技术基础':
+    - '第一节 Prometheus 系统介绍 2022' : 'chap1/1prometheus2022.md'
+    
 repo_url: https://github.com/Chao-Xi/jxprombook.git
 repo_name: "jxprombook"
 
@@ -22,8 +24,8 @@ theme:
   feature:
     tabs: false
   palette:
-    primary: 'deep orange'
-    accent: 'deep orange'
+    primary: 'amber'
+    accent: 'amber'
   i18n:
     prev: 'Previous'
     next: 'Next'
