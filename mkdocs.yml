@@ -9,8 +9,13 @@ plugins:
 
 nav:
   - 'Welcome': "index.md"
-  - 'Prometheus 技术基础':
+  - 'Prometheus技术介绍,K8S Metrics介绍&查看':
     - '第一节 Prometheus 系统介绍 2022' : 'chap1/1prometheus2022.md'
+    - '第二节 深入Prometheus设计-指标定义与分类(PromQL)': 'chap1/18Adv_Prometheus_index_classfication.md'
+    - '第三节 kube-state-metrics': 'chap1/k8s_adv39_kube_state_metrics.md'
+    - '第四节 Metrics Server 安装': 'chap1/17Adv_K8S_Metrics_Server.md'
+    - '第五节 从kubectl top看K8S监控原理': 'chap1/37kubectl_top.md'
+
     
 repo_url: https://github.com/Chao-Xi/jxprombook.git
 repo_name: "jxprombook"
@@ -24,8 +29,8 @@ theme:
   feature:
     tabs: false
   palette:
-    primary: 'amber'
-    accent: 'amber'
+    primary: 'orange'
+    accent: 'orange'
   i18n:
     prev: 'Previous'
     next: 'Next'
