@@ -267,7 +267,7 @@ sum(increase(node_cpu_seconds_total{mode="idle"}[1m])) by (instance) / sum(incre
 
 除了 CPU 监控之外，我们可能最关心的就是节点内存的监控了，平时我们查看节点的内存使用情况基本上都是使用 free 命令来查看：
 
-![Alt Image Text](images/59_10.png "headline image")
+![Alt Image Text](../images/59_10.png "headline image")
 
 ### **3-1 free命令**
 
