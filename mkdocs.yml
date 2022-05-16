@@ -14,7 +14,9 @@ nav:
     - '第二节 深入Prometheus设计-指标定义与分类(PromQL)': 'chap1/18Adv_Prometheus_index_classfication.md'
     - '第三节 kube-state-metrics': 'chap1/k8s_adv39_kube_state_metrics.md'
     - '第四节 Metrics Server 安装': 'chap1/17Adv_K8S_Metrics_Server.md'
-    - '第五节 从kubectl top看K8S监控原理': 'chap1/37kubectl_top.md'
+    - '第五节 Install Kubernetes Metrics Server on SAP Converged Cloud': 'chap1/20Install_metrics_server_SAP_CC.md'
+    - '第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)': 'chap1/38k8s_hpa_metricsserver.md'
+    - '第七节 从kubectl top看K8S监控原理': 'chap1/37kubectl_top.md'
 
     
 repo_url: https://github.com/Chao-Xi/jxprombook.git
