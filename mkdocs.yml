@@ -17,8 +17,11 @@ nav:
     - '第五节 Install Kubernetes Metrics Server on SAP Converged Cloud': 'chap1/20Install_metrics_server_SAP_CC.md'
     - '第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)': 'chap1/38k8s_hpa_metricsserver.md'
     - '第七节 从kubectl top看K8S监控原理': 'chap1/37kubectl_top.md'
+  - 'Prometheus on Linux':
+    - '第一节 Centos7 Prometheus安装部署+监控+绘图+告警': 'chap1/19centos7_Prometheus_Alertmanager_Grafana.md'
+    - '第二节 使用Node Exporter监控Linux主机&常用监控指标': 'chap1/59node_exporter.md'
+    - '第三节 基于Prometheus构建MySQL可视化监控平台': 'chap1/36Prometheus_Mysql.md'
 
-    
 repo_url: https://github.com/Chao-Xi/jxprombook.git
 repo_name: "jxprombook"
 
