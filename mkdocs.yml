@@ -21,6 +21,13 @@ nav:
     - '第一节 Centos7 Prometheus安装部署+监控+绘图+告警': 'chap2/19centos7_Prometheus_Alertmanager_Grafana.md'
     - '第二节 使用Node Exporter监控Linux主机&常用监控指标': 'chap2/59node_exporter.md'
     - '第三节 基于Prometheus构建MySQL可视化监控平台': 'chap2/36Prometheus_Mysql.md'
+  - '手动部署Kubernetes Prometheus':
+    - '第一节 Kubernetes使用Prometheus搭建监控平台(2018)': 'chap3/1prometheus_setup.md'
+    - '第二节 Prometheus报警 && AlertManager实战（2018）': 'chap3/2prometheus_AlertManager.md'
+    - '第三节 Grafana 显示参数设置(2018)': 'chap3/3changes_on_Grafana.md'
+    - '第四节 在 Kubernetes 中手动部署 Prometheus (adv)': 'chap3/4Adv_Prometheus_setup.md'
+    - '第五节 应用监控（Metrics/Exporter的配置）': 'chap3/5Adv_Prometheus_monitor.md'
+    - '*第六节 监控K8S集群节点&Node-exporter DaemonSet': 'chap3/6Adv_K8S_Nodes_monitor.md'
 
 repo_url: https://github.com/Chao-Xi/jxprombook.git
 repo_name: "jxprombook"
