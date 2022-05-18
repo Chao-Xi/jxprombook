@@ -2,7 +2,7 @@
 
 有的时候我们可能希望从 `Prometheus` 中删除一些不需要的数据指标，或者只是单纯的想要释放一些磁盘空间。`Prometheus` 中的时间序列只能通过 `HTTP API` 来进行管理。
 
-默认情况下，管理时间序列的 API 是被禁用的，要启用它，我们需要在 `Prometheus` 的启动参数中添加`--web.enable-admin-api`这个参数，比如我们前面的文章中通过 [Kubernetes Pod](4.Adv_Prometheus_setup.md) 来部署的，则同样需要添加上这个参数：
+默认情况下，管理时间序列的 API 是被禁用的，要启用它，我们需要在 `Prometheus` 的启动参数中添加`--web.enable-admin-api`这个参数，比如我们前面的文章中通过Kubernetes Pod来部署的，则同样需要添加上这个参数：
 
 ```
 command:
