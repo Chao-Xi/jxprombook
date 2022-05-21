@@ -10,13 +10,15 @@ plugins:
 nav:
   - 'Welcome': "index.md"
   - 'Prometheus技术介绍,K8S Metrics介绍&查看':
+    - '第零节 Promethues 应用监控的一些实践': 'chap1/57prometheus_best_practice.md'
     - '第一节 Prometheus 系统介绍 2022' : 'chap1/1prometheus2022.md'
     - '第二节 深入Prometheus设计-指标定义与分类(PromQL)': 'chap1/18Adv_Prometheus_index_classfication.md'
     - '第三节 kube-state-metrics': 'chap1/k8s_adv39_kube_state_metrics.md'
     - '第四节 Metrics Server 安装': 'chap1/17Adv_K8S_Metrics_Server.md'
     - '第五节 Install Kubernetes Metrics Server on SAP Converged Cloud': 'chap1/20Install_metrics_server_SAP_CC.md'
     - '第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)': 'chap1/38k8s_hpa_metricsserver.md'
-    - '第七节 从kubectl top看K8S监控原理': 'chap1/37kubectl_top.md'
+    - '第七节 为Go应用添加Prometheus监控指标': 'chap1/55prometheus_go_metrics.md'
+    - '第八节 从kubectl top看K8S监控原理': 'chap1/37kubectl_top.md'
   - 'Prometheus on Linux':
     - '第一节 Centos7 Prometheus安装部署+监控+绘图+告警': 'chap2/19centos7_Prometheus_Alertmanager_Grafana.md'
     - '第二节 使用Node Exporter监控Linux主机&常用监控指标': 'chap2/59node_exporter.md'
@@ -50,8 +52,13 @@ nav:
     - '第十一节 Operator使用AlertmanagerConfig进行报警配置': 'chap4/47Prometheus_opt_AlertmanagerConfig.md'
     - '第十二节 通过Prometheus来做SLI/SLO监控展示': 'chap4/49Prometheus_SLI_SLO.md'
     - '第十三节 Prometheus 使用 missing-container-metrics 监控 Pod oomkill': 'chap4/51missing-container-metrics.md'
+  - 'Prometheus服务发现':
+    - '第一节 Prometheus 服务的自动发现使用': 'chap5/53Prometheus_auto_discovery.md'
+    - '第二节 Prometheus Relabeling 重新标记的使用': 'chap5/52Prometheus_Relabeling.md'
+    - '第三节 如何使用 Prometheus 仪表化应用': 'chap5/54prometheus_go_metrics_guideline.md'
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
+    - '第二节 APM + OpenTracing原理': 'chap_apm/2opentracing.md'
 
 repo_url: https://github.com/Chao-Xi/jxprombook.git
 repo_name: "jxprombook"
