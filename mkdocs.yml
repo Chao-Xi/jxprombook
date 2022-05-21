@@ -51,11 +51,17 @@ nav:
     - '第十节 Traefik之使用Prometheus Operator进行监控报警2021': 'chap4/46Prometheus_traefik.md'
     - '第十一节 Operator使用AlertmanagerConfig进行报警配置': 'chap4/47Prometheus_opt_AlertmanagerConfig.md'
     - '第十二节 通过Prometheus来做SLI/SLO监控展示': 'chap4/49Prometheus_SLI_SLO.md'
-    - '第十三节 Prometheus 使用 missing-container-metrics 监控 Pod oomkill': 'chap4/51missing-container-metrics.md'
+    - '第十三节 Prometheus使用missing-container-metrics监控Pod oomkill': 'chap4/51missing-container-metrics.md'
   - 'Prometheus服务发现':
-    - '第一节 Prometheus 服务的自动发现使用': 'chap5/53Prometheus_auto_discovery.md'
-    - '第二节 Prometheus Relabeling 重新标记的使用': 'chap5/52Prometheus_Relabeling.md'
-    - '第三节 如何使用 Prometheus 仪表化应用': 'chap5/54prometheus_go_metrics_guideline.md'
+    - '第一节 Prometheus服务的自动发现使用': 'chap5/53Prometheus_auto_discovery.md'
+    - '第二节 Prometheus Relabeling重新标记的使用': 'chap5/52Prometheus_Relabeling.md'
+    - '第三节 如何使用Prometheus仪表化应用': 'chap5/54prometheus_go_metrics_guideline.md'
+  - 'Jam prometheus Monitor':
+    - 'Chap1 Alertmanager alerts with Amazon SES SMTP': 'chap6/25Alertmanager_AWS_SES.md'
+    - 'Chap2 Prometheus Operator Monitor on ArgoCD': 'chap6/26Prometheus_Monitor_Argocd.md'
+    - 'Chap3 Prometheus Operator Monitor on ElasticSearch': 'chap6/27Prometheus_Monitor_elasticsearch.md'
+    - 'Chap4 Prometheus Operator Monitor on Rabbitmq': 'chap6/31Prometheus_Monitor_rabbitmq.md'
+    - 'Chap5 Prometheus Operator Monitor on Memcached': 'chap6/33Prometheus_Monitor_memcached.md'
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
     - '第二节 APM + OpenTracing原理': 'chap_apm/2opentracing.md'
