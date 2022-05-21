@@ -34,11 +34,22 @@ nav:
     - '第十节 Prometheus 删除数据指标': 'chap3/16Adv_Prometheus_Del_index.md'
     - '第十一节 Prometheus中使用PrometheusAlert进行聚合报警': 'chap3/50PrometheusAlert.md'
     - '第十二节 监控Kubernetes集群的GPU资源': 'chap3/12gpu_monitor.md'
+    - '第十三节 AlertManager何时报警': 'chap3/29AlertManager_SendAlerts_when.md'
+    - '第十四节 Prometheus监控外部Kubernetes集群': 'chap3/41Prometheus_Monitor_OutCluster.md'
   - '玩转Prometheus Operator':
     - '第一节 Prometheus Operator 初体验': 'chap4/11Adv_Prometheus_Operator.md'
     - '第二节 使用 Prometheus Operator 监控 etcd': 'chap4/13Adv_Prometheus_Operator_etcd.md'
     - '第三节 Prometheus Operator 自定义报警': 'chap4/14Adv_Prometheus_Operator_alarm.md'
     - '第四节 Add Custom Alert and Send Alert Email with Alertmanager': 'chap4/22Customize_Alert_Email.md'
+    - '第五节 Prometheus 黑盒监控': 'chap4/24Kubernetes_Prometheus_blackbox.md'
+    - '第六节 Troubleshooting ServiceMonitor changes': 'chap4/32Prometheus_troubleshoot_Servicemonitor.md'
+    - '第七节 使用ssl_exporter监控K8S集群证书': 'chap4/43Prometheus_operator_ssl_exporter.md'
+    - '第八节 Operator2021-使用KubeNurse进行集群网络监控': 'chap4/44Prometheus_KubeNurse.md'
+    - '第九节 Prometheus Operator安装配置(2021)': 'chap4/45Prom-operator_2021.md'
+    - '第十节 Traefik之使用Prometheus Operator进行监控报警2021': 'chap4/46Prometheus_traefik.md'
+    - '第十一节 Operator使用AlertmanagerConfig进行报警配置': 'chap4/47Prometheus_opt_AlertmanagerConfig.md'
+    - '第十二节 通过Prometheus来做SLI/SLO监控展示': 'chap4/49Prometheus_SLI_SLO.md'
+
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
 
