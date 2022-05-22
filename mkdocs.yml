@@ -62,6 +62,17 @@ nav:
     - 'Chap3 Prometheus Operator Monitor on ElasticSearch': 'chap6/27Prometheus_Monitor_elasticsearch.md'
     - 'Chap4 Prometheus Operator Monitor on Rabbitmq': 'chap6/31Prometheus_Monitor_rabbitmq.md'
     - 'Chap5 Prometheus Operator Monitor on Memcached': 'chap6/33Prometheus_Monitor_memcached.md'
+  - 'Prometheus-Adapter':
+    - '应用进行自定义指标扩缩容 by Prometheus-Adapter and Flask-Exporter': 'chap7/23Kubernetes_Scale_Prometheus-Adapter.md'
+  - 'PromQL学习':
+    - '1 初识 PromQL': 'chap8/1Promql_basic1.md'
+    - '2 PromQL 操作符 & 内置函数': 'chap8/2Promql_basic2.md'
+    - '3 PromQL 内置函数': 'chap8/3Promql_basic3.md'
+    - '4 PromQL简单示例': 'chap8/4Promql_basic4.md'
+    - '5 在 HTTP API中使用 PromQL': 'chap8/5Promql_basic5.md'
+    - '6 Prometheus记录规则的使用(Recording Rule)': 'chap8/6Promql_adv1.md'
+    - '7 PromQL查询之rate函数的使用': 'chap8/56prometheus_promql_rate.md'
+    - '8 解决Prometheus监控Kubernetes Job误报的坑': 'chap8/60prometheus_job.md'
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
     - '第二节 APM + OpenTracing原理': 'chap_apm/2opentracing.md'
