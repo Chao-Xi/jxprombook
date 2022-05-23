@@ -376,18 +376,19 @@ Filesystem is predicted to run out of space within the next 24 hours at current 
 
 ### **2.25. Host EDAC Uncorrectable Errors detected**
 
-**Host `{{ $labels.instance }}` has had `{{ printf "%.0f" $value }}` uncorrectable memory errors reported by EDAC in the last 5 minutes.**
+Host `{{ $labels.instance }}` has had `{{ printf "%.0f" $value }}` correctable memory errors reported by EDAC in the last 5 minutes.
 
 ```
-  - alert: HostEdacUncorrectableErrorsDetected
-    expr: node_edac_uncorrectable_errors_total > 0
+  - alert: HostEdacCorrectableErrorsDetected
+    expr: increase(node_edac_correctable_errors_total[1m]) > 0
     for: 0m
     labels:
-      severity: warning
+      severity: info
     annotations:
-      summary: Host EDAC Uncorrectable Errors detected (instance {{ $labels.instance }})
-      description: "Host {{ $labels.instance }} has had {{ printf \"%.0f\" $value }} uncorrectable memory errors reported by EDAC in the last 5 minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      summary: Host EDAC Correctable Errors detected (instance {{ $labels.instance }})
+      description: "Host {{ $labels.instance }} has had {{ printf \"%.0f\" $value }} correctable memory errors reported by EDAC in the last 5 minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
+
 
 ### **2.26. Host Network Receive Errors**
 
