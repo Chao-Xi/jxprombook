@@ -1,4 +1,4 @@
-# **4. Blackbox : prometheus/`blackbox_exporter`**
+# 4. Blackbox : prometheus/blackbox_exporter
 
 [`prometheus/blackbox_exporter`](https://github.com/prometheus/blackbox_exporter)
 

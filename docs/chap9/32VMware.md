@@ -1,4 +1,4 @@
-# **6 VMware : pryorda/vmware_exporter**
+# 6 VMware : pryorda/vmware_exporter
 
 ### **6.1 Virtual Machine Memory Warning**
 

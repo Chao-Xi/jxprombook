@@ -1,4 +1,4 @@
-# **2 Host node-exporter**
+# 2 Host node-exporter
 
 ### **2.1 Out of memory**
 

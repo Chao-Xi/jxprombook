@@ -1,4 +1,4 @@
-# **3 Docker containers : cAdvisor**
+# 3 Docker containers : cAdvisor
 
 [https://github.com/google/cadvisor](https://github.com/google/cadvisor)
 

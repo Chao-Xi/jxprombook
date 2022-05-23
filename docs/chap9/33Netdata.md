@@ -1,4 +1,4 @@
-# **7 Netdata : Embedded exporter**
+# 7 Netdata : Embedded exporter
 
 [Embedded exporter](https://github.com/netdata/netdata/blob/c7f2647a62f73b5bfec7545c019b11efadbca2bb/exporting/prometheus/README.md)
 

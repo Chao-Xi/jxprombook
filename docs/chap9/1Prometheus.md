@@ -1,4 +1,4 @@
-# **1 Prometheus**
+# 1 Prometheus
 
 ## **1.1. Prometheus self-monitoring**
 
