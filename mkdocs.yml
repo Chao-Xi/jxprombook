@@ -82,6 +82,11 @@ nav:
     - '6 Network, security and storage': 'chap9/6network_sec_storage.md'
     - '7 Others': 'chap9/7other.md'
     - '8 Alert Sleep Peacefully': 'chap9/8Alerting_sleep.md'
+  - '数据可视化&Grafana Plugin':
+    - '1 使用 Grafana 构建你的第一个仪表盘': 'chap10/58grafana_init.md'
+    - '2 优秀的Grafana K8S 插件-DevOpsProdigy KubeGraf': 'chap10/28Grafana_plugin_DevOpsProdigy.md'
+    - '3 用 Kubernetes darks资源对象创建Grafana Dashboard': 'chap10/30Create_Grafana_dashboards.md'
+    - '4 Grafana 图表加速神器-Trickster': 'chap10/48grafana_Trickster.md'
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
     - '第二节 APM + OpenTracing原理': 'chap_apm/2opentracing.md'
