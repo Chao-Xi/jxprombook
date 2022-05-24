@@ -1,8 +1,8 @@
-# **10. Elasticsearch: `elasticsearch_exporter`**
+# 8. Elasticsearch: `elasticsearch_exporter`
 
 [https://github.com/justwatchcom/elasticsearch_exporter](https://github.com/justwatchcom/elasticsearch_exporter)
 
-### **10.1. Elastic Heap Usage Too High**
+### **1. Elastic Heap Usage Too High**
 
 **The heap usage is over 90% for 5m**
 
@@ -17,7 +17,7 @@
     description: "The heap usage is over 90% for 5m\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **10.2. Elastic Heap Usage warning**
+### **2. Elastic Heap Usage warning**
 
 **The heap usage is over 80% for 5m**
 
@@ -32,7 +32,7 @@
     description: "The heap usage is over 80% for 5m\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **10.3. Elasticsearch disk out of space**
+### **3. Elasticsearch disk out of space**
 
 **The disk usage is over 90%**
 
@@ -47,7 +47,7 @@
       description: "The disk usage is over 90%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.4. Elasticsearch disk space low**
+### **4. Elasticsearch disk space low**
 
 The disk usage is over 80%
 
@@ -63,7 +63,7 @@ The disk usage is over 80%
 
 ```
 
-### **10.5. Elastic Cluster Red**
+### **5. Elastic Cluster Red**
 
 **Elastic Cluster Red status**
 
@@ -78,7 +78,7 @@ The disk usage is over 80%
     description: "Elastic Cluster Red status\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **10.6. Elastic Cluster Yellow**
+### **6. Elastic Cluster Yellow**
 
 **Elastic Cluster Yellow status**
 
@@ -93,7 +93,7 @@ The disk usage is over 80%
     description: "Elastic Cluster Yellow status\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **10.7. Elasticsearch Healthy Nodes**
+### **7. Elasticsearch Healthy Nodes**
 
 **Missing node in Elasticsearch cluster**
 
@@ -109,7 +109,7 @@ The disk usage is over 80%
 ```
 
 
-### **10.8. Number of Elastic Healthy Nodes**
+### **8. Number of Elastic Healthy Nodes**
 
 **Number Healthy Nodes less then `number_of_nodes`**
 
@@ -124,7 +124,7 @@ The disk usage is over 80%
     description: "Number Healthy Nodes less then number_of_nodes\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **10.9. Elasticsearch relocating shards**
+### **9. Elasticsearch relocating shards**
 
 **Elasticsearch is relocating shards**
 
@@ -139,7 +139,7 @@ The disk usage is over 80%
       description: "Elasticsearch is relocating shards\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.10. Elasticsearch relocating shards too long**
+### **10. Elasticsearch relocating shards too long**
 
 **Elasticsearch has been relocating shards for 15min**
 
@@ -154,7 +154,7 @@ The disk usage is over 80%
       description: "Elasticsearch has been relocating shards for 15min\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.11. Elasticsearch initializing shards**
+### **11. Elasticsearch initializing shards**
 
 **Elasticsearch is initializing shards**
 
@@ -169,7 +169,7 @@ The disk usage is over 80%
       description: "Elasticsearch is initializing shards\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.12. Elasticsearch initializing shards too long**
+### **12. Elasticsearch initializing shards too long**
 
 **Elasticsearch has been initializing shards for 15 min**
 
@@ -184,9 +184,9 @@ The disk usage is over 80%
       description: "Elasticsearch has been initializing shards for 15 min\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.13. Elasticsearch unassigned shards**
+### **13. Elasticsearch unassigned shards**
 
-Elasticsearch has unassigned shards
+**Elasticsearch has unassigned shards**
 
 ```
   - alert: ElasticsearchUnassignedShards
@@ -200,9 +200,9 @@ Elasticsearch has unassigned shards
 ```
 
 
-### **10.14. Elasticsearch pending tasks**
+### **14. Elasticsearch pending tasks**
 
-Elasticsearch has pending tasks. Cluster works slowly.
+**Elasticsearch has pending tasks. Cluster works slowly.**
 
 ```
   - alert: ElasticsearchPendingTasks
@@ -216,7 +216,7 @@ Elasticsearch has pending tasks. Cluster works slowly.
 ```
 
 
-### **10.15 Elasticsearch no new documents**
+### **15 Elasticsearch no new documents**
 
 **No new documents for 10 min!**
 
@@ -232,7 +232,7 @@ Elasticsearch has pending tasks. Cluster works slowly.
 ```
 
 
-### **10.16. Number of pending tasks**
+### **16. Number of pending tasks**
 
 **Number of pending tasks for 10 min. Cluster works slowly.**
 
@@ -247,7 +247,7 @@ Elasticsearch has pending tasks. Cluster works slowly.
     description: "Number of pending tasks for 10 min. Cluster works slowly.\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **10.17. Number of Elastic Healthy Data Nodes**
+### **17. Number of Elastic Healthy Data Nodes**
 
 **Number Healthy Data Nodes less then `number_of_data_nodes`**
 

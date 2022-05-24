@@ -1,8 +1,8 @@
-# **9 PGBouncer**
+# 4 PGBouncer
 
 [spreaker/prometheus-pgbouncer-exporter ](https://github.com/spreaker/prometheus-pgbouncer-exporter)
 
-###  **9.1 PGBouncer active connections**
+###  **1 PGBouncer active connections**
 
 **PGBouncer pools are filling up**
 
@@ -17,7 +17,7 @@
       description: "PGBouncer pools are filling up\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **9.2. PGBouncer errors**
+### **2. PGBouncer errors**
 
 **PGBouncer is logging errors. This may be due to a a server restart or an admin typing commands at the pgbouncer console.**
 
@@ -32,7 +32,7 @@
       description: "PGBouncer is logging errors. This may be due to a a server restart or an admin typing commands at the pgbouncer console.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **9.3. PGBouncer max connections**
+### **3. PGBouncer max connections**
 
 **The number of PGBouncer client connections has reached `max_client_conn`.**
 

@@ -1,8 +1,8 @@
-# **7. PostgreSQL**
+# 2. PostgreSQL
 
 [https://github.com/wrouesnel/postgres_exporter/](https://github.com/wrouesnel/postgres_exporter/)
 
-### **7.1. PostgreSQL down**
+### **1. PostgreSQL down**
 
 **PostgreSQL instance is down**
 
@@ -17,7 +17,7 @@
     description: "PostgreSQL instance is down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **7.2. Postgresql restarted**
+### **2. Postgresql restarted**
 
 **Postgresql restarted**
 
@@ -35,7 +35,7 @@
 
 
 
-### **7.3. Postgresql exporter error**
+### **3. Postgresql exporter error**
 
 **Postgresql exporter is showing errors. A query may be buggy in query.yaml**
 
@@ -50,7 +50,7 @@
       description: "Postgresql exporter is showing errors. A query may be buggy in query.yaml\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **7.4. Replication lag**
+### **4. Replication lag**
 
 **PostgreSQL replication lag is going up (> 10s)**
 
@@ -65,7 +65,7 @@
     description: "PostgreSQL replication lag is going up (> 10s)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **7.5 Table not vaccumed**
+### **5 Table not vaccumed**
 
 **Table has not been vaccum for 24 hours**
 
@@ -81,7 +81,7 @@
 ```
 
 
-### **7.6. Table not analyzed**
+### **6. Table not analyzed**
 
 **Table has not been analyzed for 24 hours**
  
@@ -96,7 +96,7 @@
     description: "Table has not been analyzed for 24 hours\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **7.7. Too many connections**
+### **7. Too many connections**
 
 **PostgreSQL instance has too many connections**
 
@@ -112,7 +112,7 @@
 ```
 
 
-### **7.8. Not enough connections**
+### **8. Not enough connections**
 
 **PostgreSQL instance should have more connections (> 5)**
  
@@ -127,7 +127,7 @@
     description: "PostgreSQL instance should have more connections (> 5)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **7.9. Dead locks**
+### **9. Dead locks**
 
 **PostgreSQL has dead-locks**
 
@@ -142,7 +142,7 @@
     description: "PostgreSQL has dead-locks\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **7.10. High rollback rate**
+### **10. High rollback rate**
 
 **Ratio of transactions being aborted compared to committed is > 2 %**
 
@@ -157,7 +157,7 @@
     description: "Ratio of transactions being aborted compared to committed is > 2 %\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **7.11. Postgresql commit rate low**
+### **11. Postgresql commit rate low**
 
 **Postgresql seems to be processing very few transactions**
 
@@ -172,7 +172,7 @@
       description: "Postgresql seems to be processing very few transactions\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **7.12. Postgresql low XID consumption**
+### **12. Postgresql low XID consumption**
 
 **Postgresql seems to be consuming transaction IDs very slowly**
 
@@ -187,7 +187,7 @@
       description: "Postgresql seems to be consuming transaction IDs very slowly\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **7.13. Postgresql high rate statement timeout**
+### **13. Postgresql high rate statement timeout**
 
 **Postgres transactions showing high rate of statement timeouts**
 
@@ -202,7 +202,7 @@
       description: "Postgres transactions showing high rate of statement timeouts\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **7.14. Postgresql high rate deadlock**
+### **14. Postgresql high rate deadlock**
 
 **Postgres detected deadlocks**
 
@@ -217,7 +217,7 @@
       description: "Postgres detected deadlocks\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **7.15. Postgresql unused replication slot**
+### **15. Postgresql unused replication slot**
 
 **Unused Replication Slots**
 
@@ -233,7 +233,7 @@
 
 ```
 
-### **7.16. Postgresql too many dead tuples**
+### **16. Postgresql too many dead tuples**
 
 **PostgreSQL dead tuples is too large**
 
@@ -248,7 +248,7 @@
       description: "PostgreSQL dead tuples is too large\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **7.17. Postgresql split brain**
+### **17. Postgresql split brain**
 
 **Split Brain, too many primary Postgresql databases in read-write mode**
 
@@ -264,7 +264,7 @@
 
 ```
 
-### **7.18. Postgresql promoted node**
+### **18. Postgresql promoted node**
 
 **Postgresql standby server has been promoted as primary node**
 
@@ -279,7 +279,7 @@
       description: "Postgresql standby server has been promoted as primary node\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **7.19. Postgresql configuration changed**
+### **19. Postgresql configuration changed**
 
 **Postgres Database configuration change has occurred**
 
@@ -294,7 +294,7 @@
       description: "Postgres Database configuration change has occurred\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **7.20. Postgresql SSL compression active**
+### **20. Postgresql SSL compression active**
 
 Database connections with SSL compression enabled. This may add significant jitter in replication delay. Replicas should turn off SSL compression via `sslcompression=0` in `recovery.conf`.
 
@@ -310,7 +310,7 @@ Database connections with SSL compression enabled. This may add significant jitt
 ```
 
 
-### **7.21. Postgresql too many locks acquired**
+### **21. Postgresql too many locks acquired**
 
 Too many locks acquired on the database. If this alert happens frequently, we may need to increase the postgres setting `max_locks_per_transaction`.
 
@@ -326,7 +326,7 @@ Too many locks acquired on the database. If this alert happens frequently, we ma
 
 ```
 
-### **7.22. Slow queries**
+### **22. Slow queries**
 
 **PostgreSQL executes slow queries (> 1min)**
 

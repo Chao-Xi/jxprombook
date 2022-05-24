@@ -1,6 +1,6 @@
-# **9.Cassandra `cassandra_exporter`**
+# 9.Cassandra `cassandra_exporter`
 
-## 1.[criteo/cassandra_exporter](https://github.com/criteo/cassandra_exporter)
+## 1.[instaclustr/cassandra_exporter](https://github.com/instaclustr/cassandra-exporter)
 
 ### **9.1. Cassandra Node is unavailable**
 
@@ -140,7 +140,7 @@ Some Cassandra client requests are unvailable to write - `{{ $labels.cassandra_c
 ```
 
 
-### **9.10 Cassandra client request unvailable write**
+### **9.10 Cassandra client request unvailable read**
 
 Some Cassandra client requests are unvailable to read - `{{ $labels.cassandra_cluster }}`
 
@@ -219,7 +219,7 @@ Read failures have occurred, ensure there are not too many unavailable nodes - `
 
 ### **3. Cassandra viewwrite latency**
 
-High viewwrite latency on `{{ $labels.instance }}` cassandra node
+**High viewwrite latency on `{{ $labels.instance }}` cassandra node**
 
 ```
   - alert: CassandraViewwriteLatency

@@ -1,4 +1,4 @@
-# **23. Kafka : `kafka_exporter`**
+# 23. Kafka : `kafka_exporter`
 
 ## **1 Kafka [`danielqsj/kafka_exporter `](https://github.com/danielqsj/kafka_exporter)**
 

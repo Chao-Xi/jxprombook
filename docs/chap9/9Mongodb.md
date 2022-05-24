@@ -1,9 +1,9 @@
-# **9. MongoDB** 
+# 6. MongoDB
 
 [https://github.com/percona/mongodb_exporter](https://github.com/percona/mongodb_exporter)
 
 
-### **9.1. MongoDB Down**
+### **1. MongoDB Down**
 
 **MongoDB instance is down**
 
@@ -20,7 +20,7 @@
 
 
 
-### **9.2. MongoDB replication lag**
+### **2. MongoDB replication lag**
 
 **Mongodb replication lag is more than 10s**
 
@@ -35,7 +35,7 @@
     description: "Mongodb replication lag is more than 10s\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **9.3. MongoDB replication headroom**
+### **3. MongoDB replication headroom**
 
 **MongoDB replication headroom is <= 0**
 
@@ -50,7 +50,7 @@
     description: "MongoDB replication headroom is <= 0\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **9.4. MongoDB number cursors open**
+### **4. MongoDB number cursors open**
 
 **Too many cursors opened by MongoDB for clients (> 10k)**
 
@@ -65,7 +65,7 @@
       description: "Too many cursors opened by MongoDB for clients (> 10k)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **9.5. MongoDB cursors timeouts**
+### **5. MongoDB cursors timeouts**
 
 **Too many cursors are timing out**
 
@@ -80,7 +80,7 @@
       description: "Too many cursors are timing out\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **9.6. MongoDB too many connections**
+### **6. MongoDB too many connections**
 
 **Too many connections (> 80%)**
 
@@ -96,7 +96,7 @@
 ```
 
 
-### **9.7. MongoDB virtual memory usage**
+### **7. MongoDB virtual memory usage**
 
 **High memory usage**
 
@@ -115,7 +115,7 @@
 ## **MongoDB : `dcu/mongodb_exporter`**
 
 
-### **9.9. MongoDB replication lag**
+### **1. MongoDB replication lag**
 
 **Mongodb replication lag is more than 10s**
 
@@ -131,7 +131,7 @@
 ```
 
 
-### **9.10. MongoDB replication Status 3**
+### **2. MongoDB replication Status 3**
 
 **MongoDB Replication set member either perform startup self-checks, or transition from completing a rollback or resync**
 
@@ -146,7 +146,7 @@
     description: "MongoDB Replication set member either perform startup self-checks, or transition from completing a rollback or resync\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **9.11. MongoDB replication Status 6**
+### **3. MongoDB replication Status 6**
 
 **MongoDB Replication set member as seen from another member of the set, is not yet known**
 
@@ -161,7 +161,7 @@
     description: "MongoDB Replication set member as seen from another member of the set, is not yet known\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-###  **9.12. MongoDB replication Status 8**
+###  **4 MongoDB replication Status 8**
 
 **MongoDB Replication set member as seen from another member of the set, is unreachable**
 
@@ -176,7 +176,7 @@
     description: "MongoDB Replication set member as seen from another member of the set, is unreachable\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **9.13. MongoDB replication Status 9**
+### **5. MongoDB replication Status 9**
 
 **MongoDB Replication set member is actively performing a rollback. Data is not available for reads**
 
@@ -191,7 +191,7 @@
     description: "MongoDB Replication set member is actively performing a rollback. Data is not available for reads\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **9.14. MongoDB replication Status 10**
+### **14. MongoDB replication Status 10**
 
 **MongoDB Replication set member was once in a replica set but was subsequently removed**
 
@@ -206,7 +206,7 @@
     description: "MongoDB Replication set member was once in a replica set but was subsequently removed\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **9.15. MongoDB number cursors open**
+### **15. MongoDB number cursors open**
 
 **Too many cursors opened by MongoDB for clients (> 10k)**
 
@@ -221,7 +221,7 @@
     description: "Too many cursors opened by MongoDB for clients (> 10k)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **9.16. MongoDB cursors timeouts**
+### **16. MongoDB cursors timeouts**
 
 **Too many cursors are timing out**
 
@@ -236,7 +236,7 @@
     description: "Too many cursors are timing out\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **9.17. MongoDB too many connections**
+### **17. MongoDB too many connections**
 
 **Too many connections**
 
@@ -251,7 +251,7 @@
     description: "Too many connections\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **9.18. MongoDB virtual memory usage**
+### **10. MongoDB virtual memory usage**
 
 **High memory usage**
 

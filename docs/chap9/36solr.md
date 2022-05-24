@@ -1,4 +1,4 @@
-# **12 Solr : embedded exporter** 
+# 12 Solr : embedded exporter 
 
 [embedded exporter ](https://solr.apache.org/guide/8_11/monitoring-solr-with-prometheus-and-grafana.html)
 

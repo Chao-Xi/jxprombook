@@ -1,4 +1,4 @@
-# **8. MySQL : prometheus/`mysqld_exporter`**
+# 1. MySQL : prometheus/`mysqld_exporter`
 
 [https://github.com/prometheus/mysqld_exporter](https://github.com/prometheus/mysqld_exporter)
 
@@ -27,7 +27,7 @@ groups:
       summary: mysql server {{ $labels.realip }} QPS is too high. please keep an eyes on it.
 ```
 
-### **1.1. MySQL down**
+### **1. MySQL down**
 
 MySQL instance is down on `{{ $labels.instance }}`
 

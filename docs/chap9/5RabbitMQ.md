@@ -1,8 +1,8 @@
-# **10. RabbitMQ : kbudde/rabbitmq-exporter**
+# 7. RabbitMQ 
 
 ## **[rabbitmq/rabbitmq-prometheus](https://github.com/rabbitmq/rabbitmq-prometheus)**
 
-### **10.1. Rabbitmq node down**
+### **1. Rabbitmq node down**
 
 **Less than 3 nodes running in RabbitMQ cluster**
 
@@ -17,7 +17,7 @@
       description: "Less than 3 nodes running in RabbitMQ cluster\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.2. Rabbitmq node not distributed**
+### **2. Rabbitmq node not distributed**
 
 **Distribution link state is not 'up'**
 
@@ -32,7 +32,7 @@
       description: "Distribution link state is not 'up'\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.3. Rabbitmq instances different versions**
+### **3. Rabbitmq instances different versions**
 
 **Running different version of Rabbitmq in the same cluster, can lead to failure.**
 
@@ -47,7 +47,7 @@
       description: "Running different version of Rabbitmq in the same cluster, can lead to failure.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.4. Rabbitmq memory high**
+### **4. Rabbitmq memory high**
 
 **A node use more than 90% of allocated RAM**
 
@@ -62,7 +62,7 @@
       description: "A node use more than 90% of allocated RAM\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.5. Rabbitmq file descriptors usage**
+### **5. Rabbitmq file descriptors usage**
 
 **A node use more than 90% of file descriptors**
 
@@ -77,7 +77,7 @@
       description: "A node use more than 90% of file descriptors\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.6. Rabbitmq too many unack messages**
+### **6. Rabbitmq too many unack messages**
 
 **Too many unacknowledged messages**
 
@@ -92,7 +92,7 @@
       description: "Too many unacknowledged messages\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.7 Rabbitmq too many connections**
+### **7 Rabbitmq too many connections**
 
 **The total connections of a node is too high**
 
@@ -107,7 +107,7 @@
       description: "The total connections of a node is too high\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.8 Rabbitmq no queue consumer**
+### **8 Rabbitmq no queue consumer**
 
 **A queue has less than 1 consumer**
 
@@ -122,7 +122,7 @@
       description: "A queue has less than 1 consumer\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **10.9. Rabbitmq unroutable messages**
+### **9. Rabbitmq unroutable messages**
 
 **A queue has unroutable messages**
 

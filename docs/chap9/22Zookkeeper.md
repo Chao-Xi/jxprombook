@@ -1,4 +1,4 @@
-# **22. Zookeeper: `kafka_zookeeper_exporter`**
+# 11. Zookeeper: `kafka_zookeeper_exporter`
 
 ## **1 Zookeeper : [`kafka_zookeeper_exporter`](https://github.com/cloudflare/kafka_zookeeper_exporter)**
 

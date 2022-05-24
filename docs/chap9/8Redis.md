@@ -1,8 +1,8 @@
-# **8 Redis**
+# 5 Redis
 
 [https://github.com/oliver006/redis_exporter](https://github.com/oliver006/redis_exporter)
 
-### **8.1. Redis down**
+### **1. Redis down**
 
 **Redis instance is down**
 
@@ -17,7 +17,7 @@
     description: "Redis instance is down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **8.2. Redis missing master**
+### **2. Redis missing master**
 
 **Redis cluster has no node marked as master.**
 
@@ -33,7 +33,7 @@
 ```
 
 
-### **8.3. Redis too many masters**
+### **3. Redis too many masters**
 
 **Redis cluster has too many nodes marked as master.**
 
@@ -48,7 +48,7 @@
       description: "Redis cluster has too many nodes marked as master.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **8.4. Redis disconnected slaves**
+### **4. Redis disconnected slaves**
 
 **Redis not replicating for all slaves. Consider reviewing the redis replication status.**
 
@@ -63,7 +63,7 @@
       description: "Redis not replicating for all slaves. Consider reviewing the redis replication status.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **8.5. Redis replication broken**
+### **5. Redis replication broken**
 
 **Redis instance lost a slave**
 
@@ -78,7 +78,7 @@
       description: "Redis instance lost a slave\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **8.6. Redis cluster flapping**
+### **6. Redis cluster flapping**
 
 **Changes have been detected in Redis replica connection. This can occur when replica nodes lose connection to the master and reconnect (a.k.a flapping).**
 
@@ -93,7 +93,7 @@
       description: "Changes have been detected in Redis replica connection. This can occur when replica nodes lose connection to the master and reconnect (a.k.a flapping).\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **8.7. Missing backup**
+### **7. Missing backup**
 
 **Redis has not been backuped for 24 hours**
 
@@ -109,7 +109,7 @@
 ```
 
 
-### **8.8. Redis out of system memory**
+### **8. Redis out of system memory**
 
 **Redis is running out of memory (> 90%)**
 
@@ -125,7 +125,7 @@
 ```
 
 
-### **8.9. Redis out of configured maxmemory**
+### **9. Redis out of configured maxmemory**
 
 **Redis is running out of configured maxmemory (> 90%)**
 
@@ -141,7 +141,7 @@
 ```
 
 
-### **8.10. Too many connections**
+### **10. Too many connections**
 
 **Redis instance has too many connections**
 
@@ -156,7 +156,7 @@
     description: "Redis instance has too many connections\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **8.11. Not enough connections**
+### **11. Not enough connections**
 
 **Redis instance should have more connections (> 5)**
 
@@ -171,7 +171,7 @@
     description: "Redis instance should have more connections (> 5)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **8.12. Rejected connections**
+### **12. Rejected connections**
 
 **Some connections to Redis has been rejected**
 

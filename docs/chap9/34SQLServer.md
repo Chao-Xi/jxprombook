@@ -1,9 +1,9 @@
-# **8 SQL Server**
+# 3 SQL Server
 
 [Ozarklake/prometheus-mssql-exporter](https://github.com/Ozarklake/prometheus-mssql-exporter)
 
 
-### **8.1. SQL Server down**
+### **1. SQL Server down**
 
 **SQL server instance is down**
 

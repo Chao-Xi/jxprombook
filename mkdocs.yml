@@ -75,6 +75,7 @@ nav:
     - '8 解决Prometheus监控Kubernetes Job误报的坑': 'chap8/60prometheus_job.md'
   - 'Awesome alerts rules':
     - '1 Basic resource monitoring': 'chap9/1basic_resource.md'
+    - '2 Databases and brokers': 'chap9/2database_broker.md'
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
     - '第二节 APM + OpenTracing原理': 'chap_apm/2opentracing.md'
