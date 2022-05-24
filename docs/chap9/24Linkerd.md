@@ -1,4 +1,4 @@
-# **24. Linkerd**
+# 24. Linkerd
 
 
 **[Embedded exporter](https://linkerd.io/2/tasks/exporting-metrics/)**

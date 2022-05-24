@@ -1,4 +1,4 @@
-# **20. Consul : prometheus/consul_exporter**
+# 20. Consul : prometheus/consul_exporter
 
 [Consul Exporter](https://github.com/prometheus/consul_exporter)
 
@@ -18,7 +18,7 @@
     description: "Service: `{{ $labels.service_name }}` Healthcheck: `{{ $labels.service_id }}`\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-### **22. Missing Consul master node**
+### **2. Missing Consul master node**
 
 **Numbers of consul raft peers less then expected` <https://example.ru/ui/{{ $labels.dc }}/services/consul|Consul masters>`**
 

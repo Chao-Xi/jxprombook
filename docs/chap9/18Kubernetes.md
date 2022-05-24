@@ -1,4 +1,4 @@
-# **18. Kubernetes : kube-state-metrics**
+# 1 Kubernetes : kube-state-metrics
 
 [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics/tree/master/docs)
 

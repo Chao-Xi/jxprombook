@@ -1,4 +1,4 @@
-# **4 Cortex**
+# 4 Cortex
 
 ### **1. Cortex ruler configuration reload failure**
 

@@ -1,4 +1,4 @@
-# **3 Sidekiq**
+# 3 Sidekiq
 
 ## **[Strech/sidekiq-prometheus-exporter](https://github.com/Strech/sidekiq-prometheus-exporter)**
 

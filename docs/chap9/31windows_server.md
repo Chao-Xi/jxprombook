@@ -1,4 +1,4 @@
-# **5. Windows Server: `prometheus-community/windows_exporter`**
+# 5. Windows Server: `prometheus-community/windows_exporter`
 
 [https://github.com/prometheus-community/windows_exporter](https://github.com/prometheus-community/windows_exporter)
 

@@ -1,4 +1,4 @@
-# **6 Istio : Embedded exporter**
+# 6 Istio : Embedded exporter
 
 [Embedded exporter](https://istio.io/latest/docs/tasks/observability/metrics/querying-metrics/) 
 
@@ -93,7 +93,7 @@
       description: "High percentage of HTTP 5xx responses in Istio (> 5%).\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 ```
 
-### **7. Istio high 5xx error rate**
+### **7. **Istio high 5xx error rate****
 
 **High percentage of HTTP 5xx responses in Istio (> 5%).**
 

@@ -1,4 +1,4 @@
-# **28. Minio**
+# 28. Minio
 
 ### **1. Disk down**
 

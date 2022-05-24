@@ -1,4 +1,4 @@
-# **1 Ceph : Embedded exporter**
+# 1 Ceph : Embedded exporter
 
 [Embedded exporter](https://docs.ceph.com/docs/luminous/mgr/prometheus/)
 

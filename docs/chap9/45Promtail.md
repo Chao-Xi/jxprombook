@@ -1,4 +1,4 @@
-# **3. Promtail**
+# 3. Promtail
 
 ### **1. Promtail request errors**
 

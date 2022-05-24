@@ -1,4 +1,4 @@
-# **7. Juniper : `junos_exporter`**
+# 7. Juniper : `junos_exporter`
 
 [`czerwonk/junos_exporter`](https://github.com/czerwonk/junos_exporter)
 

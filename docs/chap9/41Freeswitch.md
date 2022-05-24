@@ -1,4 +1,4 @@
-# **9 Freeswitch**
+# 9 Freeswitch
 
 [znerol/prometheus-freeswitch-exporter](https://pypi.org/project/prometheus-freeswitch-exporter)
 

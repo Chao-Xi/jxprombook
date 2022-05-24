@@ -1,4 +1,4 @@
-# **2 Loki**
+# 2 Loki
 
 ### **1. Loki process too many restarts**
 

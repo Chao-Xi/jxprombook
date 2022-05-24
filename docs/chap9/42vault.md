@@ -1,4 +1,4 @@
-# **10. Hashicorp Vault**
+# 10. Hashicorp Vault
 
 [Embedded exporter](https://github.com/hashicorp/vault/blob/master/website/content/docs/configuration/telemetry.mdx#prometheus)
 

@@ -1,4 +1,4 @@
-# **2 SpeedTest : Speedtest exporter**
+# 2 SpeedTest : Speedtest exporter
 
 [Speedtest exporter](https://github.com/nlamirault/speedtest_exporter)
 

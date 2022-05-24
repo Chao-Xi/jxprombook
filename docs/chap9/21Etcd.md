@@ -1,6 +1,6 @@
-# **21. Etcd**
+# 21. Etcd
 
-## **21.1. Insufficient Members**
+### **21.1. Insufficient Members**
 
 **Etcd cluster should have an odd number of members**
 
@@ -15,7 +15,7 @@
     description: "Etcd cluster should have an odd number of members\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.2. No Leader**
+### **21.2. No Leader**
 
 **Etcd cluster have no leader**
 
@@ -30,7 +30,7 @@
     description: "Etcd cluster have no leader\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.3. High number of leader changes**
+### **21.3. High number of leader changes**
 
 **Etcd leader changed more than 3 times during last hour**
 
@@ -45,7 +45,7 @@
     description: "Etcd leader changed more than 3 times during last hour\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.4. High number of failed GRPC requests**
+### **21.4. High number of failed GRPC requests**
 
 **More than 1% GRPC request failure detected in Etcd for 5 minutes**
 
@@ -60,7 +60,7 @@
     description: "More than 1% GRPC request failure detected in Etcd for 5 minutes\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.5. High number of failed GRPC requests**
+### **21.5. High number of failed GRPC requests**
 
 **More than 5% GRPC request failure detected in Etcd for 5 minutes**
 
@@ -75,7 +75,7 @@
     description: "More than 5% GRPC request failure detected in Etcd for 5 minutes\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.6. GRPC requests slow**
+### **21.6. GRPC requests slow**
 
 **GRPC requests slowing down, 99th percentil is over 0.15s for 5 minutes**
 
@@ -90,7 +90,7 @@
     description: "GRPC requests slowing down, 99th percentil is over 0.15s for 5 minutes\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.7. High number of failed HTTP requests**
+### **21.7. High number of failed HTTP requests**
 
 **More than 1% HTTP failure detected in Etcd for 5 minutes**
 
@@ -120,7 +120,7 @@
     description: "More than 5% HTTP failure detected in Etcd for 5 minutes\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.9. HTTP requests slow**
+### **21.9. HTTP requests slow**
 
 **HTTP requests slowing down, 99th percentil is over 0.15s for 5 minutes**
 
@@ -135,7 +135,7 @@
     description: "HTTP requests slowing down, 99th percentil is over 0.15s for 5 minutes\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.10. Etcd member communication slow**
+### **21.10. Etcd member communication slow**
 
 **Etcd member communication slowing down, 99th percentil is over 0.15s for 5 minutes**
 
@@ -150,7 +150,7 @@
     description: "Etcd member communication slowing down, 99th percentil is over 0.15s for 5 minutes\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.11. High number of failed proposals**
+### **21.11. High number of failed proposals**
 
 **Etcd server got more than 5 failed proposals past hour**
 
@@ -165,7 +165,7 @@
     description: "Etcd server got more than 5 failed proposals past hour\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.12. High fsync durations**
+### **21.12. High fsync durations**
 
 
 **Etcd WAL fsync duration increasing, 99th percentil is over 0.5s for 5 minutes**
@@ -182,7 +182,7 @@
     description: "Etcd WAL fsync duration increasing, 99th percentil is over 0.5s for 5 minutes\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 ```
 
-## **21.13. High commit durations**
+### **21.13. High commit durations**
 
 
 **Etcd commit duration increasing, 99th percentil is over 0.25s for 5 minutes**

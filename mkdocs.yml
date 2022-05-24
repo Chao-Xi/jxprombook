@@ -76,6 +76,9 @@ nav:
   - 'Awesome alerts rules':
     - '1 Basic resource monitoring': 'chap9/1basic_resource.md'
     - '2 Databases and brokers': 'chap9/2database_broker.md'
+    - '3 Reverse proxies and load balancers': 'chap9/3proxy_lb.md'
+    - '4 Runtimes': 'chap9/4runtimes.md'
+    - '5 Orchestrators': 'chap9/5Orchestrators.md'
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
     - '第二节 APM + OpenTracing原理': 'chap_apm/2opentracing.md'

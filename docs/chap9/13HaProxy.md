@@ -1,4 +1,4 @@
-# **13. HaProxy `haproxy_exporter`**
+# 3 HaProxy `haproxy_exporter`
 
 
 

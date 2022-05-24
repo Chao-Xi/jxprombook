@@ -1,4 +1,4 @@
-# **14. Traefik**
+# 4 Traefik
 
 
 ## **1 Traefik : [Embedded exporter v2](https://docs.traefik.io/observability/metrics/prometheus/)**

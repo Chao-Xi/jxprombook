@@ -1,4 +1,4 @@
-# **6. SSL/TLS : ssl_exporter**
+# 6. SSL/TLS : ssl_exporter
 
 ### **1. SSL certificate probe failed**
 

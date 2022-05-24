@@ -1,4 +1,4 @@
-# **16. Java : java-client**
+# 2 Java : java-client
 
 [java-client](https://github.com/prometheus/client_java)
 

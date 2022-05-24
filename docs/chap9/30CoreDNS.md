@@ -1,4 +1,4 @@
-# **30. CoreDNS**
+# 30. CoreDNS
 
 ### **1. CoreDNS Panic Count**
 

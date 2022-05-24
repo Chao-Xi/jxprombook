@@ -1,4 +1,4 @@
-# **27. OpenEBS**
+# 27. OpenEBS
 
 ### **1. Used pool capacity**
 

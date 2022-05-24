@@ -1,4 +1,4 @@
-# **1 Thanos**
+# 1 Thanos
 
 ### **1. Thanos compaction halted**
 
