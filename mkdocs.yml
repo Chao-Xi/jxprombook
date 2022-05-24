@@ -79,6 +79,9 @@ nav:
     - '3 Reverse proxies and load balancers': 'chap9/3proxy_lb.md'
     - '4 Runtimes': 'chap9/4runtimes.md'
     - '5 Orchestrators': 'chap9/5Orchestrators.md'
+    - '6 Network, security and storage': 'chap9/6network_sec_storage.md'
+    - '7 Others': 'chap9/7other.md'
+    - '8 Alert Sleep Peacefully': 'chap9/8Alerting_sleep.md'
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
     - '第二节 APM + OpenTracing原理': 'chap_apm/2opentracing.md'
