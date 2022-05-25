@@ -87,6 +87,16 @@ nav:
     - '2 优秀的Grafana K8S 插件-DevOpsProdigy KubeGraf': 'chap10/28Grafana_plugin_DevOpsProdigy.md'
     - '3 用 Kubernetes darks资源对象创建Grafana Dashboard': 'chap10/30Create_Grafana_dashboards.md'
     - '4 Grafana 图表加速神器-Trickster': 'chap10/48grafana_Trickster.md'
+  - 'Thanos':
+    - '第一节 大规模场景下Prometheus的优化手段&Thanos架构详解': 'chap11/39Thanos_tutorial.md'
+    - '第二节 使用Thanos实现Prometheus的高可用介绍': 'chap11/34Thanos_intro.md'
+    - '第三节 Prometheus高可用Thanos学习-sidercar和query&Thanos部署': 'chap11/35Thanos_install.md'
+    - '第四节（2022）如何选择Thanos的Sidecar和Receiver两种模式？': 'chap11/61thanos_sidecar_receiver.md'
+    - '第五节（2022）使用Thanos查询前端优化查询性能': 'chap11/62thanos_query.md'
+    - '第六节 (Thaos1-2022)大规模场景下Prometheus的优化手段': 'chap11/63prometheus_optimiztion.md'
+    - '第七节 (Thaos2-2022)Thanos架构详解': 'chap11/64thanos_detail.md'
+    - '第八节 (Thaos3-2022)Thanos部署与实践': 'chap11/65thanos_setup.md'
+    - '第九节（2022）Thanos Ruler组件的使用': 'chap11/66thanos_ruler.md'
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
     - '第二节 APM + OpenTracing原理': 'chap_apm/2opentracing.md'
