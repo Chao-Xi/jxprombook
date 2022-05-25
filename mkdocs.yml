@@ -97,6 +97,14 @@ nav:
     - '第七节 (Thaos2-2022)Thanos架构详解': 'chap11/64thanos_detail.md'
     - '第八节 (Thaos3-2022)Thanos部署与实践': 'chap11/65thanos_setup.md'
     - '第九节（2022）Thanos Ruler组件的使用': 'chap11/66thanos_ruler.md'
+  - 'VictoriaMetrics':
+    - '第一节 Prometheus远程存储VictoriaMetrics简介': 'chap12/67vm_intro.md'
+    - '第二节 Prometheus长期远程存储方案VictoriaMetrics入门实践': 'chap12/68vm_setup.md'
+    - '第三节 VictorialMetrics 集群模式的使用': 'chap12/69vm_cluster.md'
+    - '第四节 使用vmagent代替Prometheus采集监控指标': 'chap12/70vm_vmagent.md'
+    - '第五节 使用Victoria Metrics Operator管理VM集群': 'chap12/71vm_operator.md'
+    - '第六节 使用 vmalert 代替 Prometheus 监控报警': 'chap12/72vm_vmalert.md'
+    - '第七节 对Prometheus兼容的时序数据库进行压力测试': 'chap12/73vm_pressure.md'
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
     - '第二节 APM + OpenTracing原理': 'chap_apm/2opentracing.md'
