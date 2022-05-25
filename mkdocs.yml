@@ -100,6 +100,8 @@ nav:
   - 'APM 工具及功能介绍':
     - '第一节 APM产品落地实战': 'chap_apm/1apm_prods.md'
     - '第二节 APM + OpenTracing原理': 'chap_apm/2opentracing.md'
+    - '第三节 怎么理解分布式链路追踪技术？': 'chap_apm/3apm_tracing.md'
+    - '第四节 在生产环境中如何选择靠谱的APM系统？': 'chap_apm/4apm_prod.md'
 
 repo_url: https://github.com/Chao-Xi/jxprombook.git
 repo_name: "jxprombook"
