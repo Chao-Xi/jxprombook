@@ -70,7 +70,7 @@
 
 ## **Salut! C'est Moi**
 
-> The man is not old as long as he is seeking something, A man is not old until regrets take the place of dreams.
+> Do or Do not, there is no try
 
 Hello, this is me, Jacob. Currently, I'm working as DevOps and Cloud Engineer in SAP, and I'm the certified AWS Solution Architect and Certified Azure Administrator, Kubernetes Specialist, Jenkins CI/CD and ElasticStack enthusiast. 
 
