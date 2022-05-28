@@ -1,5 +1,7 @@
 # **1 Basic resource monitoring**
 
+[https://awesome-prometheus-alerts.grep.to/alertmanager](https://awesome-prometheus-alerts.grep.to/alertmanager)
+
 ### [**1 Prometheus self-monitoring**](./1Prometheus.md)
 
 * **Prometheus job missing**
