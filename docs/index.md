@@ -6,7 +6,7 @@
 
 ## **JX's chit-chat**
 
-> Hi, this part is fucingk new and freshing🤔
+> Hi, this part is fucking new and freshing🤔
 
 记录一下生活，大概是上周四19号的时候终于拿到了正式的offer letter, associate director 副董事，也是我这辈子第一次有了自己的title，听起来还蛮唬人的。不过应该还是一个悲催的打工仔，既然已经拿到了属于自己奋斗的结果，终于可以按部就班的实现自己的计划了，希望一切顺利。这周一人生第一次主动提离职，有点小紧张，满肚子的怨气还是没有撒出去，不过我已经peace了。 
 

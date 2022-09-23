@@ -88,6 +88,8 @@ nav:
     - '3 用 Kubernetes darks资源对象创建Grafana Dashboard': 'chap10/30Create_Grafana_dashboards.md'
     - '4 Grafana 图表加速神器-Trickster': 'chap10/48grafana_Trickster.md'
     - '5 使用读写分离模式扩展 Grafana Loki': 'chap10/5Grafana_Loki.md'
+  - 'Prometheus与工具平台':
+    - '1 DeepFlow AutoTagging之Prometheus标签标准化': 'chap13/1deepflow.md'
   - 'Thanos':
     - '第一节 大规模场景下Prometheus的优化手段&Thanos架构详解': 'chap11/39Thanos_tutorial.md'
     - '第二节 使用Thanos实现Prometheus的高可用介绍': 'chap11/34Thanos_intro.md'
