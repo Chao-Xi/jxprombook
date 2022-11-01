@@ -23,6 +23,7 @@ nav:
     - '第一节 Centos7 Prometheus安装部署+监控+绘图+告警': 'chap2/19centos7_Prometheus_Alertmanager_Grafana.md'
     - '第二节 使用Node Exporter监控Linux主机&常用监控指标': 'chap2/59node_exporter.md'
     - '第三节 基于Prometheus构建MySQL可视化监控平台': 'chap2/36Prometheus_Mysql.md'
+    - '第四节 官方 mysqld_exporter支持抓取多MySQL实例': 'chap2/4mysql_exporter.md'
   - '手动部署Kubernetes Prometheus':
     - '第一节 Kubernetes使用Prometheus搭建监控平台(2018)': 'chap3/1prometheus_setup.md'
     - '第二节 Prometheus报警 && AlertManager实战（2018）': 'chap3/2prometheus_AlertManager.md'
