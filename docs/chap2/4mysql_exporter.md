@@ -1,4 +1,4 @@
-# 第三节 官方 `mysqld_exporter`支持抓取多MySQL实例
+# 第四节 官方 `mysqld_exporter`支持抓取多MySQL实例
 
 目前官方代码仓库已经支持了 1 个 mysqld_exporter 监控多个 mysql 实例(1:n)，详细的可以去看官方的代码仓库，但是目前尚未发现官方发布 release，可等待官方发布
 
