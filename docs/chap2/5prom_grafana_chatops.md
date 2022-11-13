@@ -250,6 +250,8 @@ Bot is alive and listening for messages...
 
 机器人可以响应一些基本的请求，如下所示，当然你也可以根据你想要监控的特定系统来定制机器人的能力。
 
+![Alt Image Text](../images/chap2_5_7.jpeg "Body image")
+
 ## **结论**
 
 ChatOps 机器人可以成为有用的助手，帮助你运维运行中的系统，我们这里是一个简化的示例，但我们可以扩展到支持更复杂的场景。
