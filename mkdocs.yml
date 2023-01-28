@@ -76,6 +76,7 @@ nav:
     - '6 Prometheus记录规则的使用(Recording Rule)': 'chap8/6Promql_adv1.md'
     - '7 PromQL查询之rate函数的使用': 'chap8/56prometheus_promql_rate.md'
     - '8 解决Prometheus监控Kubernetes Job误报的坑': 'chap8/60prometheus_job.md'
+    - '9 使用 Prometheus PromQL时需要避免这6个错误': 'chap8/9promql_6errors.md'
   - 'Awesome alerts rules':
     - '1 Basic resource monitoring': 'chap9/1basic_resource.md'
     - '2 Databases and brokers': 'chap9/2database_broker.md'
