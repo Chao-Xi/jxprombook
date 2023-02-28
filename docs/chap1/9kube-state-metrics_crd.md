@@ -1,4 +1,4 @@
-# **第九节 通过 kube-state-metrics 添加 CRD 状态指标**
+# **第九节 通过kube-state-metrics添加CRD状态指标**
 
 在 Kubernetes 中，自定义资源（CRD）是一种扩展 API 的机制，可以使用 Kubernetes APIServer 来存储和管理自定义对象。
 
