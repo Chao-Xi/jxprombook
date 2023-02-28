@@ -1,0 +1,3094 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Prometheus 技术实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.5.2">
+    
+    
+      
+        <title>第一节 Prometheus 系统介绍 2022 - Jacob Prometheus Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.9f9400aa.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#ffa724">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="orange" data-md-color-accent="orange">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#prometheus-2022" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob Prometheus Book" class="md-header__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob Prometheus Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第一节 Prometheus 系统介绍 2022
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob Prometheus Book" class="md-nav__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob Prometheus Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Prometheus技术介绍,K8S Metrics介绍&查看
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus技术介绍,K8S Metrics介绍&查看" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus技术介绍,K8S Metrics介绍&查看
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../57prometheus_best_practice/" class="md-nav__link">
+        第零节 Promethues 应用监控的一些实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          第一节 Prometheus 系统介绍 2022
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        第一节 Prometheus 系统介绍 2022
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    1 简介
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2 整体生态
+  </a>
+  
+    <nav class="md-nav" aria-label="2 整体生态">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1" class="md-nav__link">
+    2-1 指标暴露
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2" class="md-nav__link">
+    2-2 指标抓取
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3" class="md-nav__link">
+    2-3 指标存储和查询
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4" class="md-nav__link">
+    2-4 监控告警
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3 工作原理
+  </a>
+  
+    <nav class="md-nav" aria-label="3 工作原理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1" class="md-nav__link">
+    3-1 服务注册
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2" class="md-nav__link">
+    3-2 配置更新
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3" class="md-nav__link">
+    3-3 指标抓取和存储
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-metric" class="md-nav__link">
+    4 Metric 指标
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Metric 指标">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-1" class="md-nav__link">
+    4-1 数据模型
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2" class="md-nav__link">
+    4-2 指标类型
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-3" class="md-nav__link">
+    4-3 指标导出
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-promql" class="md-nav__link">
+    5 PromQL
+  </a>
+  
+    <nav class="md-nav" aria-label="5 PromQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-1" class="md-nav__link">
+    5-1 瞬时查询
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-2" class="md-nav__link">
+    5-2 范围查询
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-3" class="md-nav__link">
+    5-3 内置函数
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-grafana" class="md-nav__link">
+    6 Grafana 可视化
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    7 监控告警
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18Adv_Prometheus_index_classfication/" class="md-nav__link">
+        第二节 深入Prometheus设计-指标定义与分类(PromQL)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k8s_adv39_kube_state_metrics/" class="md-nav__link">
+        第三节 kube-state-metrics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17Adv_K8S_Metrics_Server/" class="md-nav__link">
+        第四节 Metrics Server 安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20Install_metrics_server_SAP_CC/" class="md-nav__link">
+        第五节 Install Kubernetes Metrics Server on SAP Converged Cloud
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../38k8s_hpa_metricsserver/" class="md-nav__link">
+        第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../55prometheus_go_metrics/" class="md-nav__link">
+        第七节 为Go应用添加Prometheus监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../37kubectl_top/" class="md-nav__link">
+        第八节 从kubectl top看K8S监控原理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9kube-state-metrics_crd/" class="md-nav__link">
+        第九节 通过 kube-state-metrics 添加 CRD 状态指标
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Prometheus on Linux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus on Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus on Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/19centos7_Prometheus_Alertmanager_Grafana/" class="md-nav__link">
+        第一节 Centos7 Prometheus安装部署+监控+绘图+告警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/59node_exporter/" class="md-nav__link">
+        第二节 使用Node Exporter监控Linux主机&常用监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/36Prometheus_Mysql/" class="md-nav__link">
+        第三节 基于Prometheus构建MySQL可视化监控平台
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4mysql_exporter/" class="md-nav__link">
+        第四节 官方 mysqld_exporter支持抓取多MySQL实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/5prom_grafana_chatops/" class="md-nav__link">
+        第五节 使用 Grafana、Prometheus 和 Slack 构建一个简单的 ChatOps 机器人
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          手动部署Kubernetes Prometheus
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="手动部署Kubernetes Prometheus" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          手动部署Kubernetes Prometheus
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1prometheus_setup/" class="md-nav__link">
+        第一节 Kubernetes使用Prometheus搭建监控平台(2018)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2prometheus_AlertManager/" class="md-nav__link">
+        第二节 Prometheus报警 && AlertManager实战（2018）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3changes_on_Grafana/" class="md-nav__link">
+        第三节 Grafana 显示参数设置(2018)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4Adv_Prometheus_setup/" class="md-nav__link">
+        第四节 在 Kubernetes 中手动部署 Prometheus (adv)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5Adv_Prometheus_monitor/" class="md-nav__link">
+        第五节 应用监控（Metrics/Exporter的配置）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6Adv_K8S_Nodes_monitor/" class="md-nav__link">
+        第六节 监控K8S集群节点&Node-exporter DaemonSet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7Adv_K8S_Resource_monitor/" class="md-nav__link">
+        第七节 监控常用资源对象（容器/apiserver/Service监控/kube-state-metric）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8Adv_K8S_Grafana/" class="md-nav__link">
+        第八节 Grafana 在 Kubernetes 中的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/10Adv_k8s_AlertManger/" class="md-nav__link">
+        第九节 报警神器 AlertManager 的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/16Adv_Prometheus_Del_index/" class="md-nav__link">
+        第十节 Prometheus 删除数据指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/50PrometheusAlert/" class="md-nav__link">
+        第十一节 Prometheus中使用PrometheusAlert进行聚合报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/12gpu_monitor/" class="md-nav__link">
+        第十二节 监控Kubernetes集群的GPU资源
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/29AlertManager_SendAlerts_when/" class="md-nav__link">
+        第十三节 AlertManager何时报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/41Prometheus_Monitor_OutCluster/" class="md-nav__link">
+        第十四节 Prometheus监控外部Kubernetes集群
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          玩转Prometheus Operator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="玩转Prometheus Operator" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          玩转Prometheus Operator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11Adv_Prometheus_Operator/" class="md-nav__link">
+        第一节 Prometheus Operator 初体验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/13Adv_Prometheus_Operator_etcd/" class="md-nav__link">
+        第二节 使用 Prometheus Operator 监控 etcd
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/14Adv_Prometheus_Operator_alarm/" class="md-nav__link">
+        第三节 Prometheus Operator 自定义报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/22Customize_Alert_Email/" class="md-nav__link">
+        第四节 Add Custom Alert and Send Alert Email with Alertmanager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/24Kubernetes_Prometheus_blackbox/" class="md-nav__link">
+        第五节 Prometheus 黑盒监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/32Prometheus_troubleshoot_Servicemonitor/" class="md-nav__link">
+        第六节 Troubleshooting ServiceMonitor changes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/43Prometheus_operator_ssl_exporter/" class="md-nav__link">
+        第七节 使用ssl_exporter监控K8S集群证书
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/44Prometheus_KubeNurse/" class="md-nav__link">
+        第八节 Operator2021-使用KubeNurse进行集群网络监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/45Prom-operator_2021/" class="md-nav__link">
+        第九节 Prometheus Operator安装配置(2021)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/46Prometheus_traefik/" class="md-nav__link">
+        第十节 Traefik之使用Prometheus Operator进行监控报警2021
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/47Prometheus_opt_AlertmanagerConfig/" class="md-nav__link">
+        第十一节 Operator使用AlertmanagerConfig进行报警配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/49Prometheus_SLI_SLO/" class="md-nav__link">
+        第十二节 通过Prometheus来做SLI/SLO监控展示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/51missing-container-metrics/" class="md-nav__link">
+        第十三节 Prometheus使用missing-container-metrics监控Pod oomkill
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/chap4_blackbox/" class="md-nav__link">
+        第十四节 如何在Prometheus中进行黑盒监控(ICMP/DNS/TCP/HTTP/gRPC)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Prometheus服务发现
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus服务发现" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus服务发现
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/53Prometheus_auto_discovery/" class="md-nav__link">
+        第一节 Prometheus服务的自动发现使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/52Prometheus_Relabeling/" class="md-nav__link">
+        第二节 Prometheus Relabeling重新标记的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/54prometheus_go_metrics_guideline/" class="md-nav__link">
+        第三节 如何使用Prometheus仪表化应用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Jam prometheus Monitor
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Jam prometheus Monitor" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Jam prometheus Monitor
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/25Alertmanager_AWS_SES/" class="md-nav__link">
+        Chap1 Alertmanager alerts with Amazon SES SMTP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/26Prometheus_Monitor_Argocd/" class="md-nav__link">
+        Chap2 Prometheus Operator Monitor on ArgoCD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/27Prometheus_Monitor_elasticsearch/" class="md-nav__link">
+        Chap3 Prometheus Operator Monitor on ElasticSearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/31Prometheus_Monitor_rabbitmq/" class="md-nav__link">
+        Chap4 Prometheus Operator Monitor on Rabbitmq
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/33Prometheus_Monitor_memcached/" class="md-nav__link">
+        Chap5 Prometheus Operator Monitor on Memcached
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Prometheus-Adapter
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus-Adapter" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus-Adapter
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/23Kubernetes_Scale_Prometheus-Adapter/" class="md-nav__link">
+        应用进行自定义指标扩缩容 by Prometheus-Adapter and Flask-Exporter
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          PromQL学习
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="PromQL学习" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          PromQL学习
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1Promql_basic1/" class="md-nav__link">
+        1 初识 PromQL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2Promql_basic2/" class="md-nav__link">
+        2 PromQL 操作符 & 内置函数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3Promql_basic3/" class="md-nav__link">
+        3 PromQL 内置函数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/4Promql_basic4/" class="md-nav__link">
+        4 PromQL简单示例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/5Promql_basic5/" class="md-nav__link">
+        5 在 HTTP API中使用 PromQL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/6Promql_adv1/" class="md-nav__link">
+        6 Prometheus记录规则的使用(Recording Rule)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/56prometheus_promql_rate/" class="md-nav__link">
+        7 PromQL查询之rate函数的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/60prometheus_job/" class="md-nav__link">
+        8 解决Prometheus监控Kubernetes Job误报的坑
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/9promql_6errors/" class="md-nav__link">
+        9 使用 Prometheus PromQL时需要避免这6个错误
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Awesome alerts rules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Awesome alerts rules" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Awesome alerts rules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1basic_resource/" class="md-nav__link">
+        1 Basic resource monitoring
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2database_broker/" class="md-nav__link">
+        2 Databases and brokers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3proxy_lb/" class="md-nav__link">
+        3 Reverse proxies and load balancers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4runtimes/" class="md-nav__link">
+        4 Runtimes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5Orchestrators/" class="md-nav__link">
+        5 Orchestrators
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/6network_sec_storage/" class="md-nav__link">
+        6 Network, security and storage
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/7other/" class="md-nav__link">
+        7 Others
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/8Alerting_sleep/" class="md-nav__link">
+        8 Alert Sleep Peacefully
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11">
+          数据可视化&Grafana Plugin
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="数据可视化&Grafana Plugin" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          数据可视化&Grafana Plugin
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/58grafana_init/" class="md-nav__link">
+        1 使用 Grafana 构建你的第一个仪表盘
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/28Grafana_plugin_DevOpsProdigy/" class="md-nav__link">
+        2 优秀的Grafana K8S 插件-DevOpsProdigy KubeGraf
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/30Create_Grafana_dashboards/" class="md-nav__link">
+        3 用 Kubernetes darks资源对象创建Grafana Dashboard
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/48grafana_Trickster/" class="md-nav__link">
+        4 Grafana 图表加速神器-Trickster
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/5Grafana_Loki/" class="md-nav__link">
+        5 使用读写分离模式扩展 Grafana Loki
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12">
+          Prometheus(OpenTelemetry)架构设计与工具平台
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus(OpenTelemetry)架构设计与工具平台" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus(OpenTelemetry)架构设计与工具平台
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1deepflow/" class="md-nav__link">
+        1 DeepFlow AutoTagging之Prometheus标签标准化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2Prometheus_opentele/" class="md-nav__link">
+        2 Prometheus与OpenTelemetry该选哪个？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/3Prometheus_index/" class="md-nav__link">
+        3 Prometheus的四种指标类型
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/4OpenTelemetry/" class="md-nav__link">
+        4 透彻理解OpenTelemetry
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13">
+          Thanos
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Thanos" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Thanos
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/39Thanos_tutorial/" class="md-nav__link">
+        第一节 大规模场景下Prometheus的优化手段&Thanos架构详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/34Thanos_intro/" class="md-nav__link">
+        第二节 使用Thanos实现Prometheus的高可用介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/35Thanos_install/" class="md-nav__link">
+        第三节 Prometheus高可用Thanos学习-sidercar和query&Thanos部署
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/61thanos_sidecar_receiver/" class="md-nav__link">
+        第四节（2022）如何选择Thanos的Sidecar和Receiver两种模式？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/62thanos_query/" class="md-nav__link">
+        第五节（2022）使用Thanos查询前端优化查询性能
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/63prometheus_optimiztion/" class="md-nav__link">
+        第六节 (Thaos1-2022)大规模场景下Prometheus的优化手段
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/64thanos_detail/" class="md-nav__link">
+        第七节 (Thaos2-2022)Thanos架构详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/65thanos_setup/" class="md-nav__link">
+        第八节 (Thaos3-2022)Thanos部署与实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/66thanos_ruler/" class="md-nav__link">
+        第九节（2022）Thanos Ruler组件的使用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_14" type="checkbox" id="__nav_14" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14">
+          VictoriaMetrics
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="VictoriaMetrics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          VictoriaMetrics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/67vm_intro/" class="md-nav__link">
+        第一节 Prometheus远程存储VictoriaMetrics简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/68vm_setup/" class="md-nav__link">
+        第二节 Prometheus长期远程存储方案VictoriaMetrics入门实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/69vm_cluster/" class="md-nav__link">
+        第三节 VictorialMetrics 集群模式的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/70vm_vmagent/" class="md-nav__link">
+        第四节 使用vmagent代替Prometheus采集监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/71vm_operator/" class="md-nav__link">
+        第五节 使用Victoria Metrics Operator管理VM集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/72vm_vmalert/" class="md-nav__link">
+        第六节 使用 vmalert 代替 Prometheus 监控报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/73vm_pressure/" class="md-nav__link">
+        第七节 对Prometheus兼容的时序数据库进行压力测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15">
+          APM 工具及功能介绍
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="APM 工具及功能介绍" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          APM 工具及功能介绍
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/1apm_prods/" class="md-nav__link">
+        第一节 APM产品落地实战
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/2opentracing/" class="md-nav__link">
+        第二节 APM + OpenTracing原理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/3apm_tracing/" class="md-nav__link">
+        第三节 怎么理解分布式链路追踪技术？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/4apm_prod/" class="md-nav__link">
+        第四节 在生产环境中如何选择靠谱的APM系统？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/5apm_Sentry/" class="md-nav__link">
+        第五节 Sentry+OpenTelemetry前后端全链路打通
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/6k8s_watching/" class="md-nav__link">
+        第六节 聊聊可观测性之数据模型
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    1 简介
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2 整体生态
+  </a>
+  
+    <nav class="md-nav" aria-label="2 整体生态">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1" class="md-nav__link">
+    2-1 指标暴露
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2" class="md-nav__link">
+    2-2 指标抓取
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-3" class="md-nav__link">
+    2-3 指标存储和查询
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-4" class="md-nav__link">
+    2-4 监控告警
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3 工作原理
+  </a>
+  
+    <nav class="md-nav" aria-label="3 工作原理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1" class="md-nav__link">
+    3-1 服务注册
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2" class="md-nav__link">
+    3-2 配置更新
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3" class="md-nav__link">
+    3-3 指标抓取和存储
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-metric" class="md-nav__link">
+    4 Metric 指标
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Metric 指标">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-1" class="md-nav__link">
+    4-1 数据模型
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-2" class="md-nav__link">
+    4-2 指标类型
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-3" class="md-nav__link">
+    4-3 指标导出
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-promql" class="md-nav__link">
+    5 PromQL
+  </a>
+  
+    <nav class="md-nav" aria-label="5 PromQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-1" class="md-nav__link">
+    5-1 瞬时查询
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-2" class="md-nav__link">
+    5-2 范围查询
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-3" class="md-nav__link">
+    5-3 内置函数
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-grafana" class="md-nav__link">
+    6 Grafana 可视化
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    7 监控告警
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/Chao-Xi/jxprombook.git/edit/master/docs/chap1/1prometheus2022.md" title="编辑此页" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="prometheus-2022"><strong>第一节 Prometheus 系统介绍 2022</strong></h1>
+<h2 id="1"><strong>1 简介</strong></h2>
+<p>Prometheus 是古希腊神话里泰坦族的一名神明，名字的意思是“先见之明”，下图中是 Prometheus 被宙斯惩罚，饱受肝脏日食夜长之苦。</p>
+<p>其官网封面图引导语：From metrics to insight，从指标到洞察力，通过指标去洞察你的系统，为我们的系统提<strong>供指标收集和监控的开源解决方案</strong>。也就是说，Prometheus 是一个数据监控的解决方案，让我们能随时掌握系统运行的状态，快速定位问题和排除故障。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_1.jpeg" title="Body image" /></p>
+<p>Prometheus 发展速度很快，12 年开发完成，16 年加入 CNCF，成为继 Kubernetes 之后第二个 CNCF 托管的项目，目前 GitHub 42k 的 🌟，而且社区很活跃，维护频率很高，基本稳定在 1 个月 1 个小版本的迭代速度。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_2.jpeg" title="Body image" /></p>
+<h2 id="2"><strong>2 整体生态</strong></h2>
+<p>Prometheus 提供了从<strong>指标暴露，到指标抓取、存储和可视化</strong>，以及最后的监控告警等一系列组件。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_3.jpeg" title="Body image" /></p>
+<h3 id="2-1"><strong>2-1 指标暴露</strong></h3>
+<p><strong>每一个被 Prometheus 监控的服务都是一个 Job，Prometheus 为这些 Job 提供了官方的 SDK ，利用这个 SDK 可以自定义并导出自己的业务指标</strong>，也可以使用 Prometheus 官方提供的各种常用组件和中间件的 Exporter（比如常用的 MySQL，Consul 等等）。</p>
+<p>对于短时间执行的脚本任务或者不好直接 Pull 指标的服务，<strong><mark>Prometheus 提供了 PushGateWay 网关给这些任务将服务指标主动推 Push 到网关，Prometheus 再从这个网关里 Pull 指标</mark></strong>。</p>
+<h3 id="2-2"><strong>2-2 指标抓取</strong></h3>
+<p>上面提到了 Push 和 Pull，其实这是两种指标抓取模型。</p>
+<p><strong><mark>Pull 模型：监控服务主动拉取被监控服务的指标。</mark></strong></p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_4.jpeg" title="Body image" /></p>
+<p><strong>被监控服务一般通过主动暴露 metrics 端口或者通过 Exporter 的方式暴露指标</strong>，监控服务依赖服务发现模块发现被监控服务，从而去定期的抓取指标。</p>
+<p><strong><mark>Push 模型：被监控服务主动将指标推送到监控服务，可能需要对指标做协议适配，必须得符合监控服务要求的指标格式。</mark></strong></p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_5.jpeg" title="Body image" /></p>
+<p>对于 Prometheus 中的指标抓取，采用的是 Pull 模型，<strong>默认是一分钟去拉取一次指标</strong>，</p>
+<ul>
+<li><strong>通过 Prometheus.yaml 配置文件中的 <code>scrape_interval</code> 配置项配置，Prometheus 对外都是用的 Pull 模型</strong></li>
+<li><strong>一个是 Pull Exporter 的暴露的指标，</strong></li>
+<li><strong>一个是 Pull PushGateway 暴露的指标。</strong></li>
+</ul>
+<h3 id="2-3"><strong>2-3 指标存储和查询</strong></h3>
+<p>指标抓取后会存储在内置的时序数据库中，Prometheus 也提供了 PromQL 查询语言给我们做指标的查询，我们可以在 Prometheus 的 WebUI 上通过 PromQL，可视化查询我们的指标，也可以很方便的接入第三方的可视化工具，例如 Grafana。</p>
+<h3 id="2-4"><strong>2-4 监控告警</strong></h3>
+<p>Prometheus 提供了 Alertmanageer 基于 PromQL 来做系统的监控告警，当 PromQL 查询出来的指标超过我们定义的阈值时，Prometheus 会发送一条告警信息到 Alertmanager，manager 会将告警下发到配置好的邮箱或者微信。</p>
+<h2 id="3"><strong>3 工作原理</strong></h2>
+<p>Prometheus 的从被监控服务的注册到指标抓取到指标查询的流程分为五个步骤：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_6.jpeg" title="Body image" /></p>
+<h3 id="3-1"><strong>3-1 服务注册</strong></h3>
+<p>被监控服务在 Prometheus 中是一个 Job 存在，被监控服务的所有实例在 Prometheus 中是一个 target 的存在，<strong><mark>所以被监控服务的注册就是在 Prometheus 中注册一个 Job 和其所有的 target</mark></strong>，这个注册分为：</p>
+<ul>
+<li>静态注册</li>
+<li>动态注册</li>
+</ul>
+<p>静态注册：<strong>静态的将服务的 IP 和抓取指标的端口号配置在 Prometheus yaml 文件的 <code>scrape_configs</code> 配置下</strong>：</p>
+<pre><code>scrape_configs:
+ - job_name: &quot;prometheus&quot;
+   static_configs:
+   - targets: [&quot;localhost:9090&quot;]
+</code></pre>
+<p>以上就是注册了一个名为 Prometheus 的服务，这个服务下有一个实例，暴露的抓取地址是 localhost:9090。</p>
+<p><strong>动态注册</strong>：动态注册就是在 Prometheus yaml 文件的 <code>scrape_configs</code> 配置下配置服务发现的地址和服务名，Prometheus 会去该地址，<strong>根据你提供的服务名动态发现实例列表，在 Prometheus 中，支持 Consul、DNS、文件、Kubernetes 等多种服务发现机制</strong>。</p>
+<p><strong>基于 Consul 的服务发现：</strong></p>
+<pre><code> - job_name: &quot;node_export_consul&quot;
+  metrics_path: /node_metrics
+  scheme: http
+  consul_sd_configs:
+   - server: localhost:8500
+     services:
+     - node_exporter
+</code></pre>
+<p><strong><code>consul_sd_configs</code></strong></p>
+<p>我们 Consul 的地址就是：localhost:8500，服务名是 <code>node_exporter</code>，在这个服务下有一个 exporter 实例：localhost:9600。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_7.jpeg" title="Body image" /></p>
+<p><strong><mark>注意：如果是动态注册，最好加上这两配置，静态注册指标拉取的路径会默认的帮我们指定为 <code>metrics_path:/metrics</code>，所以如果暴露的指标抓取路径不同或者是动态的服务注册，最好加上这两个配置。</mark></strong></p>
+<pre><code>metrics_path: /node_metrics
+scheme: http
+</code></pre>
+<p>不然会报错“INVALID is not a valid start token”，演示下，百度了一下，这里可能是数据格式不统一导致。</p>
+<p>最后可以在 WebUI 中查看发现的实例：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_8.jpeg" title="Body image" /></p>
+<p>目前，Prometheus 支持多达二十多种服务发现协议：</p>
+<pre><code>&lt;azure_sd_config&gt;
+&lt;consul_sd_config&gt;
+&lt;digitalocean_sd_config&gt;
+&lt;docker_sd_config&gt;
+&lt;dockerswarm_sd_config&gt;
+&lt;dns_sd_config&gt;
+&lt;ec2_sd_config&gt;
+&lt;openstack_sd_config&gt;
+&lt;file_sd_config&gt;
+&lt;gce_sd_config&gt;
+&lt;hetzner_sd_config&gt;
+&lt;http_sd_config&gt;
+&lt;kubernetes_sd_config&gt;
+&lt;kuma_sd_config&gt;
+&lt;lightsail_sd_config&gt;
+&lt;linode_sd_config&gt;
+&lt;marathon_sd_config&gt;
+&lt;nerve_sd_config&gt;
+&lt;serverset_sd_config&gt;
+&lt;triton_sd_config&gt;
+&lt;eureka_sd_config&gt;
+&lt;scaleway_sd_config&gt;
+&lt;static_config&gt;
+</code></pre>
+<h3 id="3-2"><strong>3-2 配置更新</strong></h3>
+<p>在更新完 Prometheus 的配置文件后，我们需要更新我们的配置到程序内存里，这里的更新方式有两种，<strong>第一种简单粗暴，就是重启 Prometheus，第二种是动态更新的方式</strong>。</p>
+<p><strong><mark>如何实现动态的更新 Prometheus 配置</mark></strong>。</p>
+<p><strong>第一步：首先要保证启动 Prometheus 的时候带上启动参数：<code>--web.enable-lifecycle</code>。</strong></p>
+<pre><code>prometheus --config.file=/usr/local/etc/prometheus.yml --web.enable-lifecycle
+</code></pre>
+<p>第二步：去更新我们的 Prometheus 配置。</p>
+<p>第三步：更新完配置后，我们可以通过 Post 请求的方式，动态更新配置：</p>
+<pre><code>curl -v --request POST 'http://localhost:9090/-/reload'
+</code></pre>
+<p>原理：</p>
+<p>Prometheus 在 Web 模块中，注册了一个 handler：</p>
+<pre><code>if o.EnableLifecycle {
+  router.Post(&quot;/-/quit&quot;, h.quit)
+  router.Put(&quot;/-/quit&quot;, h.quit)
+  router.Post(&quot;/-/reload&quot;, h.reload) // reload配置
+  router.Put(&quot;/-/reload&quot;, h.reload)
+}
+</code></pre>
+<p>通过 <code>h.reload</code> 这个 handler 方法实现：这个 handler 就是往一个 channle 中发送一个信号：</p>
+<pre><code>func (h *Handler) reload(w http.ResponseWriter, r *http.Request) {
+  rc := make(chan error)
+  h.reloadCh &lt;- rc  // 发送一个信号到channe了中
+  if err := &lt;-rc; err != nil {
+   http.Error(w, fmt.Sprintf(&quot;failed to reload config: %s&quot;, err), http.StatusInternalServerError)
+  }
+}
+</code></pre>
+<p>在 main 函数中会去监听这个 channel，只要有监听到信号，就会做配置的 reload，重新将新配置加载到内存中：</p>
+<p><code>case rc := &lt;-webHandler.Reload():
+  if err := reloadConfig(cfg.configFile, cfg.enableExpandExternalLabels, cfg.tsdb.EnableExemplarStorage, logger, noStepSubqueryInterval, reloaders...); err != nil {
+   level.Error(logger).Log("msg", "Error reloading config", "err", err)
+   rc &lt;- err
+  } else {
+   rc &lt;- nil
+  }</code></p>
+<h3 id="3-3"><strong>3-3 指标抓取和存储</strong></h3>
+<p>Prometheus 对指标的抓取采取主动 Pull 的方式，<strong>即周期性的请求被监控服务暴露的 Metrics 接口或者是 PushGateway</strong>，从而获取到 Metrics 指标，<strong>默认时间是 15s 抓取一次</strong>，配置项如下：</p>
+<pre><code>global:
+ scrape_interval: 15s
+</code></pre>
+<p>抓取到的指标会被以时间序列的形式保存在内存中，并且定时刷到磁盘上，默<strong>认是两个小时回刷一次</strong>。并且为了防止 Prometheus 发生崩溃或重启时能够恢复数据，Prometheus 也提供了类似 <strong>MySQL 中 binlog 一样的预写日志，当 Prometheus 崩溃重启时，会读这个预写日志来恢复数据</strong>。</p>
+<h2 id="4-metric"><strong>4 Metric 指标</strong></h2>
+<h3 id="4-1"><strong>4-1 数据模型</strong></h3>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_9.jpeg" title="Body image" /></p>
+<p>Prometheus 采集的所有指标都是以时间序列的形式进行存储，每一个时间序列有三部分组成：</p>
+<ul>
+<li>指标名和指标标签集合：<code>metric_name{&lt;label1=v1&gt;,&lt;label2=v2&gt;....}</code>，指标名：表示这个指标是监控哪一方面的状态，比如 <code>http_request_total</code> 表示请求数量；<ul>
+<li>指标标签：描述这个指标有哪些维度，比如 <code>http_request_total</code> 这个指标，有请求状态码 <code>code = 200/400/500</code>，请求方式 <code>method = get/post</code> 等，实际上指标名称实际上是以标签的形式保存，这个标签是 name，即：name=。</li>
+</ul>
+</li>
+<li>时间戳：描述当前时间序列的时间，单位：毫秒</li>
+<li>样本值：当前监控指标的具体数值，比如 <code>http_request_total</code> 的值就是请求数是多少。</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_10.jpeg" title="Body image" /></p>
+<p>所有的指标也都是通过如下所示的格式来标识的：</p>
+<pre><code># HELP  // HELP：这里描述的指标的信息，表示这个是一个什么指标，统计什么的
+# TYPE  // TYPE：这个指标是什么类型的
+&lt;metric name&gt;{&lt;label name&gt;=&lt;label value&gt;, ...} value  // 指标的具体格式，&lt;指标名&gt;{标签集合} 指标值
+</code></pre>
+<h3 id="4-2"><strong>4-2 指标类型</strong></h3>
+<p><strong>Prometheus 底层存储上其实并没有对指标做类型的区分，都是以时间序列的形式存储</strong>，但是为了方便用户的使用和理解不同监控指标之间的差异，</p>
+<p><code>Prometheus</code> 定义了 4 种不同的指标类型：计数器 <code>counter</code>，仪表盘<code>gauge</code>，直方图 <code>histogram</code>，摘要 <code>summary</code>。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_11.jpeg" title="Body image" /></p>
+<p><strong>Counter 计数器：</strong></p>
+<p>Counter 类型和 Redis 的自增命令一样，<strong>只增不减</strong>，通过 Counter 指标可以统计 Http 请求数量，请求错误数，<strong>接口调用次数等单调递增的数据</strong>。<strong>同时可以结合 increase 和 rate 等函数统计变化速率，后续我们会提到这些内置函数</strong>。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_12.jpeg" title="Body image" /></p>
+<p><strong>Gauge 仪表盘：</strong></p>
+<p><strong>和 Counter 不同，Gauge 是可增可减的，可以反映一些动态变化的数据，例如当前内存占用，CPU 利用</strong>，Gc 次数等动态可上升可下降的数据，在 Prometheus 上通过 Gauge，可以不用经过内置函数直观的反映数据的变化情况，如下图表示堆可分配的空间大小：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_13.jpeg" title="Body image" /></p>
+<p><strong>Histogram 直方图：</strong></p>
+<p>Histogram 是一种直方图类型，<strong>可以观察到指标在各个不同的区间范围的分布情况</strong>，如下图所示：可以观察到请求耗时在各个桶的分布。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_14.jpeg" title="Body image" /></p>
+<p>有一点要注意的是，<strong>Histogram 是累计直方图，即每一个桶的是只有上区间</strong>，例如下图表示小于 0.1 毫秒（le="0.1"）的请求数量是 18173 个，小于 0.2 毫秒（le="0.2"）的请求是 18182 个，在 le="0.2" 这个桶中是包含了 le="0.1"这个桶的数据，如果我们要拿到 0.1 毫秒到 0.2 毫秒的请求数量，可以通过两个桶想减得到。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_15.jpeg" title="Body image" /></p>
+<p><strong>在直方图中，还可以通过 <code>histogram_quantile</code> 函数求出百分位</strong>数，比如 P50、P90、P99 等数据。</p>
+<p><strong>Summary 摘要：</strong></p>
+<p>Summary 也是用来做统计分析的，和 Histogram 区别在于，<strong>Summary 直接存储的就是百分位数</strong>，如下所示：可以直观的观察到样本的中位数，P90 和 P99。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_16.jpeg" title="Body image" /></p>
+<p>Summary 的百分位数是客户端计算好直接让 Prometheus 抓取的，不需要 Prometheus 计算，直方图是通过内置函数 <code>histogram_quantile</code> 在 Prometheus 服务端计算求出。</p>
+<h3 id="4-3"><strong>4-3 指标导出</strong></h3>
+<p>标导出有两种方式，<strong>一种是使用 Prometheus 社区提供的定制好的 Exporter 对一些组件诸如 MySQL，Kafka 等的指标作导出，也可以利用社区提供的 Client 来自定义指标导出</strong>。</p>
+<pre><code>github.com/prometheus/client_golang/prometheus/promhttp
+</code></pre>
+<p>自定义 Prometheus exporter：</p>
+<pre><code>package main
+import (
+  &quot;net/http&quot;
+  &quot;github.com/prometheus/client_golang/prometheus/promhttp&quot;
+)
+
+func main() {
+  http.Handle(&quot;/metrics&quot;, promhttp.Handler())
+  http.ListenAndServe(&quot;:8080&quot;, nil)
+}
+</code></pre>
+<p>访问：<code>http://localhost:8080/metrics</code>，即可看到导出的指标，这里我们没有自定义任何的指标，但是能看到一些内置的 Go 的运行时指标和 promhttp 相关的指标，这个 Client 默认为我们暴露的指标，<code>go_：</code> 以 go 为前缀的指标是关于 Go 运行时相关的指标，比如垃圾回收时间、goroutine 数量等，这些都是 Go 客户端库特有的，其他语言的客户端库可能会暴露各自语言的其他运行时指标。</p>
+<p><strong>promhttp：来自 promhttp 工具包的相关指标，用于跟踪对指标请求的处理</strong>。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_17.jpeg" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_18.jpeg" title="Body image" /></p>
+<p>添加自定义指标：</p>
+<pre><code>package main
+import (
+  &quot;net/http&quot;
+
+  &quot;github.com/prometheus/client_golang/prometheus&quot;
+  &quot;github.com/prometheus/client_golang/prometheus/promhttp&quot;
+)
+
+func main() {
+
+  // 1.定义指标（类型，名字，帮助信息）
+  myCounter := prometheus.NewCounter(prometheus.CounterOpts{
+   Name: &quot;my_counter_total&quot;,
+   Help: &quot;自定义counter&quot;,
+  })
+  // 2.注册指标
+  prometheus.MustRegister(myCounter)
+  // 3.设置指标值
+  myCounter.Add(23)
+
+  http.Handle(&quot;/metrics&quot;, promhttp.Handler())
+  http.ListenAndServe(&quot;:8080&quot;, nil)
+
+}
+</code></pre>
+<p>运行：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_19.jpeg" title="Body image" /></p>
+<p>模拟下在业务中上报接口请求量：</p>
+<pre><code>package main
+
+import (
+  &quot;fmt&quot;
+  &quot;net/http&quot;
+  &quot;github.com/prometheus/client_golang/prometheus&quot;
+)
+
+var (
+  MyCounter prometheus.Counter
+)
+
+
+// init 注册指标
+func init() {
+  // 1.定义指标（类型，名字，帮助信息）
+  MyCounter = prometheus.NewCounter(prometheus.CounterOpts{
+   Name: &quot;my_counter_total&quot;,
+   Help: &quot;自定义counter&quot;,
+  })
+
+  // 2.注册指标
+  prometheus.MustRegister(MyCounter)
+}
+
+// Sayhello
+func Sayhello(w http.ResponseWriter, r *http.Request) {
+  // 接口请求量递增
+  MyCounter.Inc()
+  fmt.Fprintf(w, &quot;Hello World!&quot;)
+}
+</code></pre>
+<p>main.go：</p>
+<pre><code>package main
+import (
+  &quot;net/http&quot;
+  &quot;github.com/prometheus/client_golang/prometheus/promhttp&quot;
+)
+func main() {
+  http.Handle(&quot;/metrics&quot;, promhttp.Handler())
+  http.HandleFunc(&quot;/counter&quot;,Sayhello)
+  http.ListenAndServe(&quot;:8080&quot;, nil)
+}
+</code></pre>
+<p>一开始启动时，指标 counter 是 0：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_20.jpeg" title="Body image" /></p>
+<p>调用：/counter 接口后，指标数据发生了变化，这样就可以简单实现了接口请求数的统计：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_21.jpeg" title="Body image" /></p>
+<p>对于其他指标定义方式是一样的：</p>
+<pre><code>var (
+  MyCounter prometheus.Counter
+  MyGauge prometheus.Gauge
+  MyHistogram prometheus.Histogram
+  MySummary prometheus.Summary
+
+)
+
+// init 注册指标
+func init() {
+  // 1.定义指标（类型，名字，帮助信息）
+  MyCounter = prometheus.NewCounter(prometheus.CounterOpts{
+   Name: &quot;my_counter_total&quot;,
+   Help: &quot;自定义counter&quot;,
+  })
+
+  // 定义gauge类型指标
+  MyGauge = prometheus.NewGauge(prometheus.GaugeOpts{
+   Name: &quot;my_gauge_num&quot;,
+   Help: &quot;自定义gauge&quot;,
+
+  })
+
+  // 定义histogram
+  MyHistogram = prometheus.NewHistogram(prometheus.HistogramOpts{
+   Name: &quot;my_histogram_bucket&quot;,
+   Help: &quot;自定义histogram&quot;,
+   Buckets: []float64{0.1,0.2,0.3,0.4,0.5},  // 需要指定桶
+
+  })
+
+  // 定义Summary
+  MySummary = prometheus.NewSummary(prometheus.SummaryOpts{
+   Name: &quot;my_summary_bucket&quot;,
+   Help: &quot;自定义summary&quot;,
+   // 这部分可以算好后在set
+   Objectives: map[float64]float64{
+     0.5: 0.05,
+     0.9: 0.01,
+     0.99: 0.001,
+   },
+  })
+
+  // 2.注册指标
+  prometheus.MustRegister(MyCounter)
+  prometheus.MustRegister(MyGauge)
+  prometheus.MustRegister(MyHistogram)
+  prometheus.MustRegister(MySummary)
+}
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_22.jpeg" title="Body image" /></p>
+<p>上面的指标都是没有设置标签的，我们一般的指标都是带有标签的，如何设置指标的标签呢？</p>
+<p>如果我要设置带标签的 counter 类型指标，只需要将原来的 NewCounter 方法替换为 NewCounterVec 方法即可，并且传入标签集合。</p>
+<pre><code>MyCounter *prometheus.CounterVec
+// 1.定义指标（类型，名字，帮助信息）
+MyCounter = prometheus.NewCounterVec(
+  prometheus.CounterOpts{
+  Name: &quot;my_counter_total&quot;,
+  Help: &quot;自定义counter&quot;,
+  },
+  // 标签集合
+  []string{&quot;label1&quot;,&quot;label2&quot;},
+)
+// 带标签的set指标值
+MyCounter.With(prometheus.Labels{&quot;label1&quot;:&quot;1&quot;,&quot;label2&quot;:&quot;2&quot;}).Inc()
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_23.jpeg" title="Body image" /></p>
+<h2 id="5-promql"><strong>5 PromQL</strong></h2>
+<p>刚刚提到了 Prometheus 中指标有哪些类型以及如何导出我们的指标，现在指标导出到 Prometheus 了，利用其提供的 PromQL 可以查询我们导出的指标。</p>
+<p>PromQL 是 Prometheus 为我们提供的函数式的查询语言，查询表达式有四种类型：</p>
+<ul>
+<li>字符串：只作为某些内置函数的参数出现</li>
+<li>标量：单一的数字值，可以是函数参数，也可以是函数的返回结果</li>
+<li><strong>瞬时向量：某一时刻的时序数据</strong></li>
+<li><strong>区间向量：某一时间区间内的时序数据集合</strong></li>
+</ul>
+<h3 id="5-1"><strong>5-1 瞬时查询</strong></h3>
+<p>直接通过指标名即可进行查询，查询结果是当前指标最新的时间序列，比如查询 Gc 累积消耗的时间：</p>
+<pre><code>go_gc_duration_seconds_count
+</code></pre>
+<p><strong>我们可以看到查询出来有多个同名指标结果，可以用<code>{}</code>做标签过滤查询：比如我们想查指定实例的指标</strong>。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_24.jpeg" title="Body image" /></p>
+<pre><code>go_gc_duration_seconds_count{instance=&quot;127.0.0.1:9600&quot;}
+</code></pre>
+<p>而且也支持则表达式，通过 <code>=~</code>指定正则表达式，如下所示：查询所有 instance 是 localhost 开头的指标。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_25.jpeg" title="Body image" /></p>
+<pre><code>go_gc_duration_seconds_count{instance=~&quot;localhost.*&quot;}
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_26.jpeg" title="Body image" /></p>
+<h3 id="5-2"><strong>5-2 范围查询</strong></h3>
+<p><strong>范围查询的结果集就是区间向量，可以通过<code>[]</code>指定时间来做范围查询</strong>，查询 5 分钟内的 Gc 累积消耗时间：</p>
+<pre><code>go_gc_duration_seconds_count{}[5m]
+</code></pre>
+<p>注意：这里范围查询第一个点并不一定精确到刚刚好 5 分钟前的那个时序样本点，他是以 5 分钟作为一个区间，寻找这个区间的第一个点到最后一个样本点。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_27.jpeg" title="Body image" /></p>
+<p>时间单位：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_28.jpeg" title="Body image" /></p>
+<p>d：天，h：小时，m：分钟，ms：毫秒，s：秒，w：周，y：年</p>
+<p>同样支持类似 SQL 中的 offset 查询，如下：查询一天前当前 5 分钟前的时序数据集：</p>
+<pre><code>go_gc_duration_seconds_count{}[5m] offset 1d
+</code></pre>
+<h3 id="5-3"><strong>5-3 内置函数</strong></h3>
+<p>Prometheus 内置了很多函数，这里主要记录下常用的几个函数的使用：</p>
+<p><strong>rate 和 irate 函数</strong></p>
+<p>rate 函数可以用来求指标的平均变化速率：<code>rate函数=时间区间前后两个点的差 / 时间范围</code>。</p>
+<p>一般 rate 函数可以用来求某个时间区间内的请求速率，也就是我们常说的 QPS：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_29.jpeg" title="Body image" /></p>
+<p><strong>但是 rate 函数只是算出来了某个时间区间内的平均速率，没办法反映突发变化，假设在一分钟的时间区间里，前 50 秒的请求量都是 0 到 10 左右，但是最后 10 秒的请求量暴增到 100 以上，这时候算出来的值可能无法很好的反映这个峰值变化</strong>。</p>
+<p><strong><mark>这个问题可以通过 irate 函数解决，irate 函数求出来的就是瞬时变化率。</mark></strong></p>
+<p>时间区间内最后两个样本点的差 / 最后两个样本点的时间差。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_30.jpeg" title="Body image" /></p>
+<p>可以通过图像看下两者的区别：<strong>irate 函数的图像峰值变化大，rate 函数变化较为平缓。</strong></p>
+<p><strong>rate 函数：</strong></p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_31.jpeg" title="Body image" /></p>
+<p><strong>irate 函数：</strong></p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_32.jpeg" title="Body image" /></p>
+<p><strong>聚合函数：<code>Sum() by() without()</code></strong></p>
+<p>也是上边的例子，我们在求指定接口的 QPS 的时候，可能会出现多个实例的 QPS 的计算结果，如下是存在多个接口，三个服务的 QPS。</p>
+<pre><code>rate(demo_api_request_duration_seconds_count{job=&quot;demo&quot;, method=&quot;GET&quot;, status=&quot;200&quot;}[5m])
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_33.jpeg" title="Body image" /></p>
+<p>利用 Sum 函数可以将三个 QPS 聚合，即可得到整个服务该接口的 QPS：<strong>其实 Sum 就是将指标值做相加</strong>。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_34.jpeg" title="Body image" /></p>
+<p>但是这样直接的相加太笼统抽象了，可以配合 by 和 without 函数在 sum 的时候，基于某些标签分组，类似 SQL 中的 group by。</p>
+<p>例如，我可以根据请求接口标签分组：这样拿到的就是具体接口的 QPS：</p>
+<pre><code>sum(rate(demo_api_request_duration_seconds_count{job=&quot;demo&quot;, method=&quot;GET&quot;, status=&quot;200&quot;}[5m])) by(path)
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_35.jpeg" title="Body image" /></p>
+<p><strong>也可以不根据接口路径分组：通过 without 指定</strong>：</p>
+<pre><code>sum(rate(demo_api_request_duration_seconds_count{job=&quot;demo&quot;, method=&quot;GET&quot;, status=&quot;200&quot;}[5m])) without(path)
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_36.jpeg" title="Body image" /></p>
+<p>可以通过 <code>histogram_quantile</code> 函数做数据统计：<strong>可以用来统计百分位数：第一个参数是百分位，第二个 histogram 指标，这样计算出来的就是中位数，即 P50</strong>。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_37.jpeg" title="Body image" /></p>
+<p>在刚刚写的自定义 exporter 上新增几个 histogram 的样本点：</p>
+<pre><code>MyHistogram.Observe(0.3)
+MyHistogram.Observe(0.4)
+MyHistogram.Observe(0.5)
+</code></pre>
+<p>自定义桶：</p>
+<pre><code>// 定义histogram
+MyHistogram = prometheus.NewHistogram(prometheus.HistogramOpts{
+  Name: &quot;my_histogram_bucket&quot;,
+  Help: &quot;自定义histogram&quot;,
+  Buckets: []float64{0.1,0.2,0.3,0.4,0.5},  // 需要指定桶
+})
+</code></pre>
+<p>上报数据：</p>
+<pre><code>MyHistogram.Observe(0.1)
+MyHistogram.Observe(0.3)
+MyHistogram.Observe(0.4)
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_38.jpeg" title="Body image" /></p>
+<p>重新计算 P50，P99：</p>
+<pre><code>histogram_quantile(0.5,my_histogram_bucket_bucket)
+</code></pre>
+<pre><code>histogram_quantile(0.99,my_histogram_bucket_bucket)
+</code></pre>
+<p>桶设置的越合理，计算的误差越小。</p>
+<h2 id="6-grafana"><strong>6 Grafana 可视化</strong></h2>
+<p>除了可以利用 Prometheus 提供的 webUI 可视化我们的指标外，还可以接入 Grafana 来做指标的可视化。</p>
+<ul>
+<li>第一步，对接数据源： 配置好 prometheus 的地址</li>
+<li>第二步，创建仪表盘：<ul>
+<li>编辑仪表盘</li>
+<li>在 Metrics 处编写 PromQL 即可完成查询和可视化</li>
+<li>仪表盘编辑完后，可以导出对应的 json 文件，方便下次导入同样的仪表盘：</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_39.jpeg" title="Body image" /></p>
+<h2 id="7"><strong>7 监控告警</strong></h2>
+<p>AlertManager 是 Prometheus 提供的告警信息下发组件，包含了对告警信息的分组，下发，静默等策略。配置完成后可以在 WebUI 上看到对应的告警策略信息。告警规则也是基于 PromQL 进行定制的。</p>
+<p>编写告警配置：<strong>当 <code>Http_srv</code> 这个服务挂了，Prometheus 采集不到指标，并且持续时间 1 分钟，就会触发告警</strong>。</p>
+<pre><code>groups:
+\- name: simulator-alert-rule
+ rules:
+ \- alert: HttpSimulatorDown
+  expr: sum(up{job=&quot;http_srv&quot;}) == 0
+  for: 1m
+  labels:
+   severity: critical
+</code></pre>
+<p>在 <code>prometheus.yml</code> 中配置告警配置文件，需要配置上 Alertmanager 的地址和告警文件的地址。</p>
+<pre><code>\# Alertmanager configuration
+alerting:
+ alertmanagers:
+ \- static_configs:
+  \- targets: ['localhost:9093']
+\# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  \- &quot;alert_rules.yml&quot;
+  \#- &quot;first_rules.yml&quot;
+</code></pre>
+<p>配置告警信息，例如告警发送地址，告警内容模版，分组策略等都在 Alertmanager 的配置文件中配置：</p>
+<pre><code>global:
+ smtp_smarthost: 'smtp.qq.com:465'
+ smtp_from: 'xxxx@qq.com'
+ smtp_auth_username: 'xxxx@qq.com'
+ smtp_auth_password: 'xxxx'
+ smtp_require_tls: false
+
+route:
+ group_interval: 1m
+ repeat_interval: 1m
+ receiver: 'mail-receiver'
+
+
+# group_by       //采用哪个标签作为分组
+# group_wait      //分组等待的时间，收到报警不是立马发送出去，而是等待一段时间，看看同一组中是否有其他报警，如果有一并发送
+# group_interval    //告警时间间隔
+# repeat_interval   //重复告警时间间隔，可以减少发送告警的频率
+# receiver       //接收者是谁
+# routes        //子路由配置
+
+receivers:
+\- name: 'mail-receiver'
+ email_configs:
+  \- to: 'xxxx@qq.com'
+</code></pre>
+<p>当我 kill 进程：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_40.jpeg" title="Body image" /></p>
+<p>Prometheus 已经触发告警：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_41.jpeg" title="Body image" /></p>
+<p>在等待 1 分钟，如果持续还是符合告警策略，则状态为从 pending 变为 FIRING 会发送邮件到我的邮箱。</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_42.jpeg" title="Body image" /></p>
+<p>此时我的邮箱收到了一条告警消息：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_43.jpeg" title="Body image" /></p>
+<p>Alertmanager 也支持对告警进行静默，在 Alertmanager 的 WebUI 中配置即可：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_44.jpeg" title="Body image" /></p>
+<p>间隔了 4 分钟，没有收到告警，静默生效：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_45.jpeg" title="Body image" /></p>
+<p>一个小时没有收到告警信息：</p>
+<p><img alt="Alt Image Text" src="../../images/chap1_1_46.jpeg" title="Body image" /></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      
+        
+        <a href="../57prometheus_best_practice/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 第零节 Promethues 应用监控的一些实践" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              第零节 Promethues 应用监控的一些实践
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../18Adv_Prometheus_index_classfication/" class="md-footer__link md-footer__link--next" aria-label="下一页: 第二节 深入Prometheus设计-指标定义与分类(PromQL)" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              第二节 深入Prometheus设计-指标定义与分类(PromQL)
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\uff0c\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.39f04ddb.min.js"></script>
+      
+    
+  </body>
+</html>

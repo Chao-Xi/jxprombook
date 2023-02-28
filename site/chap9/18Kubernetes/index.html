@@ -1,0 +1,2787 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Prometheus 技术实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.5.2">
+    
+    
+      
+        <title>1 Kubernetes : kube-state-metrics - Jacob Prometheus Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.9f9400aa.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#ffa724">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="orange" data-md-color-accent="orange">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-kubernetes-kube-state-metrics" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob Prometheus Book" class="md-header__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob Prometheus Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1 Kubernetes : kube-state-metrics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob Prometheus Book" class="md-nav__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob Prometheus Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Prometheus技术介绍,K8S Metrics介绍&查看
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus技术介绍,K8S Metrics介绍&查看" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus技术介绍,K8S Metrics介绍&查看
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/57prometheus_best_practice/" class="md-nav__link">
+        第零节 Promethues 应用监控的一些实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1prometheus2022/" class="md-nav__link">
+        第一节 Prometheus 系统介绍 2022
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/18Adv_Prometheus_index_classfication/" class="md-nav__link">
+        第二节 深入Prometheus设计-指标定义与分类(PromQL)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/k8s_adv39_kube_state_metrics/" class="md-nav__link">
+        第三节 kube-state-metrics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/17Adv_K8S_Metrics_Server/" class="md-nav__link">
+        第四节 Metrics Server 安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/20Install_metrics_server_SAP_CC/" class="md-nav__link">
+        第五节 Install Kubernetes Metrics Server on SAP Converged Cloud
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/38k8s_hpa_metricsserver/" class="md-nav__link">
+        第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/55prometheus_go_metrics/" class="md-nav__link">
+        第七节 为Go应用添加Prometheus监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/37kubectl_top/" class="md-nav__link">
+        第八节 从kubectl top看K8S监控原理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/9kube-state-metrics_crd/" class="md-nav__link">
+        第九节 通过 kube-state-metrics 添加 CRD 状态指标
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Prometheus on Linux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus on Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus on Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/19centos7_Prometheus_Alertmanager_Grafana/" class="md-nav__link">
+        第一节 Centos7 Prometheus安装部署+监控+绘图+告警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/59node_exporter/" class="md-nav__link">
+        第二节 使用Node Exporter监控Linux主机&常用监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/36Prometheus_Mysql/" class="md-nav__link">
+        第三节 基于Prometheus构建MySQL可视化监控平台
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4mysql_exporter/" class="md-nav__link">
+        第四节 官方 mysqld_exporter支持抓取多MySQL实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/5prom_grafana_chatops/" class="md-nav__link">
+        第五节 使用 Grafana、Prometheus 和 Slack 构建一个简单的 ChatOps 机器人
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          手动部署Kubernetes Prometheus
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="手动部署Kubernetes Prometheus" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          手动部署Kubernetes Prometheus
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1prometheus_setup/" class="md-nav__link">
+        第一节 Kubernetes使用Prometheus搭建监控平台(2018)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2prometheus_AlertManager/" class="md-nav__link">
+        第二节 Prometheus报警 && AlertManager实战（2018）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3changes_on_Grafana/" class="md-nav__link">
+        第三节 Grafana 显示参数设置(2018)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4Adv_Prometheus_setup/" class="md-nav__link">
+        第四节 在 Kubernetes 中手动部署 Prometheus (adv)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5Adv_Prometheus_monitor/" class="md-nav__link">
+        第五节 应用监控（Metrics/Exporter的配置）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6Adv_K8S_Nodes_monitor/" class="md-nav__link">
+        第六节 监控K8S集群节点&Node-exporter DaemonSet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7Adv_K8S_Resource_monitor/" class="md-nav__link">
+        第七节 监控常用资源对象（容器/apiserver/Service监控/kube-state-metric）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8Adv_K8S_Grafana/" class="md-nav__link">
+        第八节 Grafana 在 Kubernetes 中的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/10Adv_k8s_AlertManger/" class="md-nav__link">
+        第九节 报警神器 AlertManager 的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/16Adv_Prometheus_Del_index/" class="md-nav__link">
+        第十节 Prometheus 删除数据指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/50PrometheusAlert/" class="md-nav__link">
+        第十一节 Prometheus中使用PrometheusAlert进行聚合报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/12gpu_monitor/" class="md-nav__link">
+        第十二节 监控Kubernetes集群的GPU资源
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/29AlertManager_SendAlerts_when/" class="md-nav__link">
+        第十三节 AlertManager何时报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/41Prometheus_Monitor_OutCluster/" class="md-nav__link">
+        第十四节 Prometheus监控外部Kubernetes集群
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          玩转Prometheus Operator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="玩转Prometheus Operator" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          玩转Prometheus Operator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11Adv_Prometheus_Operator/" class="md-nav__link">
+        第一节 Prometheus Operator 初体验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/13Adv_Prometheus_Operator_etcd/" class="md-nav__link">
+        第二节 使用 Prometheus Operator 监控 etcd
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/14Adv_Prometheus_Operator_alarm/" class="md-nav__link">
+        第三节 Prometheus Operator 自定义报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/22Customize_Alert_Email/" class="md-nav__link">
+        第四节 Add Custom Alert and Send Alert Email with Alertmanager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/24Kubernetes_Prometheus_blackbox/" class="md-nav__link">
+        第五节 Prometheus 黑盒监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/32Prometheus_troubleshoot_Servicemonitor/" class="md-nav__link">
+        第六节 Troubleshooting ServiceMonitor changes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/43Prometheus_operator_ssl_exporter/" class="md-nav__link">
+        第七节 使用ssl_exporter监控K8S集群证书
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/44Prometheus_KubeNurse/" class="md-nav__link">
+        第八节 Operator2021-使用KubeNurse进行集群网络监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/45Prom-operator_2021/" class="md-nav__link">
+        第九节 Prometheus Operator安装配置(2021)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/46Prometheus_traefik/" class="md-nav__link">
+        第十节 Traefik之使用Prometheus Operator进行监控报警2021
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/47Prometheus_opt_AlertmanagerConfig/" class="md-nav__link">
+        第十一节 Operator使用AlertmanagerConfig进行报警配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/49Prometheus_SLI_SLO/" class="md-nav__link">
+        第十二节 通过Prometheus来做SLI/SLO监控展示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/51missing-container-metrics/" class="md-nav__link">
+        第十三节 Prometheus使用missing-container-metrics监控Pod oomkill
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/chap4_blackbox/" class="md-nav__link">
+        第十四节 如何在Prometheus中进行黑盒监控(ICMP/DNS/TCP/HTTP/gRPC)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Prometheus服务发现
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus服务发现" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus服务发现
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/53Prometheus_auto_discovery/" class="md-nav__link">
+        第一节 Prometheus服务的自动发现使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/52Prometheus_Relabeling/" class="md-nav__link">
+        第二节 Prometheus Relabeling重新标记的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/54prometheus_go_metrics_guideline/" class="md-nav__link">
+        第三节 如何使用Prometheus仪表化应用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Jam prometheus Monitor
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Jam prometheus Monitor" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Jam prometheus Monitor
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/25Alertmanager_AWS_SES/" class="md-nav__link">
+        Chap1 Alertmanager alerts with Amazon SES SMTP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/26Prometheus_Monitor_Argocd/" class="md-nav__link">
+        Chap2 Prometheus Operator Monitor on ArgoCD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/27Prometheus_Monitor_elasticsearch/" class="md-nav__link">
+        Chap3 Prometheus Operator Monitor on ElasticSearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/31Prometheus_Monitor_rabbitmq/" class="md-nav__link">
+        Chap4 Prometheus Operator Monitor on Rabbitmq
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/33Prometheus_Monitor_memcached/" class="md-nav__link">
+        Chap5 Prometheus Operator Monitor on Memcached
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Prometheus-Adapter
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus-Adapter" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus-Adapter
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/23Kubernetes_Scale_Prometheus-Adapter/" class="md-nav__link">
+        应用进行自定义指标扩缩容 by Prometheus-Adapter and Flask-Exporter
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          PromQL学习
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="PromQL学习" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          PromQL学习
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1Promql_basic1/" class="md-nav__link">
+        1 初识 PromQL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2Promql_basic2/" class="md-nav__link">
+        2 PromQL 操作符 & 内置函数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3Promql_basic3/" class="md-nav__link">
+        3 PromQL 内置函数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/4Promql_basic4/" class="md-nav__link">
+        4 PromQL简单示例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/5Promql_basic5/" class="md-nav__link">
+        5 在 HTTP API中使用 PromQL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/6Promql_adv1/" class="md-nav__link">
+        6 Prometheus记录规则的使用(Recording Rule)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/56prometheus_promql_rate/" class="md-nav__link">
+        7 PromQL查询之rate函数的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/60prometheus_job/" class="md-nav__link">
+        8 解决Prometheus监控Kubernetes Job误报的坑
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/9promql_6errors/" class="md-nav__link">
+        9 使用 Prometheus PromQL时需要避免这6个错误
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Awesome alerts rules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Awesome alerts rules" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Awesome alerts rules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1basic_resource/" class="md-nav__link">
+        1 Basic resource monitoring
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2database_broker/" class="md-nav__link">
+        2 Databases and brokers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3proxy_lb/" class="md-nav__link">
+        3 Reverse proxies and load balancers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4runtimes/" class="md-nav__link">
+        4 Runtimes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5Orchestrators/" class="md-nav__link">
+        5 Orchestrators
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6network_sec_storage/" class="md-nav__link">
+        6 Network, security and storage
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7other/" class="md-nav__link">
+        7 Others
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8Alerting_sleep/" class="md-nav__link">
+        8 Alert Sleep Peacefully
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11">
+          数据可视化&Grafana Plugin
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="数据可视化&Grafana Plugin" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          数据可视化&Grafana Plugin
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/58grafana_init/" class="md-nav__link">
+        1 使用 Grafana 构建你的第一个仪表盘
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/28Grafana_plugin_DevOpsProdigy/" class="md-nav__link">
+        2 优秀的Grafana K8S 插件-DevOpsProdigy KubeGraf
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/30Create_Grafana_dashboards/" class="md-nav__link">
+        3 用 Kubernetes darks资源对象创建Grafana Dashboard
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/48grafana_Trickster/" class="md-nav__link">
+        4 Grafana 图表加速神器-Trickster
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/5Grafana_Loki/" class="md-nav__link">
+        5 使用读写分离模式扩展 Grafana Loki
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12">
+          Prometheus(OpenTelemetry)架构设计与工具平台
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus(OpenTelemetry)架构设计与工具平台" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus(OpenTelemetry)架构设计与工具平台
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1deepflow/" class="md-nav__link">
+        1 DeepFlow AutoTagging之Prometheus标签标准化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2Prometheus_opentele/" class="md-nav__link">
+        2 Prometheus与OpenTelemetry该选哪个？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/3Prometheus_index/" class="md-nav__link">
+        3 Prometheus的四种指标类型
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/4OpenTelemetry/" class="md-nav__link">
+        4 透彻理解OpenTelemetry
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13">
+          Thanos
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Thanos" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Thanos
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/39Thanos_tutorial/" class="md-nav__link">
+        第一节 大规模场景下Prometheus的优化手段&Thanos架构详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/34Thanos_intro/" class="md-nav__link">
+        第二节 使用Thanos实现Prometheus的高可用介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/35Thanos_install/" class="md-nav__link">
+        第三节 Prometheus高可用Thanos学习-sidercar和query&Thanos部署
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/61thanos_sidecar_receiver/" class="md-nav__link">
+        第四节（2022）如何选择Thanos的Sidecar和Receiver两种模式？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/62thanos_query/" class="md-nav__link">
+        第五节（2022）使用Thanos查询前端优化查询性能
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/63prometheus_optimiztion/" class="md-nav__link">
+        第六节 (Thaos1-2022)大规模场景下Prometheus的优化手段
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/64thanos_detail/" class="md-nav__link">
+        第七节 (Thaos2-2022)Thanos架构详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/65thanos_setup/" class="md-nav__link">
+        第八节 (Thaos3-2022)Thanos部署与实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/66thanos_ruler/" class="md-nav__link">
+        第九节（2022）Thanos Ruler组件的使用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_14" type="checkbox" id="__nav_14" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14">
+          VictoriaMetrics
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="VictoriaMetrics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          VictoriaMetrics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/67vm_intro/" class="md-nav__link">
+        第一节 Prometheus远程存储VictoriaMetrics简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/68vm_setup/" class="md-nav__link">
+        第二节 Prometheus长期远程存储方案VictoriaMetrics入门实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/69vm_cluster/" class="md-nav__link">
+        第三节 VictorialMetrics 集群模式的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/70vm_vmagent/" class="md-nav__link">
+        第四节 使用vmagent代替Prometheus采集监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/71vm_operator/" class="md-nav__link">
+        第五节 使用Victoria Metrics Operator管理VM集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/72vm_vmalert/" class="md-nav__link">
+        第六节 使用 vmalert 代替 Prometheus 监控报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/73vm_pressure/" class="md-nav__link">
+        第七节 对Prometheus兼容的时序数据库进行压力测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15">
+          APM 工具及功能介绍
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="APM 工具及功能介绍" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          APM 工具及功能介绍
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/1apm_prods/" class="md-nav__link">
+        第一节 APM产品落地实战
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/2opentracing/" class="md-nav__link">
+        第二节 APM + OpenTracing原理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/3apm_tracing/" class="md-nav__link">
+        第三节 怎么理解分布式链路追踪技术？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/4apm_prod/" class="md-nav__link">
+        第四节 在生产环境中如何选择靠谱的APM系统？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/5apm_Sentry/" class="md-nav__link">
+        第五节 Sentry+OpenTelemetry前后端全链路打通
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/6k8s_watching/" class="md-nav__link">
+        第六节 聊聊可观测性之数据模型
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-kubernetes-node-ready" class="md-nav__link">
+    1. Kubernetes Node ready
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-kubernetes-memorypressure" class="md-nav__link">
+    2. Kubernetes MemoryPressure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-kubernetes-diskpressure" class="md-nav__link">
+    3. Kubernetes DiskPressure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kubernetes-outofdisk" class="md-nav__link">
+    4. Kubernetes OutOfDisk
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-kubernetes-out-of-capacity" class="md-nav__link">
+    5. Kubernetes out of capacity
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-kubernetes-container-oom-killer" class="md-nav__link">
+    6. Kubernetes container oom killer
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-kubernetes-job-failed" class="md-nav__link">
+    7. Kubernetes Job failed
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-kubernetes-cronjob-suspended" class="md-nav__link">
+    8. Kubernetes CronJob suspended
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-kubernetes-persistentvolumeclaim-pending" class="md-nav__link">
+    9. Kubernetes PersistentVolumeClaim pending
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-volume-out-of-disk-space" class="md-nav__link">
+    10. Volume out of disk space
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-volume-full-in-four-days" class="md-nav__link">
+    11. Volume full in four days
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-kubernetes-persistentvolume-error" class="md-nav__link">
+    12. Kubernetes PersistentVolume error
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-statefulset-down" class="md-nav__link">
+    13. StatefulSet down
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-kubernetes-hpa-scaling-ability" class="md-nav__link">
+    14. Kubernetes HPA scaling ability
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-kubernetes-hpa-metric-availability" class="md-nav__link">
+    15. Kubernetes HPA metric availability
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-kubernetes-hpa-scale-capability" class="md-nav__link">
+    16. Kubernetes HPA scale capability
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-kubernetes-pod-not-healthy" class="md-nav__link">
+    17. Kubernetes Pod not healthy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-kubernetes-pod-crash-looping" class="md-nav__link">
+    18. Kubernetes pod crash looping
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-kubernetes-replicasset-mismatch" class="md-nav__link">
+    19. Kubernetes ReplicasSet mismatch
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20-kubernetes-deployment-replicas-mismatch" class="md-nav__link">
+    20. Kubernetes Deployment replicas mismatch
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21-kubernetes-statefulset-replicas-mismatch" class="md-nav__link">
+    21. Kubernetes StatefulSet replicas mismatch
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-kubernetes-deployment-generation-mismatch" class="md-nav__link">
+    22. Kubernetes Deployment generation mismatch
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-kubernetes-statefulset-generation-mismatch" class="md-nav__link">
+    23. Kubernetes StatefulSet generation mismatch
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-kubernetes-statefulset-update-not-rolled-out" class="md-nav__link">
+    24. Kubernetes StatefulSet update not rolled out
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#25-kubernetes-daemonset-rollout-stuck" class="md-nav__link">
+    25. Kubernetes DaemonSet rollout stuck
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26-kubernetes-daemonset-misscheduled" class="md-nav__link">
+    26. Kubernetes DaemonSet misscheduled
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27-kubernetes-cronjob-too-long" class="md-nav__link">
+    27. Kubernetes CronJob too long
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#28-kubernetes-job-slow-completion" class="md-nav__link">
+    28. Kubernetes job slow completion
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#29-kubernetes-api-server-errors" class="md-nav__link">
+    29. Kubernetes API server errors
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#30-kubernetes-api-client-errors" class="md-nav__link">
+    30. Kubernetes API client errors
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#31-kubernetes-client-certificate-expires-next-week" class="md-nav__link">
+    31. Kubernetes client certificate expires next week
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-kubernetes-client-certificate-expires-soon" class="md-nav__link">
+    32. Kubernetes client certificate expires soon
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33-kubernetes-api-server-latency" class="md-nav__link">
+    33. Kubernetes API server latency
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/Chao-Xi/jxprombook.git/edit/master/docs/chap9/18Kubernetes.md" title="编辑此页" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="1-kubernetes-kube-state-metrics">1 Kubernetes : kube-state-metrics</h1>
+<p><a href="https://github.com/kubernetes/kube-state-metrics/tree/master/docs">kube-state-metrics</a></p>
+<h3 id="1-kubernetes-node-ready"><strong>1. Kubernetes Node ready</strong></h3>
+<p>Node <code>{{ $labels.node }}</code> has been unready for a long time</p>
+<pre><code>  - alert: KubernetesNodeReady
+    expr: kube_node_status_condition{condition=&quot;Ready&quot;,status=&quot;true&quot;} == 0
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      summary: Kubernetes Node ready (instance {{ $labels.instance }})
+      description: &quot;Node {{ $labels.node }} has been unready for a long time\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="2-kubernetes-memorypressure"><strong>2. Kubernetes MemoryPressure</strong></h3>
+<p><strong><code>{{ $labels.node }}</code> has MemoryPressure condition</strong></p>
+<pre><code>- alert: KubernetesMemorypressure
+  expr: kube_node_status_condition{condition=&quot;MemoryPressure&quot;,status=&quot;true&quot;} == 1
+  for: 5m
+  labels:
+    severity: error
+  annotations:
+    summary: &quot;Kubernetes MemoryPressure (instance {{ $labels.instance }})&quot;
+    description: &quot;{{ $labels.node }} has MemoryPressure condition\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}&quot;
+</code></pre>
+<h3 id="3-kubernetes-diskpressure"><strong>3. Kubernetes DiskPressure</strong></h3>
+<p><strong><code>{{ $labels.node }}</code> has DiskPressure condition</strong></p>
+<pre><code>- alert: KubernetesDiskpressure
+  expr: kube_node_status_condition{condition=&quot;DiskPressure&quot;,status=&quot;true&quot;} == 1
+  for: 5m
+  labels:
+    severity: error
+  annotations:
+    summary: &quot;Kubernetes DiskPressure (instance {{ $labels.instance }})&quot;
+    description: &quot;{{ $labels.node }} has DiskPressure condition\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}&quot;
+</code></pre>
+<h3 id="4-kubernetes-outofdisk"><strong>4. Kubernetes OutOfDisk</strong></h3>
+<p><strong><code>{{ $labels.node }}</code> has OutOfDisk condition</strong></p>
+<pre><code>- alert: KubernetesOutofdisk
+  expr: kube_node_status_condition{condition=&quot;OutOfDisk&quot;,status=&quot;true&quot;} == 1
+  for: 5m
+  labels:
+    severity: error
+  annotations:
+    summary: &quot;Kubernetes OutOfDisk (instance {{ $labels.instance }})&quot;
+    description: &quot;{{ $labels.node }} has OutOfDisk condition\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}&quot;
+</code></pre>
+<h3 id="5-kubernetes-out-of-capacity"><strong>5. Kubernetes out of capacity</strong></h3>
+<p><strong><code>{{ $labels.node }}</code> is out of capacity</strong></p>
+<pre><code>  - alert: KubernetesOutOfCapacity
+    expr: sum by (node) ((kube_pod_status_phase{phase=&quot;Running&quot;} == 1) + on(uid) group_left(node) (0 * kube_pod_info{pod_template_hash=&quot;&quot;})) / sum by (node) (kube_node_status_allocatable{resource=&quot;pods&quot;}) * 100 &gt; 90
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes out of capacity (instance {{ $labels.instance }})
+      description: &quot;{{ $labels.node }} is out of capacity\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="6-kubernetes-container-oom-killer"><strong>6. Kubernetes container oom killer</strong></h3>
+<p><strong>Container <code>{{ $labels.container }}</code> in pod <code>{{ $labels.namespace }}/{{ $labels.pod }}</code> has been OOMKilled <code>{{ $value }}</code> times in the last 10 minutes.</strong></p>
+<pre><code>  - alert: KubernetesContainerOomKiller
+    expr: (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m &gt;= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason=&quot;OOMKilled&quot;}[10m]) == 1
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes container oom killer (instance {{ $labels.instance }})
+      description: &quot;Container {{ $labels.container }} in pod {{ $labels.namespace }}/{{ $labels.pod }} has been OOMKilled {{ $value }} times in the last 10 minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="7-kubernetes-job-failed"><strong>7. Kubernetes Job failed</strong></h3>
+<p><strong>Job <code>{{$labels.namespace}}/{{$labels.exported_job}}</code> failed to complete</strong></p>
+<pre><code>- alert: KubernetesJobFailed
+  expr: kube_job_status_failed &gt; 0
+  for: 5m
+  labels:
+    severity: warning
+  annotations:
+    summary: &quot;Kubernetes Job failed (instance {{ $labels.instance }})&quot;
+    description: &quot;Job {{$labels.namespace}}/{{$labels.exported_job}} failed to complete\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}&quot;
+</code></pre>
+<h3 id="8-kubernetes-cronjob-suspended"><strong>8. Kubernetes CronJob suspended</strong></h3>
+<p><strong>CronJob <code>{{ $labels.namespace }}/{{ $labels.cronjob }}</code> is suspended</strong></p>
+<pre><code>- alert: KubernetesCronjobSuspended
+  expr: kube_cronjob_spec_suspend != 0
+  for: 5m
+  labels:
+    severity: info
+  annotations:
+    summary: &quot;Kubernetes CronJob suspended (instance {{ $labels.instance }})&quot;
+    description: &quot;CronJob {{ $labels.namespace }}/{{ $labels.cronjob }} is suspended\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}&quot;
+</code></pre>
+<h3 id="9-kubernetes-persistentvolumeclaim-pending"><strong>9. Kubernetes PersistentVolumeClaim pending</strong></h3>
+<p><strong>PersistentVolumeClaim <code>{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }}</code> is pending</strong></p>
+<pre><code>- alert: KubernetesPersistentvolumeclaimPending
+  expr: kube_persistentvolumeclaim_status_phase{phase=&quot;Pending&quot;} == 1
+  for: 5m
+  labels:
+    severity: warning
+  annotations:
+    summary: &quot;Kubernetes PersistentVolumeClaim pending (instance {{ $labels.instance }})&quot;
+    description: &quot;PersistentVolumeClaim {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is pending\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}&quot;
+</code></pre>
+<h3 id="10-volume-out-of-disk-space"><strong>10. Volume out of disk space</strong></h3>
+<p><strong>Volume is almost full (&lt; 10% left)</strong></p>
+<pre><code>- alert: VolumeOutOfDiskSpace
+  expr: kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes * 100 &lt; 10
+  for: 5m
+  labels:
+    severity: warning
+  annotations:
+    summary: &quot;Volume out of disk space (instance {{ $labels.instance }})&quot;
+    description: &quot;Volume is almost full (&lt; 10% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}&quot;
+</code></pre>
+<h3 id="11-volume-full-in-four-days"><strong>11. Volume full in four days</strong></h3>
+<p><strong><code>{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }}</code> is expected to fill up within four days. Currently <code>{{ $value | humanize }}%</code> is available.</strong></p>
+<pre><code>- alert: VolumeFullInFourDays
+  expr: 100 * (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes) &lt; 15 and predict_linear(kubelet_volume_stats_available_bytes[6h], 4 * 24 * 3600) &lt; 0
+  for: 5m
+  labels:
+    severity: error
+  annotations:
+    summary: &quot;Volume full in four days (instance {{ $labels.instance }})&quot;
+    description: &quot;{{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is expected to fill up within four days. Currently {{ $value | humanize }}% is available.\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}&quot;
+</code></pre>
+<h3 id="12-kubernetes-persistentvolume-error"><strong>12. Kubernetes PersistentVolume error</strong></h3>
+<p><strong>Persistent volume is in bad state</strong></p>
+<pre><code>  - alert: KubernetesPersistentvolumeError
+    expr: kube_persistentvolume_status_phase{phase=~&quot;Failed|Pending&quot;, job=&quot;kube-state-metrics&quot;} &gt; 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: Kubernetes PersistentVolume error (instance {{ $labels.instance }})
+      description: &quot;Persistent volume is in bad state\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="13-statefulset-down"><strong>13. StatefulSet down</strong></h3>
+<p><strong>A StatefulSet went down</strong></p>
+<pre><code>- alert: StatefulsetDown
+  expr: (kube_statefulset_status_replicas_ready / kube_statefulset_status_replicas_current) != 1
+  for: 5m
+  labels:
+    severity: error
+  annotations:
+    summary: &quot;StatefulSet down (instance {{ $labels.instance }})&quot;
+    description: &quot;A StatefulSet went down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}&quot;
+</code></pre>
+<h3 id="14-kubernetes-hpa-scaling-ability"><strong>14. Kubernetes HPA scaling ability</strong></h3>
+<p><strong>Pod is unable to scale</strong></p>
+<pre><code>  - alert: KubernetesHpaScalingAbility
+    expr: kube_horizontalpodautoscaler_status_condition{status=&quot;false&quot;, condition=&quot;AbleToScale&quot;} == 1
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes HPA scaling ability (instance {{ $labels.instance }})
+      description: &quot;Pod is unable to scale\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="15-kubernetes-hpa-metric-availability"><strong>15. Kubernetes HPA metric availability</strong></h3>
+<p><strong>HPA is not able to collect metrics</strong></p>
+<pre><code>  - alert: KubernetesHpaMetricAvailability
+    expr: kube_horizontalpodautoscaler_status_condition{status=&quot;false&quot;, condition=&quot;ScalingActive&quot;} == 1
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes HPA metric availability (instance {{ $labels.instance }})
+      description: &quot;HPA is not able to collect metrics\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="16-kubernetes-hpa-scale-capability"><strong>16. Kubernetes HPA scale capability</strong></h3>
+<p><strong>The maximum number of desired Pods has been hit</strong></p>
+<pre><code>  - alert: KubernetesHpaScaleCapability
+    expr: kube_horizontalpodautoscaler_status_desired_replicas &gt;= kube_horizontalpodautoscaler_spec_max_replicas
+    for: 2m
+    labels:
+      severity: info
+    annotations:
+      summary: Kubernetes HPA scale capability (instance {{ $labels.instance }})
+      description: &quot;The maximum number of desired Pods has been hit\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="17-kubernetes-pod-not-healthy"><strong>17. Kubernetes Pod not healthy</strong></h3>
+<p><strong>Pod has been in a non-ready state for longer than 15 minutes.</strong></p>
+<pre><code>  - alert: KubernetesPodNotHealthy
+    expr: min_over_time(sum by (namespace, pod) (kube_pod_status_phase{phase=~&quot;Pending|Unknown|Failed&quot;})[15m:1m]) &gt; 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: Kubernetes Pod not healthy (instance {{ $labels.instance }})
+      description: &quot;Pod has been in a non-ready state for longer than 15 minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="18-kubernetes-pod-crash-looping"><strong>18. Kubernetes pod crash looping</strong></h3>
+<p><strong>Pod <code>{{ $labels.pod }}</code> is crash looping</strong></p>
+<pre><code>  - alert: KubernetesPodCrashLooping
+    expr: increase(kube_pod_container_status_restarts_total[1m]) &gt; 3
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes pod crash looping (instance {{ $labels.instance }})
+      description: &quot;Pod {{ $labels.pod }} is crash looping\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="19-kubernetes-replicasset-mismatch"><strong>19. Kubernetes ReplicasSet mismatch</strong></h3>
+<p><strong>Deployment Replicas mismatch</strong></p>
+<pre><code>  - alert: KubernetesReplicassetMismatch
+    expr: kube_replicaset_spec_replicas != kube_replicaset_status_ready_replicas
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes ReplicasSet mismatch (instance {{ $labels.instance }})
+      description: &quot;Deployment Replicas mismatch\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="20-kubernetes-deployment-replicas-mismatch"><strong>20. Kubernetes Deployment replicas mismatch</strong></h3>
+<p><strong>Deployment Replicas mismatch</strong></p>
+<pre><code>  - alert: KubernetesDeploymentReplicasMismatch
+    expr: kube_deployment_spec_replicas != kube_deployment_status_replicas_available
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes Deployment replicas mismatch (instance {{ $labels.instance }})
+      description: &quot;Deployment Replicas mismatch\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="21-kubernetes-statefulset-replicas-mismatch"><strong>21. Kubernetes StatefulSet replicas mismatch</strong></h3>
+<p><strong>A StatefulSet does not match the expected number of replicas.</strong></p>
+<pre><code>  - alert: KubernetesStatefulsetReplicasMismatch
+    expr: kube_statefulset_status_replicas_ready != kube_statefulset_status_replicas
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes StatefulSet replicas mismatch (instance {{ $labels.instance }})
+      description: &quot;A StatefulSet does not match the expected number of replicas.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="22-kubernetes-deployment-generation-mismatch"><strong>22. Kubernetes Deployment generation mismatch</strong></h3>
+<p><strong>A Deployment has failed but has not been rolled back.</strong></p>
+<pre><code>  - alert: KubernetesDeploymentGenerationMismatch
+    expr: kube_deployment_status_observed_generation != kube_deployment_metadata_generation
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      summary: Kubernetes Deployment generation mismatch (instance {{ $labels.instance }})
+      description: &quot;A Deployment has failed but has not been rolled back.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="23-kubernetes-statefulset-generation-mismatch"><strong>23. Kubernetes StatefulSet generation mismatch</strong></h3>
+<p><strong>A StatefulSet has failed but has not been rolled back.</strong></p>
+<pre><code>  - alert: KubernetesStatefulsetGenerationMismatch
+    expr: kube_statefulset_status_observed_generation != kube_statefulset_metadata_generation
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      summary: Kubernetes StatefulSet generation mismatch (instance {{ $labels.instance }})
+      description: &quot;A StatefulSet has failed but has not been rolled back.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="24-kubernetes-statefulset-update-not-rolled-out"><strong>24. Kubernetes StatefulSet update not rolled out</strong></h3>
+<p><strong>StatefulSet update has not been rolled out.</strong></p>
+<pre><code>  - alert: KubernetesStatefulsetUpdateNotRolledOut
+    expr: max without (revision) (kube_statefulset_status_current_revision unless kube_statefulset_status_update_revision) * (kube_statefulset_replicas != kube_statefulset_status_replicas_updated)
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes StatefulSet update not rolled out (instance {{ $labels.instance }})
+      description: &quot;StatefulSet update has not been rolled out.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="25-kubernetes-daemonset-rollout-stuck"><strong>25. Kubernetes DaemonSet rollout stuck</strong></h3>
+<p><strong>Some Pods of DaemonSet are not scheduled or not ready</strong></p>
+<pre><code>  - alert: KubernetesDaemonsetRolloutStuck
+    expr: kube_daemonset_status_number_ready / kube_daemonset_status_desired_number_scheduled * 100 &lt; 100 or kube_daemonset_status_desired_number_scheduled - kube_daemonset_status_current_number_scheduled &gt; 0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes DaemonSet rollout stuck (instance {{ $labels.instance }})
+      description: &quot;Some Pods of DaemonSet are not scheduled or not ready\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="26-kubernetes-daemonset-misscheduled"><strong>26. Kubernetes DaemonSet misscheduled</strong></h3>
+<p><strong>Some DaemonSet Pods are running where they are not supposed to run</strong></p>
+<pre><code>  - alert: KubernetesDaemonsetMisscheduled
+    expr: kube_daemonset_status_number_misscheduled &gt; 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: Kubernetes DaemonSet misscheduled (instance {{ $labels.instance }})
+      description: &quot;Some DaemonSet Pods are running where they are not supposed to run\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="27-kubernetes-cronjob-too-long"><strong>27. Kubernetes CronJob too long</strong></h3>
+<p>CronJob <code>{{ $labels.namespace }}/{{ $labels.cronjob }}</code> is taking more than 1h to complete.</p>
+<pre><code>  - alert: KubernetesCronjobTooLong
+    expr: time() - kube_cronjob_next_schedule_time &gt; 3600
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes CronJob too long (instance {{ $labels.instance }})
+      description: &quot;CronJob {{ $labels.namespace }}/{{ $labels.cronjob }} is taking more than 1h to complete.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="28-kubernetes-job-slow-completion"><strong>28. Kubernetes job slow completion</strong></h3>
+<p>Kubernetes Job <code>{{ $labels.namespace }}/{{ $labels.job_name }}</code> did not complete in time.</p>
+<pre><code>  - alert: KubernetesJobSlowCompletion
+    expr: kube_job_spec_completions - kube_job_status_succeeded &gt; 0
+    for: 12h
+    labels:
+      severity: critical
+    annotations:
+      summary: Kubernetes job slow completion (instance {{ $labels.instance }})
+      description: &quot;Kubernetes Job {{ $labels.namespace }}/{{ $labels.job_name }} did not complete in time.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="29-kubernetes-api-server-errors"><strong>29. Kubernetes API server errors</strong></h3>
+<p><strong>Kubernetes API server is experiencing high error rate</strong></p>
+<pre><code>  - alert: KubernetesApiServerErrors
+    expr: sum(rate(apiserver_request_total{job=&quot;apiserver&quot;,code=~&quot;^(?:5..)$&quot;}[1m])) / sum(rate(apiserver_request_total{job=&quot;apiserver&quot;}[1m])) * 100 &gt; 3
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: Kubernetes API server errors (instance {{ $labels.instance }})
+      description: &quot;Kubernetes API server is experiencing high error rate\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="30-kubernetes-api-client-errors"><strong>30. Kubernetes API client errors</strong></h3>
+<p><strong>Kubernetes API client is experiencing high error rate</strong></p>
+<pre><code>  - alert: KubernetesApiClientErrors
+    expr: (sum(rate(rest_client_requests_total{code=~&quot;(4|5)..&quot;}[1m])) by (instance, job) / sum(rate(rest_client_requests_total[1m])) by (instance, job)) * 100 &gt; 1
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: Kubernetes API client errors (instance {{ $labels.instance }})
+      description: &quot;Kubernetes API client is experiencing high error rate\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="31-kubernetes-client-certificate-expires-next-week"><strong>31. Kubernetes client certificate expires next week</strong></h3>
+<p><strong>A client certificate used to authenticate to the apiserver is expiring next week.</strong></p>
+<pre><code>  - alert: KubernetesClientCertificateExpiresNextWeek
+    expr: apiserver_client_certificate_expiration_seconds_count{job=&quot;apiserver&quot;} &gt; 0 and histogram_quantile(0.01, sum by (job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job=&quot;apiserver&quot;}[5m]))) &lt; 7*24*60*60
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes client certificate expires next week (instance {{ $labels.instance }})
+      description: &quot;A client certificate used to authenticate to the apiserver is expiring next week.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="32-kubernetes-client-certificate-expires-soon"><strong>32. Kubernetes client certificate expires soon</strong></h3>
+<p><strong>A client certificate used to authenticate to the apiserver is expiring in less than 24.0 hours.</strong></p>
+<pre><code>  - alert: KubernetesClientCertificateExpiresSoon
+    expr: apiserver_client_certificate_expiration_seconds_count{job=&quot;apiserver&quot;} &gt; 0 and histogram_quantile(0.01, sum by (job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job=&quot;apiserver&quot;}[5m]))) &lt; 24*60*60
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: Kubernetes client certificate expires soon (instance {{ $labels.instance }})
+      description: &quot;A client certificate used to authenticate to the apiserver is expiring in less than 24.0 hours.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+<h3 id="33-kubernetes-api-server-latency"><strong>33. Kubernetes API server latency</strong></h3>
+<p><strong>Kubernetes API server has a 99th percentile latency of <code>{{ $value }}</code> seconds for <code>{{ $labels.verb }} {{ $labels.resource }}</code>.</strong></p>
+<pre><code>  - alert: KubernetesApiServerLatency
+    expr: histogram_quantile(0.99, sum(rate(apiserver_request_latencies_bucket{subresource!=&quot;log&quot;,verb!~&quot;^(?:CONNECT|WATCHLIST|WATCH|PROXY)$&quot;} [10m])) WITHOUT (instance, resource)) / 1e+06 &gt; 1
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Kubernetes API server latency (instance {{ $labels.instance }})
+      description: &quot;Kubernetes API server has a 99th percentile latency of {{ $value }} seconds for {{ $labels.verb }} {{ $labels.resource }}.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}&quot;
+</code></pre>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\uff0c\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.39f04ddb.min.js"></script>
+      
+    
+  </body>
+</html>

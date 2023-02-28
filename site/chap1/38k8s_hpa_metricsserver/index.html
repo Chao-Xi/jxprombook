@@ -1,0 +1,3271 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Prometheus 技术实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.5.2">
+    
+    
+      
+        <title>第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater) - Jacob Prometheus Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.9f9400aa.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#ffa724">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="orange" data-md-color-accent="orange">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kubernetes-hpa-metrics-servercpumemadapater" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob Prometheus Book" class="md-header__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob Prometheus Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob Prometheus Book" class="md-nav__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob Prometheus Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Prometheus技术介绍,K8S Metrics介绍&查看
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus技术介绍,K8S Metrics介绍&查看" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus技术介绍,K8S Metrics介绍&查看
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../57prometheus_best_practice/" class="md-nav__link">
+        第零节 Promethues 应用监控的一些实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1prometheus2022/" class="md-nav__link">
+        第一节 Prometheus 系统介绍 2022
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18Adv_Prometheus_index_classfication/" class="md-nav__link">
+        第二节 深入Prometheus设计-指标定义与分类(PromQL)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k8s_adv39_kube_state_metrics/" class="md-nav__link">
+        第三节 kube-state-metrics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17Adv_K8S_Metrics_Server/" class="md-nav__link">
+        第四节 Metrics Server 安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20Install_metrics_server_SAP_CC/" class="md-nav__link">
+        第五节 Install Kubernetes Metrics Server on SAP Converged Cloud
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-metrics-server" class="md-nav__link">
+    1 Metrics Server
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Metrics Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-api" class="md-nav__link">
+    1-1 聚合 API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2" class="md-nav__link">
+    1-2 安装
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-cpu" class="md-nav__link">
+    2 基于 CPU
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3 基于内存
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    4 基于自定义指标
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../55prometheus_go_metrics/" class="md-nav__link">
+        第七节 为Go应用添加Prometheus监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../37kubectl_top/" class="md-nav__link">
+        第八节 从kubectl top看K8S监控原理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9kube-state-metrics_crd/" class="md-nav__link">
+        第九节 通过 kube-state-metrics 添加 CRD 状态指标
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Prometheus on Linux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus on Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus on Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/19centos7_Prometheus_Alertmanager_Grafana/" class="md-nav__link">
+        第一节 Centos7 Prometheus安装部署+监控+绘图+告警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/59node_exporter/" class="md-nav__link">
+        第二节 使用Node Exporter监控Linux主机&常用监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/36Prometheus_Mysql/" class="md-nav__link">
+        第三节 基于Prometheus构建MySQL可视化监控平台
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4mysql_exporter/" class="md-nav__link">
+        第四节 官方 mysqld_exporter支持抓取多MySQL实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/5prom_grafana_chatops/" class="md-nav__link">
+        第五节 使用 Grafana、Prometheus 和 Slack 构建一个简单的 ChatOps 机器人
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          手动部署Kubernetes Prometheus
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="手动部署Kubernetes Prometheus" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          手动部署Kubernetes Prometheus
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1prometheus_setup/" class="md-nav__link">
+        第一节 Kubernetes使用Prometheus搭建监控平台(2018)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2prometheus_AlertManager/" class="md-nav__link">
+        第二节 Prometheus报警 && AlertManager实战（2018）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3changes_on_Grafana/" class="md-nav__link">
+        第三节 Grafana 显示参数设置(2018)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4Adv_Prometheus_setup/" class="md-nav__link">
+        第四节 在 Kubernetes 中手动部署 Prometheus (adv)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5Adv_Prometheus_monitor/" class="md-nav__link">
+        第五节 应用监控（Metrics/Exporter的配置）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6Adv_K8S_Nodes_monitor/" class="md-nav__link">
+        第六节 监控K8S集群节点&Node-exporter DaemonSet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7Adv_K8S_Resource_monitor/" class="md-nav__link">
+        第七节 监控常用资源对象（容器/apiserver/Service监控/kube-state-metric）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8Adv_K8S_Grafana/" class="md-nav__link">
+        第八节 Grafana 在 Kubernetes 中的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/10Adv_k8s_AlertManger/" class="md-nav__link">
+        第九节 报警神器 AlertManager 的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/16Adv_Prometheus_Del_index/" class="md-nav__link">
+        第十节 Prometheus 删除数据指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/50PrometheusAlert/" class="md-nav__link">
+        第十一节 Prometheus中使用PrometheusAlert进行聚合报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/12gpu_monitor/" class="md-nav__link">
+        第十二节 监控Kubernetes集群的GPU资源
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/29AlertManager_SendAlerts_when/" class="md-nav__link">
+        第十三节 AlertManager何时报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/41Prometheus_Monitor_OutCluster/" class="md-nav__link">
+        第十四节 Prometheus监控外部Kubernetes集群
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          玩转Prometheus Operator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="玩转Prometheus Operator" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          玩转Prometheus Operator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11Adv_Prometheus_Operator/" class="md-nav__link">
+        第一节 Prometheus Operator 初体验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/13Adv_Prometheus_Operator_etcd/" class="md-nav__link">
+        第二节 使用 Prometheus Operator 监控 etcd
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/14Adv_Prometheus_Operator_alarm/" class="md-nav__link">
+        第三节 Prometheus Operator 自定义报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/22Customize_Alert_Email/" class="md-nav__link">
+        第四节 Add Custom Alert and Send Alert Email with Alertmanager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/24Kubernetes_Prometheus_blackbox/" class="md-nav__link">
+        第五节 Prometheus 黑盒监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/32Prometheus_troubleshoot_Servicemonitor/" class="md-nav__link">
+        第六节 Troubleshooting ServiceMonitor changes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/43Prometheus_operator_ssl_exporter/" class="md-nav__link">
+        第七节 使用ssl_exporter监控K8S集群证书
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/44Prometheus_KubeNurse/" class="md-nav__link">
+        第八节 Operator2021-使用KubeNurse进行集群网络监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/45Prom-operator_2021/" class="md-nav__link">
+        第九节 Prometheus Operator安装配置(2021)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/46Prometheus_traefik/" class="md-nav__link">
+        第十节 Traefik之使用Prometheus Operator进行监控报警2021
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/47Prometheus_opt_AlertmanagerConfig/" class="md-nav__link">
+        第十一节 Operator使用AlertmanagerConfig进行报警配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/49Prometheus_SLI_SLO/" class="md-nav__link">
+        第十二节 通过Prometheus来做SLI/SLO监控展示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/51missing-container-metrics/" class="md-nav__link">
+        第十三节 Prometheus使用missing-container-metrics监控Pod oomkill
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/chap4_blackbox/" class="md-nav__link">
+        第十四节 如何在Prometheus中进行黑盒监控(ICMP/DNS/TCP/HTTP/gRPC)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Prometheus服务发现
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus服务发现" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus服务发现
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/53Prometheus_auto_discovery/" class="md-nav__link">
+        第一节 Prometheus服务的自动发现使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/52Prometheus_Relabeling/" class="md-nav__link">
+        第二节 Prometheus Relabeling重新标记的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/54prometheus_go_metrics_guideline/" class="md-nav__link">
+        第三节 如何使用Prometheus仪表化应用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Jam prometheus Monitor
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Jam prometheus Monitor" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Jam prometheus Monitor
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/25Alertmanager_AWS_SES/" class="md-nav__link">
+        Chap1 Alertmanager alerts with Amazon SES SMTP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/26Prometheus_Monitor_Argocd/" class="md-nav__link">
+        Chap2 Prometheus Operator Monitor on ArgoCD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/27Prometheus_Monitor_elasticsearch/" class="md-nav__link">
+        Chap3 Prometheus Operator Monitor on ElasticSearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/31Prometheus_Monitor_rabbitmq/" class="md-nav__link">
+        Chap4 Prometheus Operator Monitor on Rabbitmq
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/33Prometheus_Monitor_memcached/" class="md-nav__link">
+        Chap5 Prometheus Operator Monitor on Memcached
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Prometheus-Adapter
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus-Adapter" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus-Adapter
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/23Kubernetes_Scale_Prometheus-Adapter/" class="md-nav__link">
+        应用进行自定义指标扩缩容 by Prometheus-Adapter and Flask-Exporter
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          PromQL学习
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="PromQL学习" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          PromQL学习
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1Promql_basic1/" class="md-nav__link">
+        1 初识 PromQL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2Promql_basic2/" class="md-nav__link">
+        2 PromQL 操作符 & 内置函数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3Promql_basic3/" class="md-nav__link">
+        3 PromQL 内置函数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/4Promql_basic4/" class="md-nav__link">
+        4 PromQL简单示例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/5Promql_basic5/" class="md-nav__link">
+        5 在 HTTP API中使用 PromQL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/6Promql_adv1/" class="md-nav__link">
+        6 Prometheus记录规则的使用(Recording Rule)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/56prometheus_promql_rate/" class="md-nav__link">
+        7 PromQL查询之rate函数的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/60prometheus_job/" class="md-nav__link">
+        8 解决Prometheus监控Kubernetes Job误报的坑
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/9promql_6errors/" class="md-nav__link">
+        9 使用 Prometheus PromQL时需要避免这6个错误
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Awesome alerts rules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Awesome alerts rules" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Awesome alerts rules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1basic_resource/" class="md-nav__link">
+        1 Basic resource monitoring
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2database_broker/" class="md-nav__link">
+        2 Databases and brokers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3proxy_lb/" class="md-nav__link">
+        3 Reverse proxies and load balancers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4runtimes/" class="md-nav__link">
+        4 Runtimes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5Orchestrators/" class="md-nav__link">
+        5 Orchestrators
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/6network_sec_storage/" class="md-nav__link">
+        6 Network, security and storage
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/7other/" class="md-nav__link">
+        7 Others
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/8Alerting_sleep/" class="md-nav__link">
+        8 Alert Sleep Peacefully
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11">
+          数据可视化&Grafana Plugin
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="数据可视化&Grafana Plugin" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          数据可视化&Grafana Plugin
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/58grafana_init/" class="md-nav__link">
+        1 使用 Grafana 构建你的第一个仪表盘
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/28Grafana_plugin_DevOpsProdigy/" class="md-nav__link">
+        2 优秀的Grafana K8S 插件-DevOpsProdigy KubeGraf
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/30Create_Grafana_dashboards/" class="md-nav__link">
+        3 用 Kubernetes darks资源对象创建Grafana Dashboard
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/48grafana_Trickster/" class="md-nav__link">
+        4 Grafana 图表加速神器-Trickster
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/5Grafana_Loki/" class="md-nav__link">
+        5 使用读写分离模式扩展 Grafana Loki
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12">
+          Prometheus(OpenTelemetry)架构设计与工具平台
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus(OpenTelemetry)架构设计与工具平台" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus(OpenTelemetry)架构设计与工具平台
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1deepflow/" class="md-nav__link">
+        1 DeepFlow AutoTagging之Prometheus标签标准化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2Prometheus_opentele/" class="md-nav__link">
+        2 Prometheus与OpenTelemetry该选哪个？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/3Prometheus_index/" class="md-nav__link">
+        3 Prometheus的四种指标类型
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/4OpenTelemetry/" class="md-nav__link">
+        4 透彻理解OpenTelemetry
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13">
+          Thanos
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Thanos" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Thanos
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/39Thanos_tutorial/" class="md-nav__link">
+        第一节 大规模场景下Prometheus的优化手段&Thanos架构详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/34Thanos_intro/" class="md-nav__link">
+        第二节 使用Thanos实现Prometheus的高可用介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/35Thanos_install/" class="md-nav__link">
+        第三节 Prometheus高可用Thanos学习-sidercar和query&Thanos部署
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/61thanos_sidecar_receiver/" class="md-nav__link">
+        第四节（2022）如何选择Thanos的Sidecar和Receiver两种模式？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/62thanos_query/" class="md-nav__link">
+        第五节（2022）使用Thanos查询前端优化查询性能
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/63prometheus_optimiztion/" class="md-nav__link">
+        第六节 (Thaos1-2022)大规模场景下Prometheus的优化手段
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/64thanos_detail/" class="md-nav__link">
+        第七节 (Thaos2-2022)Thanos架构详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/65thanos_setup/" class="md-nav__link">
+        第八节 (Thaos3-2022)Thanos部署与实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/66thanos_ruler/" class="md-nav__link">
+        第九节（2022）Thanos Ruler组件的使用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_14" type="checkbox" id="__nav_14" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14">
+          VictoriaMetrics
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="VictoriaMetrics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          VictoriaMetrics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/67vm_intro/" class="md-nav__link">
+        第一节 Prometheus远程存储VictoriaMetrics简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/68vm_setup/" class="md-nav__link">
+        第二节 Prometheus长期远程存储方案VictoriaMetrics入门实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/69vm_cluster/" class="md-nav__link">
+        第三节 VictorialMetrics 集群模式的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/70vm_vmagent/" class="md-nav__link">
+        第四节 使用vmagent代替Prometheus采集监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/71vm_operator/" class="md-nav__link">
+        第五节 使用Victoria Metrics Operator管理VM集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/72vm_vmalert/" class="md-nav__link">
+        第六节 使用 vmalert 代替 Prometheus 监控报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/73vm_pressure/" class="md-nav__link">
+        第七节 对Prometheus兼容的时序数据库进行压力测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15">
+          APM 工具及功能介绍
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="APM 工具及功能介绍" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          APM 工具及功能介绍
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/1apm_prods/" class="md-nav__link">
+        第一节 APM产品落地实战
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/2opentracing/" class="md-nav__link">
+        第二节 APM + OpenTracing原理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/3apm_tracing/" class="md-nav__link">
+        第三节 怎么理解分布式链路追踪技术？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/4apm_prod/" class="md-nav__link">
+        第四节 在生产环境中如何选择靠谱的APM系统？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/5apm_Sentry/" class="md-nav__link">
+        第五节 Sentry+OpenTelemetry前后端全链路打通
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/6k8s_watching/" class="md-nav__link">
+        第六节 聊聊可观测性之数据模型
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-metrics-server" class="md-nav__link">
+    1 Metrics Server
+  </a>
+  
+    <nav class="md-nav" aria-label="1 Metrics Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-api" class="md-nav__link">
+    1-1 聚合 API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2" class="md-nav__link">
+    1-2 安装
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-cpu" class="md-nav__link">
+    2 基于 CPU
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3 基于内存
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    4 基于自定义指标
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/Chao-Xi/jxprombook.git/edit/master/docs/chap1/38k8s_hpa_metricsserver.md" title="编辑此页" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="kubernetes-hpa-metrics-servercpumemadapater"><strong>第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)</strong></h1>
+<ul>
+<li>Metrics Server</li>
+<li>基于 CPU 的 HPA</li>
+<li>基于内存 的 HPA</li>
+<li><strong>基于自定义指标 和 Prometheus-adapater 的 HPA</strong></li>
+</ul>
+<p>在前面的学习中我们使用用一个 <code>kubectl scale</code> 命令可以来实现 <code>Pod</code> 的扩缩容功能，但是这个毕竟是完全手动操作的，要应对线上的各种复杂情况，我们需要能够做到自动化去感知业务，来自动进行扩缩容。</p>
+<p>为此，<code>Kubernetes</code> 也为我们提供了这样的一个资源对象：<code>Horizontal Pod Autoscaling</code>（Pod 水平自动伸缩），简称<code>HPA</code>，<code>HPA</code> 通过监控分析一些控制器控制的所有 <code>Pod</code> 的负载变化情况来确定是否需要调整 <code>Pod</code> 的副本数量，这是 <code>HPA</code> 最基本的原理：</p>
+<p><img alt="Alt Image Text" src="../../images/38_1.png" title="Body image" /></p>
+<p>我们可以简单的通过 <code>kubectl autoscale</code> 命令来创建一个 <code>HPA</code> 资源对象，<strong><code>HPA Controller</code>默认<code>30s</code>轮询一次（可通过<code>kube-controller-manager</code> 的<code>--horizontal-pod-autoscaler-sync-period</code> 参数进行设置）</strong>，查询指定的资源中的 <code>Pod</code> 资源使用率，并且与创建时设定的值和指标做对比，从而实现自动伸缩的功能。</p>
+<h2 id="1-metrics-server"><strong>1 Metrics Server</strong></h2>
+<p>在 <code>HPA</code> 的第一个版本中，我们需要 <code>Heapster</code> 提供 <code>CPU</code> 和内存指标，在 <code>HPA v2</code> 过后就需要安装 <code>Metrcis Server</code>了，<code>Metrics Server</code> 可以通过标准的 <code>Kubernetes API</code>把监控数据暴露出来，有了 <code>Metrics Server</code> 之后，我们就完全可以通过标准的 <code>Kubernetes API</code> 来访问我们想要获取的监控数据了：</p>
+<pre><code>https://10.96.0.1/apis/metrics.k8s.io/v1beta1/namespaces/&lt;namespace-name&gt;/pods/&lt;pod-name&gt;
+</code></pre>
+<p><strong>比如当我们访问上面的 <code>API</code> 的时候，我们就可以获取到该 <code>Pod</code>的资源数据，这些数据其实是来自于<code>kubelet</code>的 <code>Summary API</code> 采集而来的。</strong></p>
+<p>不过需要说明的是我们这里可以通过标准的 <code>API</code> 来获取资源监控数据，并不是因为 <code>Metrics Server</code> 就是 <code>APIServer</code> 的一部分，<strong>而是通过 <code>Kubernetes</code> 提供的 <code>Aggregator</code> 汇聚插件来实现的，是独立于 <code>APIServer</code> 之外运行的</strong>。</p>
+<p><img alt="Alt Image Text" src="../../images/38_2.png" title="Body image" /></p>
+<h3 id="1-1-api"><strong>1-1 聚合 API</strong></h3>
+<p><code>Aggregator</code> 允许开发人员编写一个自己的服务，把这个服务注册到 <code>Kubernetes</code> 的 <code>APIServer</code> 里面去，这样我们就可以像原生的 <code>APIServer</code> 提供的 <code>API</code> 使用自己的 <code>API</code> 了，我们把自己的服务运行在 <code>Kubernetes</code> 集群里面，<strong>然后 <code>Kubernetes</code> 的 <code>Aggregator</code> 通过 <code>Service</code> 名称就可以转发到我们自己写的 <code>Service</code> 里面去了</strong>。</p>
+<p>这样这个聚合层就带来了很多好处：</p>
+<ul>
+<li>增加了 <code>API</code> 的扩展性，开发人员可以编写自己的 <code>API</code> 服务来暴露他们想要的 <code>API</code>。</li>
+<li>丰富了 <code>API</code>，核心 <code>kubernetes</code> 团队阻止了很多新的 <code>API</code> 提案，通过允许开发人员将他们的 <code>API</code> 作为单独的服务公开，这样就无须社区繁杂的审查了。</li>
+<li>开发分阶段实验性 <code>API</code>，新的 <code>API</code>可以在单独的聚合服务中开发，当它稳定之后，在合并会 <code>APIServer</code> 就很容易了。</li>
+<li>确保新 <code>API</code> 遵循 <code>Kubernetes</code> 约定，如果没有这里提出的机制，社区成员可能会被迫推出自己的东西，这样很可能造成社区成员和社区约定不一致。</li>
+</ul>
+<h3 id="1-2"><strong>1-2 安装</strong></h3>
+<p>所以现在我们要使用 <code>HPA</code>，就需要在集群中安装 <code>Metrics Server</code> 服务，要安装 <code>Metrics Server</code> 就需要开启 <code>Aggregator</code>，因为 <code>Metrics Server</code> 就是通过该代理进行扩展的，不过我们集群是通过 <code>Kubeadm</code> 搭建的，默认已经开启了，如果是二进制方式安装的集群，需要单独配置 <code>kube-apsierver</code> 添加如下所示的参数：</p>
+<pre><code>--requestheader-client-ca-file=&lt;path to aggregator CA cert&gt;
+--requestheader-allowed-names=aggregator
+--requestheader-extra-headers-prefix=X-Remote-Extra-
+--requestheader-group-headers=X-Remote-Group
+--requestheader-username-headers=X-Remote-User
+--proxy-client-cert-file=&lt;path to aggregator proxy cert&gt;
+--proxy-client-key-file=&lt;path to aggregator proxy key&gt;
+</code></pre>
+<pre><code>- --requestheader-allowed-names=front-proxy-client
+</code></pre>
+<p>如果 <code>kube-proxy</code> 没有和 <code>APIServer</code> 运行在同一台主机上，那么需要确保启用了如下 <code>kube-apsierver</code> 的参数：</p>
+<pre><code>--enable-aggregator-routing=true
+</code></pre>
+<p>对于这些证书的生成方式，我们可以查看官方文档：https://github.com/kubernetes-sigs/apiserver-builder-alpha/blob/master/docs/concepts/auth.md。</p>
+<p><code>Aggregator</code> 聚合层启动完成后，就可以来安装<code>Metrics Server</code> 了，我们可以获取该仓库的官方安装资源清单：</p>
+<pre><code>$ git clone https://github.com/kubernetes-incubator/metrics-server
+$ cd metrics-server
+$ kubectl apply -f deploy/1.8+/
+</code></pre>
+<p>在部署之前，修改 <code>metrcis-server/deploy/1.8+/metrics-server-deployment.yaml</code>的镜像地址为：</p>
+<pre><code>containers:
+- name: metrics-server
+  image: gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.6
+</code></pre>
+<p>等部署完成后，可以查看 Pod 日志是否正常：</p>
+<pre><code>$ kubectl get pods -n kube-system -l k8s-app=metrics-server
+NAME                              READY   STATUS    RESTARTS   AGE
+metrics-server-6886856d7c-g5k6q   1/1     Running   0          2m39s
+$ kubectl logs -f metrics-server-6886856d7c-g5k6q -n kube-system
+......
+E1119 09:05:57.234312       1 manager.go:111] unable to fully collect metrics: [unable to fully scrape metrics from source kubelet_summary:jxi-node1: unable to fetch metrics from Kubelet jxi-node1 (jxi-node1): Get https://jxi-node1:10250/stats/summary?only_cpu_and_memory=true: dial tcp: lookup jxi-node1 on 10.96.0.10:53: no such host, unable to fully scrape metrics from source kubelet_summary:jxi-node4: unable to fetch metrics from Kubelet jxi-node4 (jxi-node4): Get https://jxi-node4:10250/stats/summary?only_cpu_and_memory=true: dial tcp: lookup jxi-node4 on 10.96.0.10:53: no such host, unable to fully scrape metrics from source kubelet_summary:jxi-node3: unable to fetch metrics from Kubelet jxi-node3 (jxi-node3): Get https://jxi-node3:10250/stats/summary?only_cpu_and_memory=true: dial tcp: lookup jxi-node3 on 10.96.0.10:53: no such host, unable to fully scrape metrics from source kubelet_summary:jxi-master: unable to fetch metrics from Kubelet jxi-master (jxi-master): Get https://jxi-master:10250/stats/summary?only_cpu_and_memory=true: dial tcp: lookup jxi-master on 10.96.0.10:53: no such host, unable to fully scrape metrics from source kubelet_summary:jxi-node2: unable to fetch metrics from Kubelet jxi-node2 (jxi-node2): Get https://jxi-node2:10250/stats/summary?only_cpu_and_memory=true: dial tcp: lookup jxi-node2 on 10.96.0.10:53: no such host]
+</code></pre>
+<p>我们可以发现 Pod 中出现了一些错误信息：<code>xxx: no such host</code>，我们看到这个错误信息一般就可以确定是<code>DNS</code>解析不了造成的，<strong>我们可以看到 <code>Metrics Server</code> 会通过 <code>kubelet</code> 的 <code>10250</code> 端口获取信息，使用的是 <code>hostname</code>，我们部署集群的时候在节点的 <code>/etc/hosts</code>里面添加了节点的 <code>hostname</code> 和 <code>ip</code> 的映射</strong>，</p>
+<p><strong>但是是我们的 <code>Metrics Server</code> 的 <code>Pod</code> 内部并没有这个 <code>hosts</code> 信息，当然也就不识别 <code>hostname</code> 了</strong>，要解决这个问题，有两种方法：</p>
+<p><strong>第一种方法就是在集群内部的 <code>DNS</code> 服务里面添加上 <code>hostname</code> 的解析，比如我们这里集群中使用的是 <code>CoreDNS</code>，我们就可以去修改下 <code>CoreDNS</code> 的 <code>Configmap</code> 信息，添加上 <code>hosts</code> 信息</strong>：</p>
+<pre><code>$ kubectl edit configmap coredns -n kube-system
+apiVersion: v1
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health
+        hosts {  # 添加集群节点hosts隐射信息
+          10.151.30.11 jxi-master
+          10.151.30.57 jxi-node3
+          10.151.30.59 jxi-node4
+          10.151.30.22 jxi-node1
+          10.151.30.23 jxi-node2
+          fallthrough
+        }
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+           pods insecure
+           upstream
+           fallthrough in-addr.arpa ip6.arpa
+        }
+        prometheus :9153
+        proxy . /etc/resolv.conf
+        cache 30
+        reload
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: 2019-05-18T11:07:46Z
+  name: coredns
+  namespace: kube-system
+</code></pre>
+<p>这样当在集群内部访问集群的 <code>hostname</code> 的时候就可以解析到对应的 <code>ip</code> 了，<strong>另外一种方法就是在 <code>metrics-server</code> 的启动参数中修改 <code>kubelet-preferred-address-types</code> 参数</strong>，如下：</p>
+<pre><code>args:
+- --cert-dir=/tmp
+- --secure-port=4443
+- --kubelet-preferred-address-types=InternalIP
+</code></pre>
+<p>我们这里使用第二种方式，然后重新安装：</p>
+<pre><code>$ kubectl get pods -n kube-system -l app=metrics-server
+NAME                                     READY   STATUS    RESTARTS   AGE
+metric-metrics-server-6d4d4f6dc4-c8hhl   1/1     Running   0          2d11h
+
+$ kubectl logs -f metric-metrics-server-58fc94d9f-jlxcb -n kube-system
+......
+E1119 09:05:57.234312       1 manager.go:111] unable to fully collect metrics: [unable to fully scrape metrics from source kubelet_summary:jxi-node1: unable to fetch metrics from Kubelet jxi-node1 (jxi-node1): Get https://jxi-node1:10250/stats/summary?only_cpu_and_memory=true: dial tcp: lookup jxi-node1 on 10.96.0.10:53: no such host, unable to fully scrape metrics from source kubelet_summary:jxi-node4: unable to fetch metrics from Kubelet jxi-node4 (jxi-node4): Get https://jxi-node4:10250/stats/summary?only_cpu_and_memory=true: dial tcp: lookup jxi-node4 on 10.96.0.10:53: no such host, unable to fully scrape metrics from source kubelet_summary:jxi-node3: unable to fetch metrics from Kubelet jxi-node3 (jxi-node3): Get https://jxi-node3:10250/stats/summary?only_cpu_and_memory=true: dial tcp: lookup jxi-node3 on 10.96.0.10:53: no such host, unable to fully scrape metrics from source kubelet_summary:jxi-master: unable to fetch metrics from Kubelet jxi-master (jxi-master): Get https://jxi-master:10250/stats/summary?only_cpu_and_memory=true: dial tcp: lookup jxi-master on 10.96.0.10:53: no such host, unable to fully scrape metrics from source kubelet_summary:jxi-node2: unable to fetch metrics from Kubelet jxi-node2 (jxi-node2): Get https://jxi-node2:10250/stats/summary?only_cpu_and_memory=true: dial tcp: lookup jxi-node2 on 10.96.0.10:53: no such host]
+</code></pre>
+<p>因为部署集群的时候，<code>CA</code> 证书并没有把各个节点的 <code>IP</code> 签上去，所以这里 <code>Metrics Server</code> 通过 <code>IP</code> 去请求时，提示签的证书没有对应的 IP（错误：x509: cannot validate certificate for 10.151.30.22 because it doesn’t contain any IP SANs），我们可以添加一个<code>--kubelet-insecure-tls</code>参数跳过证书校验：</p>
+<pre><code>args:
+- --cert-dir=/tmp
+- --secure-port=4443
+- --kubelet-insecure-tls
+- --kubelet-preferred-address-types=InternalIP
+</code></pre>
+<p>然后再重新安装即可成功！可以通过如下命令来验证：</p>
+<pre><code>$ kubectl apply -f deploy/1.8+/
+$ kubectl get pods -n kube-system -l k8s-app=metrics-server
+NAME                              READY   STATUS    RESTARTS   AGE
+metrics-server-5d4dbb78bb-6klw6   1/1     Running   0          14s
+$ kubectl logs -f metrics-server-5d4dbb78bb-6klw6 -n kube-system
+I1119 09:10:44.249092       1 serving.go:312] Generated self-signed cert (/tmp/apiserver.crt, /tmp/apiserver.key)
+I1119 09:10:45.264076       1 secure_serving.go:116] Serving securely on [::]:4443
+$ kubectl get apiservice | grep metrics
+v1beta1.metrics.k8s.io                 kube-system/metrics-server   True        9m
+$ kubectl get --raw &quot;/apis/metrics.k8s.io/v1beta1/nodes&quot;
+{&quot;kind&quot;:&quot;NodeMetricsList&quot;,&quot;apiVersion&quot;:&quot;metrics.k8s.io/v1beta1&quot;,&quot;metadata&quot;:{&quot;selfLink&quot;:&quot;/apis/metrics.k8s.io/v1beta1/nodes&quot;},&quot;items&quot;:[{&quot;metadata&quot;:{&quot;name&quot;:&quot;jxi-node3&quot;,&quot;selfLink&quot;:&quot;/apis/metrics.k8s.io/v1beta1/nodes/jxi-node3&quot;,&quot;creationTimestamp&quot;:&quot;2019-11-19T09:11:53Z&quot;},&quot;timestamp&quot;:&quot;2019-11-19T09:11:38Z&quot;,&quot;window&quot;:&quot;30s&quot;,&quot;usage&quot;:{&quot;cpu&quot;:&quot;240965441n&quot;,&quot;memory&quot;:&quot;3004360Ki&quot;}},{&quot;metadata&quot;:{&quot;name&quot;:&quot;jxi-node4&quot;,&quot;selfLink&quot;:&quot;/apis/metrics.k8s.io/v1beta1/nodes/jxi-node4&quot;,&quot;creationTimestamp&quot;:&quot;2019-11-19T09:11:53Z&quot;},&quot;timestamp&quot;:&quot;2019-11-19T09:11:37Z&quot;,&quot;window&quot;:&quot;30s&quot;,&quot;usage&quot;:{&quot;cpu&quot;:&quot;167036681n&quot;,&quot;memory&quot;:&quot;2574664Ki&quot;}},{&quot;metadata&quot;:{&quot;name&quot;:&quot;jxi-master&quot;,&quot;selfLink&quot;:&quot;/apis/metrics.k8s.io/v1beta1/nodes/jxi-master&quot;,&quot;creationTimestamp&quot;:&quot;2019-11-19T09:11:53Z&quot;},&quot;timestamp&quot;:&quot;2019-11-19T09:11:38Z&quot;,&quot;window&quot;:&quot;30s&quot;,&quot;usage&quot;:{&quot;cpu&quot;:&quot;350907350n&quot;,&quot;memory&quot;:&quot;2986716Ki&quot;}},{&quot;metadata&quot;:{&quot;name&quot;:&quot;jxi-node1&quot;,&quot;selfLink&quot;:&quot;/apis/metrics.k8s.io/v1beta1/nodes/jxi-node1&quot;,&quot;creationTimestamp&quot;:&quot;2019-11-19T09:11:53Z&quot;},&quot;timestamp&quot;:&quot;2019-11-19T09:11:39Z&quot;,&quot;window&quot;:&quot;30s&quot;,&quot;usage&quot;:{&quot;cpu&quot;:&quot;1319638039n&quot;,&quot;memory&quot;:&quot;2094376Ki&quot;}},{&quot;metadata&quot;:{&quot;name&quot;:&quot;jxi-node2&quot;,&quot;selfLink&quot;:&quot;/apis/metrics.k8s.io/v1beta1/nodes/jxi-node2&quot;,&quot;creationTimestamp&quot;:&quot;2019-11-19T09:11:53Z&quot;},&quot;timestamp&quot;:&quot;2019-11-19T09:11:36Z&quot;,&quot;window&quot;:&quot;30s&quot;,&quot;usage&quot;:{&quot;cpu&quot;:&quot;320381888n&quot;,&quot;memory&quot;:&quot;3270368Ki&quot;}}]}
+$ kubectl top nodes
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+jxi-master   351m         17%    2916Mi          79%       
+jxi-node1    1320m        33%    2045Mi          26%       
+jxi-node2    321m         8%     3193Mi          41%       
+jxi-node3    241m         6%     2933Mi          37%       
+jxi-node4    168m         4%     2514Mi          32% 
+</code></pre>
+<p>现在我们可以通过 kubectl top 命令来获取到资源数据了，证明 <code>Metrics Server</code> 已经安装成功了。</p>
+<h2 id="2-cpu"><strong>2 基于 CPU</strong></h2>
+<p>现在我们用 <code>Deployment</code> 来创建一个 <code>Nginx Pod</code>，然后利用 <code>HPA</code> 来进行自动扩缩容。资源清单如下所示：（<code>hpa-demo.yaml</code>）</p>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hpa-demo
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+</code></pre>
+<p>然后直接创建 <code>Deployment</code>：</p>
+<pre><code>$ kubectl apply -f hpa-demo.yaml 
+deployment.apps/hpa-demo created
+</code></pre>
+<p>现在我们来创建一个 HPA 资源对象，可以使用<code>kubectl autoscale</code>命令来创建：</p>
+<pre><code>kubectl autoscale deployment hpa-demo --cpu-percent=10 --min=1 --max=10
+horizontalpodautoscaler.autoscaling/hpa-demo autoscaled
+
+$ kubectl get hpa
+NAME       REFERENCE             TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+hpa-demo   Deployment/hpa-demo   &lt;unknown&gt;/10%   1         10        0          12s
+</code></pre>
+<p>此命令创建了一个关联资源 <code>hpa-demo</code> 的 <code>HPA</code>，最小的 Pod 副本数为<code>1</code>，最大为<code>10</code>。HPA 会根据设定的 <code>cpu</code> 使用率（<code>10%</code>）动态的增加或者减少 Pod 数量。</p>
+<p>当然我们依然还是可以通过创建 YAML 文件的形式来创建 HPA 资源对象。如果我们不知道怎么编写的话，可以查看上面命令行创建的HPA的YAML文件：</p>
+<pre><code>$  kubectl get hpa hpa-demo -o yaml
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    autoscaling.alpha.kubernetes.io/conditions: '[{&quot;type&quot;:&quot;AbleToScale&quot;,&quot;status&quot;:&quot;True&quot;,&quot;lastTransitionTime&quot;:&quot;2020-04-07T15:38:07Z&quot;,&quot;reason&quot;:
+&quot;SucceededGetScale&quot;,&quot;message&quot;:&quot;the
+      HPA controller was able to get the target''s current scale&quot;},{&quot;type&quot;:&quot;ScalingActive&quot;,&quot;status&quot;:&quot;False&quot;,&quot;lastTransitionTime&quot;:&quot;2020-04-07T
+15:38:07Z&quot;,&quot;reason&quot;:&quot;FailedGetResourceMetric&quot;,&quot;message&quot;:&quot;the
+      HPA was unable to compute the replica count: missing request for cpu&quot;}]'
+  creationTimestamp: &quot;2020-04-07T15:37:52Z&quot;
+  name: hpa-demo
+  namespace: default
+  resourceVersion: &quot;2321037&quot;
+  selfLink: /apis/autoscaling/v1/namespaces/default/horizontalpodautoscalers/hpa-demo
+  uid: d24084ba-f050-41d3-a524-51fa1ed76d78
+spec:
+  maxReplicas: 10
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hpa-demo
+  targetCPUUtilizationPercentage: 10
+status:
+  currentReplicas: 1
+  desiredReplicas: 0
+</code></pre>
+<p>然后我们可以根据上面的 YAML 文件就可以自己来创建一个基于 YAML 的 HPA 描述文件了。但是我们发现上面信息里面出现了一些 Fail 信息，我们来查看下这个 HPA 对象的信息：</p>
+<pre><code>$ kubectl describe hpa hpa-demo
+Name:                                                  hpa-demo
+Namespace:                                             default
+Labels:                                                &lt;none&gt;
+Annotations:                                           &lt;none&gt;
+CreationTimestamp:                                     Tue, 07 Apr 2020 23:37:52 +0800
+Reference:                                             Deployment/hpa-demo
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  &lt;unknown&gt; / 10%
+Min replicas:                                          1
+Max replicas:                                          10
+Deployment pods:                                       1 current / 0 desired
+Conditions:
+  Type           Status  Reason                   Message
+  ----           ------  ------                   -------
+  AbleToScale    True    SucceededGetScale        the HPA controller was able to get the target's current scale
+  ScalingActive  False   FailedGetResourceMetric  the HPA was unable to compute the replica count: missing request for cpu
+Events:
+  Type     Reason                        Age                   From                       Message
+  ----     ------                        ----                  ----                       -------
+  Warning  FailedComputeMetricsReplicas  36s (x12 over 3m21s)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu utilization: missing request for cpu
+  Warning  FailedGetResourceMetric       21s (x13 over 3m21s)  horizontal-pod-autoscaler  missing request for cpu
+</code></pre>
+<p>我们可以看到上面的事件信息里面出现了 <code>failed to get cpu utilization: missing request for cpu</code> 这样的错误信息。这是因为我们上面创建的 <code>Pod</code> 对象没有添加 <code>request</code>资源声明，这样导致 HPA 读取不到 <code>CPU</code> 指标信息，<strong>所以如果要想让 <code>HPA</code> 生效，对应的 <code>Pod 资源必须添加</code>requests` 资源声明</strong>，更新我们的资源清单文件：</p>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hpa-demo
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 50Mi
+            cpu: 50m
+</code></pre>
+<p>然后重新更新 Deployment，重新创建 HPA 对象：</p>
+<pre><code>$ kubectl apply -f hpa-demo.yaml 
+deployment.apps/hpa-demo configured
+
+
+$ kubectl get pods -o wide -l app=nginx
+NAME                        READY   STATUS        RESTARTS   AGE   IP          NODE             NOMINATED NODE   READINESS GATES
+hpa-demo-75f94c5d7-ncg5f    1/1     Running       0          16s   10.1.5.71   docker-desktop   &lt;none&gt;           &lt;none&gt;
+hpa-demo-85ff79dd56-mc7mq   0/1     Terminating   0          34m   10.1.5.70   docker-desktop   &lt;none&gt;           &lt;none&gt;
+
+
+$ kubectl delete hpa hpa-demo
+horizontalpodautoscaler.autoscaling &quot;hpa-demo&quot; deleted
+
+$ kubectl autoscale deployment hpa-demo --cpu-percent=10 --min=1 --max=10
+horizontalpodautoscaler.autoscaling/hpa-demo autoscaled
+
+$ kubectl describe hpa hpa-demo
+Name:                                                  hpa-demo
+Namespace:                                             default
+Labels:                                                &lt;none&gt;
+Annotations:                                           &lt;none&gt;
+CreationTimestamp:                                     Wed, 08 Apr 2020 09:33:15 +0800
+Reference:                                             Deployment/hpa-demo
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  0% (0) / 10%
+Min replicas:                                          1
+Max replicas:                                          10
+Deployment pods:                                       1 current / 1 desired
+Conditions:
+  Type            Status  Reason               Message
+  ----            ------  ------               -------
+  AbleToScale     True    ScaleDownStabilized  recent recommendations were higher than current one, applying the highest recent recommendation
+  ScalingActive   True    ValidMetricFound     the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)
+  ScalingLimited  False   DesiredWithinRange   the desired count is within the acceptable range
+Events:           &lt;none&gt;
+
+$ kubectl get hpa             
+NAME       REFERENCE             TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+hpa-demo   Deployment/hpa-demo   0%/10%    1         10        1          91s
+</code></pre>
+<p>现在可以看到 HPA 资源对象已经正常了，现在我们来增大负载进行测试，我们来创建一个 busybox 的 Pod，并且循环访问上面创建的 Pod：</p>
+<pre><code>$ kubectl get pod -l app=nginx -o wide
+NAME                        READY   STATUS    RESTARTS   AGE     IP          NODE             NOMINATED NODE   READINESS GATES
+hpa-demo-69968bb59f-dxjd7   1/1     Running   0          7m16s   10.1.5.75   docker-desktop   &lt;none&gt;           &lt;none&gt;
+
+
+kubectl run -it --image busybox test-hpa --restart=Never --rm /bin/sh
+If you don't see a command prompt, try pressing enter.
+/ # while true; do wget -q -O- http://10.1.5.75; done
+</code></pre>
+<pre><code>$ kubectl get hpa
+NAME       REFERENCE             TARGETS    MINPODS   MAXPODS   REPLICAS   AGE
+hpa-demo   Deployment/hpa-demo   264%/10%   1         10        8          7m36s
+
+]$ kubectl get pods -l app=nginx --watch 
+NAME                        READY   STATUS              RESTARTS   AGE
+hpa-demo-69968bb59f-4624m   1/1     Running             0          41s
+hpa-demo-69968bb59f-4h6lh   1/1     Running             0          11s
+hpa-demo-69968bb59f-7dw9d   1/1     Running             0          26s
+hpa-demo-69968bb59f-dxjd7   1/1     Running             0          10m
+hpa-demo-69968bb59f-ggmgw   1/1     Running             0          41s
+hpa-demo-69968bb59f-nnsm7   1/1     Running             0          26s
+hpa-demo-69968bb59f-np6fc   1/1     Running             0          26s
+hpa-demo-69968bb59f-tkbzb   1/1     Running             0          41s
+hpa-demo-69968bb59f-x8x9r   1/1     Running             0          26s
+hpa-demo-69968bb59f-zcnp7   0/1     ContainerCreating   0          11s
+hpa-demo-69968bb59f-zcnp7   1/1     Running             0          13s
+</code></pre>
+<p>我们可以看到已经自动拉起了很多新的 Pod，最后定格在了我们上面设置的 10 个 Pod，同时查看资源 hpa-demo 的副本数量，副本数量已经从原来的1变成了10个：</p>
+<pre><code>$ kubectl get deployment hpa-demo
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+hpa-demo   10/10   10           10          20m
+</code></pre>
+<p>查看 HPA 资源的对象了解工作过程：</p>
+<pre><code>$ kubectl describe hpa hpa-demo
+Name:                                                  hpa-demo
+Namespace:                                             default
+Labels:                                                &lt;none&gt;
+Annotations:                                           &lt;none&gt;
+CreationTimestamp:                                     Wed, 08 Apr 2020 09:33:15 +0800
+Reference:                                             Deployment/hpa-demo
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  10% (5m) / 10%
+Min replicas:                                          1
+Max replicas:                                          10
+Deployment pods:                                       10 current / 10 desired
+Conditions:
+  Type            Status  Reason               Message
+  ----            ------  ------               -------
+  AbleToScale     True    ScaleDownStabilized  recent recommendations were higher than current one, applying the highest recent recommendation
+  ScalingActive   True    ValidMetricFound     the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)
+  ScalingLimited  True    TooManyReplicas      the desired replica count is more than the maximum replica count
+Events:
+  Type    Reason             Age   From                       Message
+  ----    ------             ----  ----                       -------
+  Normal  SuccessfulRescale  89s   horizontal-pod-autoscaler  New size: 4; reason: cpu resource utilization (percentage of request) above target
+  Normal  SuccessfulRescale  74s   horizontal-pod-autoscaler  New size: 8; reason: cpu resource utilization (percentage of request) above target
+  Normal  SuccessfulRescale  59s   horizontal-pod-autoscaler  New size: 10; reason: cpu resource utilization (percentage of request) above target
+</code></pre>
+<p>同样的这个时候我们来关掉 busybox 来减少负载，然后等待一段时间观察下 HPA 和 Deployment 对象：</p>
+<pre><code>$ kubectl get hpa
+NAME       REFERENCE             TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+hpa-demo   Deployment/hpa-demo   0%/10%    1         10        1          14m
+$ kubectl get deployment hpa-demo
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+hpa-demo   1/1     1            1           24m
+</code></pre>
+<blockquote>
+<p>从 <code>Kubernetes v1.12</code> 版本开始我们可以通过设置 <strong><code>kube-controller-manager</code> 组件的<code>--horizontal-pod-autoscaler-downscale-stabilization</code>参数来设置一个持续时间，用于指定在当前操作完成后，<code>HPA</code> 必须等待多长时间才能执行另一次缩放操作。默认为<code>5</code>分钟，也就是默认需要等待5分钟后才会开始自动缩放</strong>。</p>
+</blockquote>
+<p>可以看到副本数量已经由 10 变为 1，当前我们只是演示了 CPU 使用率这一个指标，在后面的课程中我们还会学习到根据自定义的监控指标来自动对 Pod 进行扩缩容。</p>
+<pre><code>$ kubectl describe hpa hpa-demo
+Name:                                                  hpa-demo
+Namespace:                                             default
+Labels:                                                &lt;none&gt;
+Annotations:                                           &lt;none&gt;
+CreationTimestamp:                                     Wed, 08 Apr 2020 09:33:15 +0800
+Reference:                                             Deployment/hpa-demo
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  0% (0) / 10%
+Min replicas:                                          1
+Max replicas:                                          10
+Deployment pods:                                       1 current / 1 desired
+Conditions:
+  Type            Status  Reason            Message
+  ----            ------  ------            -------
+  AbleToScale     True    ReadyForNewScale  recommended size matches current size
+  ScalingActive   True    ValidMetricFound  the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)
+  ScalingLimited  True    TooFewReplicas    the desired replica count is less than the minimum replica count
+Events:
+  Type    Reason             Age    From                       Message
+  ----    ------             ----   ----                       -------
+  Normal  SuccessfulRescale  11m    horizontal-pod-autoscaler  New size: 4; reason: cpu resource utilization (percentage of request) above target
+  Normal  SuccessfulRescale  11m    horizontal-pod-autoscaler  New size: 8; reason: cpu resource utilization (percentage of request) above target
+  Normal  SuccessfulRescale  10m    horizontal-pod-autoscaler  New size: 10; reason: cpu resource utilization (percentage of request) above target
+  Normal  SuccessfulRescale  4m23s  horizontal-pod-autoscaler  New size: 1; reason: All metrics below target
+[Jacob@i515190:~/Devops_sap/k8s_cka/CKAD]$ kubectl describe hpa hpa-demo
+</code></pre>
+<h2 id="3"><strong>3 基于内存</strong></h2>
+<p><code>HorizontalPodAutoscaler</code> 是 <code>Kubernetes autoscaling API</code> 组的资源，在当前稳定版本 <code>autoscaling/v1</code> 中只支持基于 <code>CPU</code>指标的缩放。</p>
+<p><strong>在 <code>Beta</code> 版本<code>autoscaling/v2beta2</code>，引入了基于内存和自定义指标的缩放。所以我们这里需要使用 <code>Beta</code> 版本的 <code>API</code>。</strong></p>
+<p><img alt="Alt Image Text" src="../../images/38_3.png" title="Body image" /></p>
+<p>现在我们用 Deployment 来创建一个 Nginx Pod，然后利用 HPA 来进行自动扩缩容。资源清单如下所示：（<code>hpa-mem-demo.yaml</code>）</p>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hpa-mem-demo
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+      - name: increase-mem-script
+        configMap:
+          name: increase-mem-config
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: increase-mem-script
+          mountPath: /etc/script
+        resources:
+          requests:
+            memory: 50Mi
+            cpu: 50m
+        securityContext:
+          privileged: true
+</code></pre>
+<p>这里和前面普通的应用有一些区别，我们将一个名为 <code>increase-mem-config</code> 的 <code>ConfigMap</code> 资源对象挂载到了容器中，该配置文件是用于后面增加容器内存占用的脚本，配置文件如下所示：（<code>increase-mem-cm.yaml</code>）</p>
+<pre><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: increase-mem-config
+data:
+  increase-mem.sh: |
+    #!/bin/bash  
+    mkdir /tmp/memory  
+    mount -t tmpfs -o size=40M tmpfs /tmp/memory  
+    dd if=/dev/zero of=/tmp/memory/block  
+    sleep 60 
+    rm /tmp/memory/block  
+    umount /tmp/memory  
+    rmdir /tmp/memory
+</code></pre>
+<pre><code>$ kubectl apply -f increase-mem-cm.yaml
+$ kubectl apply -f hpa-mem-demo.yaml 
+$ kubectl get pods -l app=nginx
+NAME                            READY   STATUS    RESTARTS   AGE
+hpa-mem-demo-66944b79bf-696r8   1/1     Running   0          19s
+</code></pre>
+<p>然后需要创建一个基于内存的 <code>HPA</code> 资源对象：（<code>hpa-mem.yaml</code>）</p>
+<pre><code>apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hpa-mem-demo
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 60
+</code></pre>
+<pre><code>$ kubectl apply -f hpa-mem.yaml 
+horizontalpodautoscaler.autoscaling/nginx-hpa created
+
+$ kubectl get hpa
+NAME        REFERENCE                 TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+hpa-demo    Deployment/hpa-demo       0%/10%    1         10        1          22m
+nginx-hpa   Deployment/hpa-mem-demo   4%/60%    1         5         1          15s
+</code></pre>
+<p>到这里证明 HPA 资源对象已经部署成功了，接下来我们对应用进行压测，将内存压上去，直接执行上面我们挂载到容器中的 <code>increase-mem.sh</code> 脚本即可：</p>
+<pre><code>$  kubectl exec -it hpa-mem-demo-66944b79bf-696r8 /bin/bash
+root@hpa-mem-demo-66944b79bf-696r8:/# ls /etc/script/
+increase-mem.sh
+root@hpa-mem-demo-66944b79bf-696r8:/# increase-mem.sh
+bash: increase-mem.sh: command not found
+root@hpa-mem-demo-66944b79bf-696r8:/# source /etc/script/increase-mem.sh 
+dd: writing to '/tmp/memory/block': No space left on device
+81921+0 records in
+81920+0 records out
+41943040 bytes (42 MB, 40 MiB) copied, 0.14645 s, 286 MB/s
+</code></pre>
+<p>然后打开另外一个终端观察 HPA 资源对象的变化情况：</p>
+<pre><code>$ kubectl get hpa
+NAME        REFERENCE                 TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+nginx-hpa   Deployment/hpa-mem-demo   44%/60%   1         5         2          2m45s
+</code></pre>
+<pre><code>$ kubectl describe hpa nginx-hpa
+Name:                                                     nginx-hpa
+Namespace:                                                default
+Labels:                                                   &lt;none&gt;
+Annotations:                                              kubectl.kubernetes.io/last-applied-configuration:
+                                                            {&quot;apiVersion&quot;:&quot;autoscaling/v2beta1&quot;,&quot;kind&quot;:&quot;HorizontalPodAutoscaler&quot;,&quot;metadata&quot;:{&quot;annotations&quot;:{},&quot;name&quot;:&quot;nginx-hpa&quot;,&quot;namespace&quot;:&quot;default&quot;...
+CreationTimestamp:                                        Wed, 08 Apr 2020 09:55:46 +0800
+Reference:                                                Deployment/hpa-mem-demo
+Metrics:                                                  ( current / target )
+  resource memory on pods  (as a percentage of request):  44% (23568384) / 60%
+Min replicas:                                             1
+Max replicas:                                             5
+Deployment pods:                                          2 current / 2 desired
+Conditions:
+  Type            Status  Reason              Message
+  ----            ------  ------              -------
+  AbleToScale     True    ReadyForNewScale    recommended size matches current size
+  ScalingActive   True    ValidMetricFound    the HPA was able to successfully calculate a replica count from memory resource utilization (percentage of request)
+  ScalingLimited  False   DesiredWithinRange  the desired count is within the acceptable range
+Events:
+  Type    Reason             Age   From                       Message
+  ----    ------             ----  ----                       -------
+  Normal  SuccessfulRescale  47s   horizontal-pod-autoscaler  New size: 2; reason: memory resource utilization (percentage of request) above target
+
+$ kubectl top pod  hpa-mem-demo-66944b79bf-f79l2
+NAME                            CPU(cores)   MEMORY(bytes)   
+hpa-mem-demo-66944b79bf-tqrn9   0m           41Mi
+</code></pre>
+<p>可以看到内存使用已经超过了我们设定的 60% 这个阈值了，HPA 资源对象也已经触发了自动扩容，变成了两个副本了：</p>
+<pre><code>$ kubectl get pods -l app=nginx
+NAME                            READY   STATUS    RESTARTS   AGE
+hpa-mem-demo-66944b79bf-696r8   1/1     Running   0          9m39s
+hpa-mem-demo-66944b79bf-f79l2   1/1     Running   0          5m47s
+</code></pre>
+<p>当内存释放掉后，<code>controller-manager</code> 默认5分钟过后会进行缩放，到这里就完成了基于内存的 <code>HPA</code>操作。</p>
+<h2 id="4"><strong>4 基于自定义指标</strong></h2>
+<p>除了基于 <code>CPU</code> 和内存来进行自动扩缩容之外，我们还可以根据自定义的监控指标来进行。</p>
+<p><strong>这个我们就需要使用 <code>Prometheus Adapter</code>，<code>Prometheus</code> 用于监控应用的负载和集群本身的各种指标，<code>Prometheus Adapter</code> 可以帮我们使用 <code>Prometheus</code> 收集的指标并使用它们来制定扩展策略</strong>，这些指标都是通过 <code>APIServer</code> 暴露的，而且 <code>HPA</code> 资源对象也可以很轻易的直接使用</p>
+<p><img alt="Alt Image Text" src="../../images/38_4.png" title="Body image" /></p>
+<p>首先，我们部署一个示例应用，在该应用程序上测试 Prometheus 指标自动缩放，资源清单文件如下所示：（<code>hpa-prome-demo.yaml</code>）</p>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hpa-prom-demo
+spec:
+  selector:
+    matchLabels:
+      app: nginx-server
+  template:
+    metadata:
+      labels:
+        app: nginx-server
+    spec:
+      containers:
+      - name: nginx-demo
+        image: cnych/nginx-vts:v1.0
+        resources:
+          limits:
+            cpu: 50m
+          requests:
+            cpu: 50m
+        ports:
+        - containerPort: 80
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hpa-prom-demo
+  annotations:
+    prometheus.io/scrape: &quot;true&quot;
+    prometheus.io/port: &quot;80&quot;
+    prometheus.io/path: &quot;/status/format/prometheus&quot;
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+  selector:
+    app: nginx-server
+  type: NodePort
+</code></pre>
+<pre><code>$ kubectl apply -f hpa-prome-demo.yaml
+deployment.apps/hpa-prom-demo created
+service/hpa-prom-demo created
+</code></pre>
+<pre><code>$  kubectl get pods -l app=nginx-server 
+NAME                            READY   STATUS    RESTARTS   AGE
+hpa-prom-demo-cddb7b67f-97pqf   1/1     Running   0          95s
+
+$ kubectl get svc 
+NAME            TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+hpa-prom-demo   NodePort    10.104.168.230   &lt;none&gt;        80:30339/TCP   109s
+</code></pre>
+<p>部署完成后我们可以使用如下命令测试应用是否正常，以及指标数据接口能够正常获取：</p>
+<pre><code>$ curl localhost:30339
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+&lt;style&gt;
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;
+&lt;p&gt;If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.&lt;/p&gt;
+
+&lt;p&gt;For online documentation and support please refer to
+&lt;a href=&quot;http://nginx.org/&quot;&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;
+Commercial support is available at
+&lt;a href=&quot;http://nginx.com/&quot;&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Thank you for using nginx.&lt;/em&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<pre><code>$ curl http://localhost:30339/status/format/prometheus 
+# HELP nginx_vts_info Nginx info
+# TYPE nginx_vts_info gauge
+nginx_vts_info{hostname=&quot;hpa-prom-demo-cddb7b67f-97pqf&quot;,version=&quot;1.13.12&quot;} 1
+# HELP nginx_vts_start_time_seconds Nginx start time
+# TYPE nginx_vts_start_time_seconds gauge
+nginx_vts_start_time_seconds 1586312884.322
+# HELP nginx_vts_main_connections Nginx connections
+# TYPE nginx_vts_main_connections gauge
+nginx_vts_main_connections{status=&quot;accepted&quot;} 4
+nginx_vts_main_connections{status=&quot;active&quot;} 2
+nginx_vts_main_connections{status=&quot;handled&quot;} 4
+nginx_vts_main_connections{status=&quot;reading&quot;} 0
+nginx_vts_main_connections{status=&quot;requests&quot;} 129
+nginx_vts_main_connections{status=&quot;waiting&quot;} 1
+nginx_vts_main_connections{status=&quot;writing&quot;} 1
+# HELP nginx_vts_main_shm_usage_bytes Shared memory [ngx_http_vhost_traffic_status] info
+# TYPE nginx_vts_main_shm_usage_bytes gauge
+nginx_vts_main_shm_usage_bytes{shared=&quot;max_size&quot;} 1048575
+...
+</code></pre>
+<p>上面的指标数据中，我们比较关心的是 <code>nginx_vts_server_requests_total</code> 这个指标，表示请求总数，是一个 <code>Counter</code> 类型的指标，我们将使用该指标的值来确定是否需要对我们的应用进行自动扩缩容。</p>
+<pre><code>code prometheus-additional.yaml
+kubectl create secret generic additional-configs --from-file=prometheus-additional.yaml -n monitoring
+secret/additional-configs created
+
+$ kubectl get prometheus -n monitoring 
+NAME                                    VERSION   REPLICAS   AGE
+kube-prom-prometheus-opera-prometheus   v2.15.2   1          17d
+
+kubectl edit prometheus kube-prom-prometheus-opera-prometheus -n monitoring
+...
+securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  additionalScrapeConfigs:
+    name: additional-configs
+    key: prometheus-additional.yaml
+  serviceAccountName: prometheus-k8s
+...
+</code></pre>
+<pre><code>kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/38_5.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/38_6.png" title="Body image" /></p>
+<p>接下来我们将 <code>Prometheus-Adapter</code> 安装到集群中，并添加一个规则来跟踪 Pod 的请求，我们可以将 <code>Prometheus</code> 中的任何一个指标都用于 <code>HPA</code>，但是前提是你得通过查询语句将它拿到（包括指标名称和其对应的值）。</p>
+<p>这里我们定义一个如下所示的规则：</p>
+<pre><code>rules:
+- seriesQuery: 'nginx_vts_server_requests_total'
+  seriesFilters: []
+  resources:
+    overrides:
+      kubernetes_namespace:
+        resource: namespace
+      kubernetes_pod_name:
+        resource: pod
+  name:
+    matches: &quot;^(.*)_total&quot;
+    as: &quot;${1}_per_second&quot;
+  metricsQuery: (sum(rate(&lt;&lt;.Series&gt;&gt;{&lt;&lt;.LabelMatchers&gt;&gt;}[1m])) by (&lt;&lt;.GroupBy&gt;&gt;))
+</code></pre>
+<p>接下来我们将 <code>Prometheus-Adapter</code>安装到集群中，并添加一个规则来跟踪 <code>Pod</code> 的请求，我们可以将 <code>Prometheus</code> 中的任何一个指标都用于 HPA，但是前提是你得通过查询语句将它拿到（包括指标名称和其对应的值）。</p>
+<p>这里我们定义一个如下所示的规则：</p>
+<pre><code>rules:
+- seriesQuery: 'nginx_vts_server_requests_total'
+  seriesFilters: []
+  resources:
+    overrides:
+      kubernetes_namespace:
+        resource: namespace
+      kubernetes_pod_name:
+        resource: pod
+  name:
+    matches: &quot;^(.*)_total&quot;
+    as: &quot;${1}_per_second&quot;
+  metricsQuery: (sum(rate(&lt;&lt;.Series&gt;&gt;{&lt;&lt;.LabelMatchers&gt;&gt;}[1m])) by (&lt;&lt;.GroupBy&gt;&gt;))
+</code></pre>
+<p>这是一个带参数的 Prometheus 查询，其中：</p>
+<ul>
+<li><code>seriesQuery</code>：查询 <code>Prometheus</code> 的语句，通过这个查询语句查询到的所有指标都可以用于 <code>HPA</code></li>
+<li><code>seriesFilters</code>：查询到的指标可能会存在不需要的，可以通过它过滤掉。</li>
+<li><code>resources</code>：通过 <code>seriesQuery</code> 查询到的只是指标，如果需要查询某个 <code>Pod</code> 的指标，肯定要将它的名称和所在的命名空间作为指标的标签进行查询，<code>resources</code> 就是将指标的标签和 <code>k8s</code> 的资源类型关联起来，最常用的就是 <code>pod</code> 和<code>namespace</code>。有两种添加标签的方式，一种是 <code>overrides</code>，另一种是 <code>template</code>。<ul>
+<li><code>overrides</code>：它会将指标中的标签和 <code>k8s</code> 资源关联起来。上面示例中就是将指标中的 <code>pod</code> 和 <code>namespace</code> 标签和<code>k8s</code> 中的 <code>pod</code> 和 <code>namespace</code> 关联起来，因为 <code>pod</code> 和 <code>namespace</code> 都属于核心 <code>api</code> 组，所以不需要指定 <code>api</code> 组。当我们查询某个 <code>pod</code> 的指标时，它会自动将 <code>pod</code> 的名称和名称空间作为标签加入到查询条件中。比如<code>nginx: {group: "apps", resource: "deployment"}</code>这么写表示的就是将指标中 <code>nginx</code> 这个标签和 <code>apps</code> 这个 <code>api</code> 组中的 <code>deployment</code> 资源关联起来；</li>
+<li><code>template</code>：通过 <code>go</code> 模板的形式。比如<code>template: "kube_&lt;&lt;.Group&gt;&gt;_&lt;&lt;.Resource&gt;&gt;"</code> 这么写表示，假如 <code>&lt;&lt;.Group&gt;&gt;</code> 为 <code>apps，&lt;&lt;.Resource&gt;&gt;</code> 为 <code>deployment</code>，那么它就是将指标中 <code>kube_apps_deployment</code> 标签和 <code>deployment</code> 资源关联起来。</li>
+</ul>
+</li>
+<li><code>name</code>：用来给指标重命名的，之所以要给指标重命名是因为有些指标是只增的，比如以 <code>total</code> 结尾的指标。这些指标拿来做 <code>HPA</code> 是没有意义的，我们一般计算它的速率，以速率作为值，那么此时的名称就不能以 <code>total</code> 结尾了，所以要进行重命名。<ul>
+<li><code>matches</code>：通过正则表达式来匹配指标名，可以进行分组</li>
+<li><code>as</code>：默认值为 <code>$1</code>，也就是第一个分组。<code>as</code> 为空就是使用默认值的意思。</li>
+</ul>
+</li>
+<li><code>metricsQuery</code>：这就是 <code>Prometheus</code>的查询语句了，前面的 <code>seriesQuery</code> 查询是获得 <code>HPA</code> 指标。当我们要查某个指标的值时就要通过它指定的查询语句进行了。可以看到查询语句使用了速率和分组，这就是解决上面提到的只增指标的问题<ul>
+<li><code>Series</code>：表示指标名称</li>
+<li><code>LabelMatchers</code>：附加的标签，目前只有 <code>pod</code> 和 <code>namespace</code> 两种，因此我们要在之前使用 <code>resources</code> 进行关联</li>
+<li><code>GroupBy</code>：就是 <code>pod</code> 名称，同样需要使用 <code>resources</code> 进行关联。</li>
+</ul>
+</li>
+</ul>
+<p>接下来我们通过 <code>Helm Chart</code>来部署 <code>Prometheus Adapter</code>，新建 <code>hpa-prome-adapter-values.yaml</code> 文件覆盖默认的 <code>Values</code> 值，内容如下所示：</p>
+<pre><code>rules:
+  default: false
+  custom:
+  - seriesQuery: 'nginx_vts_server_requests_total'
+    resources: 
+      overrides:
+        kubernetes_namespace:
+          resource: namespace
+        kubernetes_pod_name:
+          resource: pod
+    name:
+      matches: &quot;^(.*)_total&quot;
+      as: &quot;${1}_per_second&quot;
+    metricsQuery: (sum(rate(&lt;&lt;.Series&gt;&gt;{&lt;&lt;.LabelMatchers&gt;&gt;}[1m])) by (&lt;&lt;.GroupBy&gt;&gt;))
+
+prometheus:
+  url: http://kube-prom-prometheus-opera-prometheus.monitoring.svc.cluster.local
+</code></pre>
+<p>这里我们添加了一条 rules 规则，然后指定了 <code>Prometheus</code> 的地址，我们这里是使用了 <code>Operator</code> 部署的 <code>Promethues</code> 集群，所以用 <code>kube-prom-prometheus-opera-prometheus</code> 的地址。使用下面的命令一键安装：</p>
+<pre><code>$ helm install prometheus-adapter stable/prometheus-adapter -n monitoring -f hpa-prome-adapter-values.yaml
+NAME: prometheus-adapter
+LAST DEPLOYED: Wed Apr  8 12:09:13 2020
+NAMESPACE: monitoring
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+prometheus-adapter has been deployed.
+In a few minutes you should be able to list metrics using the following command(s):
+
+  kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1
+</code></pre>
+<p>等一小会儿，安装完成后，可以使用下面的命令来检测是否生效了：</p>
+<pre><code>$  kubectl get pods -n monitoring -l app=prometheus-adapter
+NAME                                  READY   STATUS    RESTARTS   AGE
+prometheus-adapter-58b559fc7d-mk5bz   1/1     Running   0          3m39s
+</code></pre>
+<pre><code>$  kubectl get --raw=&quot;/apis/custom.metrics.k8s.io/v1beta1&quot; | jq
+{
+  &quot;kind&quot;: &quot;APIResourceList&quot;,
+  &quot;apiVersion&quot;: &quot;v1&quot;,
+  &quot;groupVersion&quot;: &quot;custom.metrics.k8s.io/v1beta1&quot;,
+  &quot;resources&quot;: [
+    {
+      &quot;name&quot;: &quot;namespaces/nginx_vts_server_requests_per_second&quot;,
+      &quot;singularName&quot;: &quot;&quot;,
+      &quot;namespaced&quot;: false,
+      &quot;kind&quot;: &quot;MetricValueList&quot;,
+      &quot;verbs&quot;: [
+        &quot;get&quot;
+      ]
+    },
+    {
+      &quot;name&quot;: &quot;pods/nginx_vts_server_requests_per_second&quot;,
+      &quot;singularName&quot;: &quot;&quot;,
+      &quot;namespaced&quot;: true,
+      &quot;kind&quot;: &quot;MetricValueList&quot;,
+      &quot;verbs&quot;: [
+        &quot;get&quot;
+      ]
+    }
+  ]
+}
+</code></pre>
+<p>我们可以看到 <code>nginx_vts_server_requests_per_second</code> 指标可用。 现在，让我们检查该指标的当前值：</p>
+<pre><code>$ kubectl get --raw &quot;/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/nginx_vts_server_requests_per_second&quot; | jq .
+{
+  &quot;kind&quot;: &quot;MetricValueList&quot;,
+  &quot;apiVersion&quot;: &quot;custom.metrics.k8s.io/v1beta1&quot;,
+  &quot;metadata&quot;: {
+    &quot;selfLink&quot;: &quot;/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/%2A/nginx_vts_server_requests_per_second&quot;
+  },
+  &quot;items&quot;: [
+    {
+      &quot;describedObject&quot;: {
+        &quot;kind&quot;: &quot;Pod&quot;,
+        &quot;namespace&quot;: &quot;default&quot;,
+        &quot;name&quot;: &quot;hpa-prom-demo-755bb56f85-lvksr&quot;,
+        &quot;apiVersion&quot;: &quot;/v1&quot;
+      },
+      &quot;metricName&quot;: &quot;nginx_vts_server_requests_per_second&quot;,
+      &quot;timestamp&quot;: &quot;2020-04-07T09:45:45Z&quot;,
+      &quot;value&quot;: &quot;527m&quot;,
+      &quot;selector&quot;: null
+    }
+  ]
+}
+</code></pre>
+<p>出现类似上面的信息就表明已经配置成功了，接下来我们部署一个针对上面的自定义指标的 HAP 资源对象，如下所示：(<code>hpa-prome.yaml</code>)</p>
+<pre><code>apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-custom-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hpa-prom-demo
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+  - type: Pods
+    pods:
+      metricName: nginx_vts_server_requests_per_second
+      targetAverageValue: 10
+</code></pre>
+<p>如果请求数超过每秒10个，则将对应用进行扩容。直接创建上面的资源对象：</p>
+<pre><code>$ kubectl apply -f hpa-prome.yaml
+horizontalpodautoscaler.autoscaling/nginx-custom-hpa created
+$ kubectl describe hpa nginx-custom-hpa
+Name:                                              nginx-custom-hpa
+Namespace:                                         default
+Labels:                                            &lt;none&gt;
+Annotations:                                       kubectl.kubernetes.io/last-applied-configuration:
+                                                     {&quot;apiVersion&quot;:&quot;autoscaling/v2beta1&quot;,&quot;kind&quot;:&quot;HorizontalPodAutoscaler&quot;,&quot;metadata&quot;:{&quot;annotations&quot;:{},&quot;name&quot;:&quot;nginx-custom-hpa&quot;,&quot;namespace&quot;:&quot;d...
+CreationTimestamp:                                 Tue, 07 Apr 2020 17:54:55 +0800
+Reference:                                         Deployment/hpa-prom-demo
+Metrics:                                           ( current / target )
+  &quot;nginx_vts_server_requests_per_second&quot; on pods:  &lt;unknown&gt; / 10
+Min replicas:                                      2
+Max replicas:                                      5
+Deployment pods:                                   1 current / 2 desired
+Conditions:
+  Type         Status  Reason            Message
+  ----         ------  ------            -------
+  AbleToScale  True    SucceededRescale  the HPA controller was able to update the target scale to 2
+Events:
+  Type    Reason             Age   From                       Message
+  ----    ------             ----  ----                       -------
+  Normal  SuccessfulRescale  7s    horizontal-pod-autoscaler  New size: 2; reason: Current number of replicas below Spec.MinReplicas
+</code></pre>
+<p>可以看到 HPA 对象已经生效了，会应用最小的副本数2，所以会新增一个 Pod 副本：</p>
+<pre><code>$ kubectl get pods -l app=nginx-server
+NAME                             READY   STATUS    RESTARTS   AGE
+hpa-prom-demo-755bb56f85-s5dzf   1/1     Running   0          67s
+hpa-prom-demo-755bb56f85-wbpfr   1/1     Running   0          3m30s
+</code></pre>
+<p>接下来我们同样对应用进行压测：</p>
+<pre><code>$ while true; do wget -q -O- http://localhost:30339; done
+</code></pre>
+<p>打开另外一个终端观察 HPA 对象的变化：</p>
+<pre><code>$ kubectl get hpa
+NAME               REFERENCE                  TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+nginx-custom-hpa   Deployment/hpa-prom-demo   14239m/10   2         5         2          4m27s
+$ kubectl describe hpa nginx-custom-hpa
+Name:                                              nginx-custom-hpa
+Namespace:                                         default
+Labels:                                            &lt;none&gt;
+Annotations:                                       kubectl.kubernetes.io/last-applied-configuration:
+                                                     {&quot;apiVersion&quot;:&quot;autoscaling/v2beta1&quot;,&quot;kind&quot;:&quot;HorizontalPodAutoscaler&quot;,&quot;metadata&quot;:{&quot;annotations&quot;:{},&quot;name&quot;:&quot;nginx-custom-hpa&quot;,&quot;namespace&quot;:&quot;d...
+CreationTimestamp:                                 Tue, 07 Apr 2020 17:54:55 +0800
+Reference:                                         Deployment/hpa-prom-demo
+Metrics:                                           ( current / target )
+  &quot;nginx_vts_server_requests_per_second&quot; on pods:  14308m / 10
+Min replicas:                                      2
+Max replicas:                                      5
+Deployment pods:                                   3 current / 3 desired
+Conditions:
+  Type            Status  Reason              Message
+  ----            ------  ------              -------
+  AbleToScale     True    ReadyForNewScale    recommended size matches current size
+  ScalingActive   True    ValidMetricFound    the HPA was able to successfully calculate a replica count from pods metric nginx_vts_server_requests_per_second
+  ScalingLimited  False   DesiredWithinRange  the desired count is within the acceptable range
+Events:
+  Type    Reason             Age   From                       Message
+  ----    ------             ----  ----                       -------
+  Normal  SuccessfulRescale  5m2s  horizontal-pod-autoscaler  New size: 2; reason: Current number of replicas below Spec.MinReplicas
+  Normal  SuccessfulRescale  61s   horizontal-pod-autoscaler  New size: 3; reason: pods metric nginx_vts_server_requests_per_second above target
+</code></pre>
+<p>可以看到指标 <code>nginx_vts_server_requests_per_second</code> 的数据已经超过阈值了，触发扩容动作了，副本数变成了<code>3</code>，但是后续很难继续扩容了，这是因为上面我们的 <code>while</code> 命令并不够快，<code>3</code>个副本完全可以满足每秒不超过 <code>10</code> 个请求的阈值。</p>
+<p><img alt="Alt Image Text" src="../../images/38_7.png" title="Body image" /></p>
+<p>如果需要更好的进行测试，我们可以使用一些压测工具，比如 ab、fortio 等工具。当我们中断测试后，默认5分钟过后就会自动缩容：</p>
+<pre><code>$ kubectl describe hpa nginx-custom-hpa
+Name:                                              nginx-custom-hpa
+Namespace:                                         default
+Labels:                                            &lt;none&gt;
+Annotations:                                       kubectl.kubernetes.io/last-applied-configuration:
+                                                     {&quot;apiVersion&quot;:&quot;autoscaling/v2beta1&quot;,&quot;kind&quot;:&quot;HorizontalPodAutoscaler&quot;,&quot;metadata&quot;:{&quot;annotations&quot;:{},&quot;name&quot;:&quot;nginx-custom-hpa&quot;,&quot;namespace&quot;:&quot;d...
+CreationTimestamp:                                 Tue, 07 Apr 2020 17:54:55 +0800
+Reference:                                         Deployment/hpa-prom-demo
+Metrics:                                           ( current / target )
+  &quot;nginx_vts_server_requests_per_second&quot; on pods:  533m / 10
+Min replicas:                                      2
+Max replicas:                                      5
+Deployment pods:                                   2 current / 2 desired
+Conditions:
+  Type            Status  Reason            Message
+  ----            ------  ------            -------
+  AbleToScale     True    ReadyForNewScale  recommended size matches current size
+  ScalingActive   True    ValidMetricFound  the HPA was able to successfully calculate a replica count from pods metric nginx_vts_server_requests_per_second
+  ScalingLimited  True    TooFewReplicas    the desired replica count is less than the minimum replica count
+Events:
+  Type    Reason             Age   From                       Message
+  ----    ------             ----  ----                       -------
+  Normal  SuccessfulRescale  23m   horizontal-pod-autoscaler  New size: 2; reason: Current number of replicas below Spec.MinReplicas
+  Normal  SuccessfulRescale  19m   horizontal-pod-autoscaler  New size: 3; reason: pods metric nginx_vts_server_requests_per_second above target
+  Normal  SuccessfulRescale  4m2s  horizontal-pod-autoscaler  New size: 2; reason: All metrics below target
+</code></pre>
+<p>到这里我们就完成了使用自定义的指标对应用进行自动扩缩容的操作。如果 <code>Prometheus</code> 安装在我们的 Kubernetes 集群之外，则只需要确保可以从集群访问到查询的端点，并在 adapter 的部署清单中对其进行更新即可。在更复杂的场景中，可以获取多个指标结合使用来制定扩展策略。</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      
+        
+        <a href="../20Install_metrics_server_SAP_CC/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 第五节 Install Kubernetes Metrics Server on SAP Converged Cloud" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              第五节 Install Kubernetes Metrics Server on SAP Converged Cloud
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../55prometheus_go_metrics/" class="md-footer__link md-footer__link--next" aria-label="下一页: 第七节 为Go应用添加Prometheus监控指标" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              第七节 为Go应用添加Prometheus监控指标
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\uff0c\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.39f04ddb.min.js"></script>
+      
+    
+  </body>
+</html>

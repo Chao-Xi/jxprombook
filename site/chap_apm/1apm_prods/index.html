@@ -1,0 +1,3144 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Prometheus 技术实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.5.2">
+    
+    
+      
+        <title>第一节 APM产品落地实战 - Jacob Prometheus Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.9f9400aa.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#ffa724">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="orange" data-md-color-accent="orange">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#apm" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob Prometheus Book" class="md-header__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob Prometheus Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第一节 APM产品落地实战
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob Prometheus Book" class="md-nav__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob Prometheus Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Prometheus技术介绍,K8S Metrics介绍&查看
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus技术介绍,K8S Metrics介绍&查看" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus技术介绍,K8S Metrics介绍&查看
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/57prometheus_best_practice/" class="md-nav__link">
+        第零节 Promethues 应用监控的一些实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1prometheus2022/" class="md-nav__link">
+        第一节 Prometheus 系统介绍 2022
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/18Adv_Prometheus_index_classfication/" class="md-nav__link">
+        第二节 深入Prometheus设计-指标定义与分类(PromQL)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/k8s_adv39_kube_state_metrics/" class="md-nav__link">
+        第三节 kube-state-metrics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/17Adv_K8S_Metrics_Server/" class="md-nav__link">
+        第四节 Metrics Server 安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/20Install_metrics_server_SAP_CC/" class="md-nav__link">
+        第五节 Install Kubernetes Metrics Server on SAP Converged Cloud
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/38k8s_hpa_metricsserver/" class="md-nav__link">
+        第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/55prometheus_go_metrics/" class="md-nav__link">
+        第七节 为Go应用添加Prometheus监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/37kubectl_top/" class="md-nav__link">
+        第八节 从kubectl top看K8S监控原理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/9kube-state-metrics_crd/" class="md-nav__link">
+        第九节 通过 kube-state-metrics 添加 CRD 状态指标
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Prometheus on Linux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus on Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus on Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/19centos7_Prometheus_Alertmanager_Grafana/" class="md-nav__link">
+        第一节 Centos7 Prometheus安装部署+监控+绘图+告警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/59node_exporter/" class="md-nav__link">
+        第二节 使用Node Exporter监控Linux主机&常用监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/36Prometheus_Mysql/" class="md-nav__link">
+        第三节 基于Prometheus构建MySQL可视化监控平台
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4mysql_exporter/" class="md-nav__link">
+        第四节 官方 mysqld_exporter支持抓取多MySQL实例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/5prom_grafana_chatops/" class="md-nav__link">
+        第五节 使用 Grafana、Prometheus 和 Slack 构建一个简单的 ChatOps 机器人
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          手动部署Kubernetes Prometheus
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="手动部署Kubernetes Prometheus" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          手动部署Kubernetes Prometheus
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1prometheus_setup/" class="md-nav__link">
+        第一节 Kubernetes使用Prometheus搭建监控平台(2018)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2prometheus_AlertManager/" class="md-nav__link">
+        第二节 Prometheus报警 && AlertManager实战（2018）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3changes_on_Grafana/" class="md-nav__link">
+        第三节 Grafana 显示参数设置(2018)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4Adv_Prometheus_setup/" class="md-nav__link">
+        第四节 在 Kubernetes 中手动部署 Prometheus (adv)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5Adv_Prometheus_monitor/" class="md-nav__link">
+        第五节 应用监控（Metrics/Exporter的配置）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6Adv_K8S_Nodes_monitor/" class="md-nav__link">
+        第六节 监控K8S集群节点&Node-exporter DaemonSet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7Adv_K8S_Resource_monitor/" class="md-nav__link">
+        第七节 监控常用资源对象（容器/apiserver/Service监控/kube-state-metric）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8Adv_K8S_Grafana/" class="md-nav__link">
+        第八节 Grafana 在 Kubernetes 中的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/10Adv_k8s_AlertManger/" class="md-nav__link">
+        第九节 报警神器 AlertManager 的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/16Adv_Prometheus_Del_index/" class="md-nav__link">
+        第十节 Prometheus 删除数据指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/50PrometheusAlert/" class="md-nav__link">
+        第十一节 Prometheus中使用PrometheusAlert进行聚合报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/12gpu_monitor/" class="md-nav__link">
+        第十二节 监控Kubernetes集群的GPU资源
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/29AlertManager_SendAlerts_when/" class="md-nav__link">
+        第十三节 AlertManager何时报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/41Prometheus_Monitor_OutCluster/" class="md-nav__link">
+        第十四节 Prometheus监控外部Kubernetes集群
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          玩转Prometheus Operator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="玩转Prometheus Operator" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          玩转Prometheus Operator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11Adv_Prometheus_Operator/" class="md-nav__link">
+        第一节 Prometheus Operator 初体验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/13Adv_Prometheus_Operator_etcd/" class="md-nav__link">
+        第二节 使用 Prometheus Operator 监控 etcd
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/14Adv_Prometheus_Operator_alarm/" class="md-nav__link">
+        第三节 Prometheus Operator 自定义报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/22Customize_Alert_Email/" class="md-nav__link">
+        第四节 Add Custom Alert and Send Alert Email with Alertmanager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/24Kubernetes_Prometheus_blackbox/" class="md-nav__link">
+        第五节 Prometheus 黑盒监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/32Prometheus_troubleshoot_Servicemonitor/" class="md-nav__link">
+        第六节 Troubleshooting ServiceMonitor changes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/43Prometheus_operator_ssl_exporter/" class="md-nav__link">
+        第七节 使用ssl_exporter监控K8S集群证书
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/44Prometheus_KubeNurse/" class="md-nav__link">
+        第八节 Operator2021-使用KubeNurse进行集群网络监控
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/45Prom-operator_2021/" class="md-nav__link">
+        第九节 Prometheus Operator安装配置(2021)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/46Prometheus_traefik/" class="md-nav__link">
+        第十节 Traefik之使用Prometheus Operator进行监控报警2021
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/47Prometheus_opt_AlertmanagerConfig/" class="md-nav__link">
+        第十一节 Operator使用AlertmanagerConfig进行报警配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/49Prometheus_SLI_SLO/" class="md-nav__link">
+        第十二节 通过Prometheus来做SLI/SLO监控展示
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/51missing-container-metrics/" class="md-nav__link">
+        第十三节 Prometheus使用missing-container-metrics监控Pod oomkill
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/chap4_blackbox/" class="md-nav__link">
+        第十四节 如何在Prometheus中进行黑盒监控(ICMP/DNS/TCP/HTTP/gRPC)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Prometheus服务发现
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus服务发现" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus服务发现
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/53Prometheus_auto_discovery/" class="md-nav__link">
+        第一节 Prometheus服务的自动发现使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/52Prometheus_Relabeling/" class="md-nav__link">
+        第二节 Prometheus Relabeling重新标记的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/54prometheus_go_metrics_guideline/" class="md-nav__link">
+        第三节 如何使用Prometheus仪表化应用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Jam prometheus Monitor
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Jam prometheus Monitor" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Jam prometheus Monitor
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/25Alertmanager_AWS_SES/" class="md-nav__link">
+        Chap1 Alertmanager alerts with Amazon SES SMTP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/26Prometheus_Monitor_Argocd/" class="md-nav__link">
+        Chap2 Prometheus Operator Monitor on ArgoCD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/27Prometheus_Monitor_elasticsearch/" class="md-nav__link">
+        Chap3 Prometheus Operator Monitor on ElasticSearch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/31Prometheus_Monitor_rabbitmq/" class="md-nav__link">
+        Chap4 Prometheus Operator Monitor on Rabbitmq
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/33Prometheus_Monitor_memcached/" class="md-nav__link">
+        Chap5 Prometheus Operator Monitor on Memcached
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Prometheus-Adapter
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus-Adapter" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus-Adapter
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/23Kubernetes_Scale_Prometheus-Adapter/" class="md-nav__link">
+        应用进行自定义指标扩缩容 by Prometheus-Adapter and Flask-Exporter
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          PromQL学习
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="PromQL学习" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          PromQL学习
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1Promql_basic1/" class="md-nav__link">
+        1 初识 PromQL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2Promql_basic2/" class="md-nav__link">
+        2 PromQL 操作符 & 内置函数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3Promql_basic3/" class="md-nav__link">
+        3 PromQL 内置函数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/4Promql_basic4/" class="md-nav__link">
+        4 PromQL简单示例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/5Promql_basic5/" class="md-nav__link">
+        5 在 HTTP API中使用 PromQL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/6Promql_adv1/" class="md-nav__link">
+        6 Prometheus记录规则的使用(Recording Rule)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/56prometheus_promql_rate/" class="md-nav__link">
+        7 PromQL查询之rate函数的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/60prometheus_job/" class="md-nav__link">
+        8 解决Prometheus监控Kubernetes Job误报的坑
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/9promql_6errors/" class="md-nav__link">
+        9 使用 Prometheus PromQL时需要避免这6个错误
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Awesome alerts rules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Awesome alerts rules" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Awesome alerts rules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1basic_resource/" class="md-nav__link">
+        1 Basic resource monitoring
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2database_broker/" class="md-nav__link">
+        2 Databases and brokers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3proxy_lb/" class="md-nav__link">
+        3 Reverse proxies and load balancers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4runtimes/" class="md-nav__link">
+        4 Runtimes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5Orchestrators/" class="md-nav__link">
+        5 Orchestrators
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/6network_sec_storage/" class="md-nav__link">
+        6 Network, security and storage
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/7other/" class="md-nav__link">
+        7 Others
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/8Alerting_sleep/" class="md-nav__link">
+        8 Alert Sleep Peacefully
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11">
+          数据可视化&Grafana Plugin
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="数据可视化&Grafana Plugin" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          数据可视化&Grafana Plugin
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/58grafana_init/" class="md-nav__link">
+        1 使用 Grafana 构建你的第一个仪表盘
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/28Grafana_plugin_DevOpsProdigy/" class="md-nav__link">
+        2 优秀的Grafana K8S 插件-DevOpsProdigy KubeGraf
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/30Create_Grafana_dashboards/" class="md-nav__link">
+        3 用 Kubernetes darks资源对象创建Grafana Dashboard
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/48grafana_Trickster/" class="md-nav__link">
+        4 Grafana 图表加速神器-Trickster
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/5Grafana_Loki/" class="md-nav__link">
+        5 使用读写分离模式扩展 Grafana Loki
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12">
+          Prometheus(OpenTelemetry)架构设计与工具平台
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Prometheus(OpenTelemetry)架构设计与工具平台" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Prometheus(OpenTelemetry)架构设计与工具平台
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1deepflow/" class="md-nav__link">
+        1 DeepFlow AutoTagging之Prometheus标签标准化
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2Prometheus_opentele/" class="md-nav__link">
+        2 Prometheus与OpenTelemetry该选哪个？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/3Prometheus_index/" class="md-nav__link">
+        3 Prometheus的四种指标类型
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/4OpenTelemetry/" class="md-nav__link">
+        4 透彻理解OpenTelemetry
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13">
+          Thanos
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Thanos" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Thanos
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/39Thanos_tutorial/" class="md-nav__link">
+        第一节 大规模场景下Prometheus的优化手段&Thanos架构详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/34Thanos_intro/" class="md-nav__link">
+        第二节 使用Thanos实现Prometheus的高可用介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/35Thanos_install/" class="md-nav__link">
+        第三节 Prometheus高可用Thanos学习-sidercar和query&Thanos部署
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/61thanos_sidecar_receiver/" class="md-nav__link">
+        第四节（2022）如何选择Thanos的Sidecar和Receiver两种模式？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/62thanos_query/" class="md-nav__link">
+        第五节（2022）使用Thanos查询前端优化查询性能
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/63prometheus_optimiztion/" class="md-nav__link">
+        第六节 (Thaos1-2022)大规模场景下Prometheus的优化手段
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/64thanos_detail/" class="md-nav__link">
+        第七节 (Thaos2-2022)Thanos架构详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/65thanos_setup/" class="md-nav__link">
+        第八节 (Thaos3-2022)Thanos部署与实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/66thanos_ruler/" class="md-nav__link">
+        第九节（2022）Thanos Ruler组件的使用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_14" type="checkbox" id="__nav_14" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14">
+          VictoriaMetrics
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="VictoriaMetrics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          VictoriaMetrics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/67vm_intro/" class="md-nav__link">
+        第一节 Prometheus远程存储VictoriaMetrics简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/68vm_setup/" class="md-nav__link">
+        第二节 Prometheus长期远程存储方案VictoriaMetrics入门实践
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/69vm_cluster/" class="md-nav__link">
+        第三节 VictorialMetrics 集群模式的使用
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/70vm_vmagent/" class="md-nav__link">
+        第四节 使用vmagent代替Prometheus采集监控指标
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/71vm_operator/" class="md-nav__link">
+        第五节 使用Victoria Metrics Operator管理VM集群
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/72vm_vmalert/" class="md-nav__link">
+        第六节 使用 vmalert 代替 Prometheus 监控报警
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/73vm_pressure/" class="md-nav__link">
+        第七节 对Prometheus兼容的时序数据库进行压力测试
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_15" type="checkbox" id="__nav_15" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15">
+          APM 工具及功能介绍
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="APM 工具及功能介绍" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          APM 工具及功能介绍
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          第一节 APM产品落地实战
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        第一节 APM产品落地实战
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-cat" class="md-nav__link">
+    1 系统监控：老牌监控点评 CAT
+  </a>
+  
+    <nav class="md-nav" aria-label="1 系统监控：老牌监控点评 CAT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-cat" class="md-nav__link">
+    1-1 CAT 凭什么称为“老牌监控”？
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2" class="md-nav__link">
+    1-2 实时的代码段监控报表
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-3" class="md-nav__link">
+    1-3 客户端性能损耗低
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-4" class="md-nav__link">
+    1-4 落地实践要点
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-5" class="md-nav__link">
+    1-5 线程优化
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-apm-apache-skywalking" class="md-nav__link">
+    2 APM 引领者：Apache SkyWalking
+  </a>
+  
+    <nav class="md-nav" aria-label="2 APM 引领者：Apache SkyWalking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-apache-skywalking" class="md-nav__link">
+    2-1 Apache SkyWalking 发展历程
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2" class="md-nav__link">
+    2-2 企业级落地
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-java-alibaba-arthas" class="md-nav__link">
+    3 Java 性能分析神器 Alibaba Arthas
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Java 性能分析神器 Alibaba Arthas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-arthas" class="md-nav__link">
+    3-1 Arthas 的核心应用场景如下
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2" class="md-nav__link">
+    3-2 学习路径：命令+场景+原理
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3" class="md-nav__link">
+    3-3 两套部署方案
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-alibaba-sentinel" class="md-nav__link">
+    4 Alibaba Sentinel 时刻守卫流量健康
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Alibaba Sentinel 时刻守卫流量健康">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    1.技术骨架图，深入设计原理
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-treenodebuilder-cluster-node-builder" class="md-nav__link">
+    2 构建调用树（TreeNodeBuilder 和 Cluster NODE Builder）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3 服务节点引入
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-java-visualvm" class="md-nav__link">
+    4 故障定位：Java VisualVM
+  </a>
+  
+    <nav class="md-nav" aria-label="4 故障定位：Java VisualVM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    1.操作权限
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2.安全限制
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-visualvm" class="md-nav__link">
+    3 VisualVM 四个选项卡都有哪些能力？
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-visualvm" class="md-nav__link">
+    4 VisualVM 的插件体系
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kibana" class="md-nav__link">
+    4 日志可视化：Kibana
+  </a>
+  
+    <nav class="md-nav" aria-label="4 日志可视化：Kibana">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_2" class="md-nav__link">
+    1 重新认识日志
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-kibana" class="md-nav__link">
+    2 Kibana 探索和分析日志
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-grafana" class="md-nav__link">
+    5 多数据源让 Grafana 监控报警更高效
+  </a>
+  
+    <nav class="md-nav" aria-label="5 多数据源让 Grafana 监控报警更高效">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-1-grafana" class="md-nav__link">
+    5-1 Grafana 的核心设计
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafana" class="md-nav__link">
+    应用服务配置 Grafana 指标
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-apm" class="md-nav__link">
+    6 熟悉 APM 产品
+  </a>
+  
+    <nav class="md-nav" aria-label="6 熟悉 APM 产品">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apache-skywalking" class="md-nav__link">
+    Apache SkyWalking
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alibaba-arthas" class="md-nav__link">
+    Alibaba Arthas
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java-visualvm" class="md-nav__link">
+    Java VisualVM
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2opentracing/" class="md-nav__link">
+        第二节 APM + OpenTracing原理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3apm_tracing/" class="md-nav__link">
+        第三节 怎么理解分布式链路追踪技术？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4apm_prod/" class="md-nav__link">
+        第四节 在生产环境中如何选择靠谱的APM系统？
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5apm_Sentry/" class="md-nav__link">
+        第五节 Sentry+OpenTelemetry前后端全链路打通
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6k8s_watching/" class="md-nav__link">
+        第六节 聊聊可观测性之数据模型
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-cat" class="md-nav__link">
+    1 系统监控：老牌监控点评 CAT
+  </a>
+  
+    <nav class="md-nav" aria-label="1 系统监控：老牌监控点评 CAT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-1-cat" class="md-nav__link">
+    1-1 CAT 凭什么称为“老牌监控”？
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-2" class="md-nav__link">
+    1-2 实时的代码段监控报表
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-3" class="md-nav__link">
+    1-3 客户端性能损耗低
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-4" class="md-nav__link">
+    1-4 落地实践要点
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-5" class="md-nav__link">
+    1-5 线程优化
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-apm-apache-skywalking" class="md-nav__link">
+    2 APM 引领者：Apache SkyWalking
+  </a>
+  
+    <nav class="md-nav" aria-label="2 APM 引领者：Apache SkyWalking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-1-apache-skywalking" class="md-nav__link">
+    2-1 Apache SkyWalking 发展历程
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-2" class="md-nav__link">
+    2-2 企业级落地
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-java-alibaba-arthas" class="md-nav__link">
+    3 Java 性能分析神器 Alibaba Arthas
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Java 性能分析神器 Alibaba Arthas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3-1-arthas" class="md-nav__link">
+    3-1 Arthas 的核心应用场景如下
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-2" class="md-nav__link">
+    3-2 学习路径：命令+场景+原理
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-3" class="md-nav__link">
+    3-3 两套部署方案
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-alibaba-sentinel" class="md-nav__link">
+    4 Alibaba Sentinel 时刻守卫流量健康
+  </a>
+  
+    <nav class="md-nav" aria-label="4 Alibaba Sentinel 时刻守卫流量健康">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    1.技术骨架图，深入设计原理
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-treenodebuilder-cluster-node-builder" class="md-nav__link">
+    2 构建调用树（TreeNodeBuilder 和 Cluster NODE Builder）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3 服务节点引入
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-java-visualvm" class="md-nav__link">
+    4 故障定位：Java VisualVM
+  </a>
+  
+    <nav class="md-nav" aria-label="4 故障定位：Java VisualVM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    1.操作权限
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2.安全限制
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-visualvm" class="md-nav__link">
+    3 VisualVM 四个选项卡都有哪些能力？
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-visualvm" class="md-nav__link">
+    4 VisualVM 的插件体系
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-kibana" class="md-nav__link">
+    4 日志可视化：Kibana
+  </a>
+  
+    <nav class="md-nav" aria-label="4 日志可视化：Kibana">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_2" class="md-nav__link">
+    1 重新认识日志
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-kibana" class="md-nav__link">
+    2 Kibana 探索和分析日志
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-grafana" class="md-nav__link">
+    5 多数据源让 Grafana 监控报警更高效
+  </a>
+  
+    <nav class="md-nav" aria-label="5 多数据源让 Grafana 监控报警更高效">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-1-grafana" class="md-nav__link">
+    5-1 Grafana 的核心设计
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafana" class="md-nav__link">
+    应用服务配置 Grafana 指标
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-apm" class="md-nav__link">
+    6 熟悉 APM 产品
+  </a>
+  
+    <nav class="md-nav" aria-label="6 熟悉 APM 产品">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apache-skywalking" class="md-nav__link">
+    Apache SkyWalking
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alibaba-arthas" class="md-nav__link">
+    Alibaba Arthas
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java-visualvm" class="md-nav__link">
+    Java VisualVM
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/Chao-Xi/jxprombook.git/edit/master/docs/chap_apm/1apm_prods.md" title="编辑此页" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="apm"><strong>第一节 APM产品落地实战</strong></h1>
+<h2 id="1-cat"><strong>1 系统监控：老牌监控点评 CAT</strong></h2>
+<blockquote>
+<p>CAT（Central Application Tracking）</p>
+</blockquote>
+<p>首先，从时间上看，CAT 首个开源版本是在 2012 年，此时期与 APM 相关重大事件有：</p>
+<ul>
+<li>Google 公司发布《<a href="https://ai.google/research/pubs/pub36356?fileGuid=xxQTRXtVcqtHK6j8">Dapper 论文</a>》；</li>
+<li>紧随其后，Naver 公司发布开源无侵入 APM 系统<a href="https://github.com/pinpoint-apm/pinpoint?fileGuid=xxQTRXtVcqtHK6j8">Pinpoint</a>；</li>
+<li>Twitter 公司发布开源 APM 系统<a href="https://github.com/openzipkin/zipkin?fileGuid=xxQTRXtVcqtHK6j8">Zipkin</a>，Zipkin 是 Spring Cloud 分布式追踪系统<a href="https://github.com/spring-cloud/spring-cloud-sleuth?fileGuid=xxQTRXtVcqtHK6j8">Spring-Cloud-Sleuth</a>的解决方案。</li>
+</ul>
+<h3 id="1-1-cat"><strong>1-1 CAT 凭什么称为“老牌监控”？</strong></h3>
+<ul>
+<li>Java 开发实现的实时应用监控平台,  起初专为大规模 Java 微服务集群提供实时监控报警场景</li>
+<li>应用服务在代码中引入 CAT 客户端和相关埋点集成方案即可完成接</li>
+<li>服务端由两个模块组成，<strong>负责收集分析客户端数据的收集器模块</strong>和<strong>负责给用户提供报表展示的控制端模块</strong></li>
+</ul>
+<p>总的来说 CAT 产品架构是由三个模块组成，架构设计非常清晰：</p>
+<ul>
+<li>Cat-client 提供给应用以及中间层埋点的底层 SDK</li>
+<li>Cat-consumer 用于实时分析从客户端提供的数据（收集器模块）</li>
+<li>Cat-home 作为给用户提供展示的控制端（控制端模块）</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_1.png" title="Body image" /></p>
+<h3 id="1-2"><strong>1-2 实时的代码段监控报表</strong></h3>
+<p>CAT 提供了非常丰富的报表，应用服务简单接入 CAT 客户端后，我们就可以通过 CAT 服务端全方位地监控应用集群了</p>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_2.png" title="Body image" /></p>
+<h3 id="1-3"><strong>1-3 客户端性能损耗低</strong></h3>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_3.png" title="Body image" /></p>
+<h3 id="1-4"><strong>1-4 落地实践要点</strong></h3>
+<ul>
+<li>建议所有应用服务接入 CAT</li>
+<li>不建议使用 CAT 分布式链路追踪功能<ul>
+<li><strong>“树形”模型无法追踪批处理框架的链路</strong><ul>
+<li>CAT 使用 ROOT、PARENT 和 CHILD 三个参数实现了分布式链路跟踪的“树形”模型，而“树形”模型是<strong>无法绘制分布式集群中存在批处理框架的链路的</strong>。</li>
+<li>即使不需要追踪批处理框架的链路，CAT 分布式链路跟踪代码也需要让每个 RD 理解跟踪模型，然后分布式跟踪的上下游都需要去进行手动埋点才可以实现</li>
+</ul>
+</li>
+<li><strong>报表展示效果不理想，且过时</strong><ul>
+<li>CAT 分布式链路追踪展示，可通过 Transaction 报表的 logview 视图查看。个人觉得其展示效果相较 SkyWalking、Zipkin 的分布式链路追踪视图存在明显差距。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-5"><strong>1-5 线程优化</strong></h3>
+<p><strong>1.为什么要进行线程优化？</strong></p>
+<ul>
+<li><strong>从软件资源角度</strong>：Java从应用视角看，线程的优化可以优化 JVM 资源，从而减少 GC。</li>
+<li><strong>从硬件资源角度</strong>： 可以实现一个节点资源运行多个进程，降低硬件成本</li>
+<li><strong>从可用性角度</strong>：非预期的 GC 导致应用节点不能按照预期响应消费者，造成应用服务不可用。</li>
+</ul>
+<p><strong>2.使用线程的正确姿势</strong></p>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_4.png" title="Body image" /></p>
+<p>正确使用方式是</p>
+<ul>
+<li>使用线程池去管理线程；</li>
+<li>线程的命名需要有意义；</li>
+<li>任务线程的数量需要与工作线程挂钩，且需要考虑极端情况，如故障重启。</li>
+</ul>
+<p><strong>3.CAT 改造</strong></p>
+<p>为了让 Heartbeat 报表支持更细的框架线程粒度监控，我们需要掌握 CAT 的监控线程实现原理。Heartbeat 功能采集线程通过 <code>Java ThreadMXBean</code> 获取进程中的线程信</p>
+<p>原理很简单，比如我们要监控 Apache Dubbo 的核心线程和活跃线程数，只需要在此处代码增加前缀<code>DubboServerHandler-</code>，即可监控 <code>Apache Dubbo</code> 的核心线程，然后遍历所有的线程，通过获取运行状态或者非等待状态的线程，就可以统计出活跃线程数。</p>
+<p><strong>4. 优化实战</strong></p>
+<p>此应用服务存在大量的内置框架（Apache Dubbo、Netty）的过度线程使用，这些<strong>框架滥用线程</strong>的形式通常会分为以下两种情况。</p>
+<ul>
+<li>第一种：线程池使用一个较大的固定值。例如 Apache Dubbo 为例，服务提供者的默认线程数为 200 的 Fixed 的线程池。</li>
+<li>
+<p>第二种：和 CPU 核心数挂钩的线程池。非常典型的代码<code>Runtime.getRuntime().availableProcessors()*2</code> 获取硬件环境可用的 CPU 核心数 2 倍作为线程池个数，例如 Redisson。</p>
+</li>
+<li>
+<p><strong>数量优化</strong></p>
+<ul>
+<li>第一种，框架使用线程池的方式显然就不合理。通过 CAT 改造，可以监控 Apache Dubbo 的线程数，你会发现一般的应用服务只用了十几个线程。<ul>
+<li>建议，可以根据高峰和一定的未来预估来适当缩小线程池，并且考虑将线程池类型由 Fixed 改为 Cache，实现减少项目的启动时间和不必要的线程池数量。</li>
+</ul>
+</li>
+<li>第二种，主要会在公司使用 IDC 机房，采取物理机多进程混合部署的方式，会存在线程滥用过多的情况。<ul>
+<li>以 Redis 客户端 Redisson 为例，Redisson 客户端使用 Netty 与 Redis 集群通讯，默认的 Netty threads 为 0，这种配置会形成线程数与 CPU 核心数挂钩。</li>
+<li>对于常规的微服务进程，基本都会用到的框架有 HTTP Server、HTTP Client、JDBC、RPC Framework、MQ 和 NoSQL，我们可以自底向上，将每个应用服务的各个框架优化任务分配到各个成员。然后自顶向下，通过 CAT 的持续跟进优化，看是否达到了预期。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>体积优化</strong></p>
+<ul>
+<li>适当缩小线程栈到 512k 以下，在应用服务使用较多线程时，优化的效果会非常明显</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-apm-apache-skywalking"><strong>2 APM 引领者：Apache SkyWalking</strong></h2>
+<h3 id="2-1-apache-skywalking"><strong>2-1 Apache SkyWalking 发展历程</strong></h3>
+<p>这里我先对下面内容使用的版本号，进行简要说明。版本后缀为什么是“.X”？其实软件的发布版本号分为三个部分，即“X.Y.Z”：</p>
+<ul>
+<li>“X”代表主要版本，此版本号的升级代表软件有重大特性发布，且特性很可能不向前兼容；</li>
+<li>“Y”代表次要版本，这个版本通常不提供重要的功能特性，而会对主要版本带来的重大特性，进行迭代升级；</li>
+<li>“Z”代表修复版本，用于 Bug 修复。</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_5.png" title="Body image" /></p>
+<h3 id="2-2"><strong>2-2 企业级落地</strong></h3>
+<p>如果早期落地方案不好，短期看到的都是 APM 工具带来的问题，对 APM 日后的推广非常不利。</p>
+<p><strong>1.探针不稳定，如何及时止损并修复？</strong></p>
+<ul>
+<li>解决思路是：实现秒级别的故障恢复和问题现场保留，然后通过持续的实践，最终找到适合自己团队的方法论。</li>
+<li>止损方案：业务方接入 SkyWalking 探针时，<strong>需要进行一段时间的灰度接入，确保灰度一段时间没有问题，才可以全量接入</strong>。而如果灰度节点出现了问题，一些 CASE 自动（如进程挂掉）和兜底手动将通过脚本使用 Dump 命令对现场进行保留，然后打通发布平台快速摘除探针并上线。</li>
+</ul>
+<p><strong>2.针对不同中间件，如何设计差异化落地方案？</strong></p>
+<p>APM 监控存储的数据都是海量级别的。如果全记录下来，需要投入大量的设备资源，但带来的收益却很小，</p>
+<p>假设要设计一款针对 Redis 的 APM 系统，也就是要做到能监控到的数据最小粒度为 Redis 操作命令，那势必要做出性能比 Redis 还要好的产品才可以</p>
+<p>将要监控的业务系统快速的分为两类：</p>
+<ul>
+<li>高 QPS 低业务编排能力的底层系统</li>
+<li>低 QPS 高业务赋能的业务系统</li>
+</ul>
+<p><strong>3.数据暴露的同时，如何保障信息安全？</strong></p>
+<p>当你引入 SkyWalking 后，会发现固定的账户密码登录后，这些涉密信息便一览无余。</p>
+<ul>
+<li>SkyWalking 接入公司的登录系统，每个 APM 数据都必须有相应的应用归属。当用户查询数据时，只有用户所在的应用归属与 APM 数据的应用归属一致才可以展示。</li>
+<li>APM 在定位问题时，需要相关资源的数据联动展示，才能发挥出真正的价值。所以在应用拓扑和全链路追踪时，会展示相关联的技术数据，如端点信息、耗时等；但不会展示核心数据，如接口的出入参，执行 SQL 具体信息等。</li>
+<li>同时也有部分相关联的数据是不对外展示的，如公司的人事、薪酬等，只对本应用负责的 RD 展示。</li>
+</ul>
+<h2 id="3-java-alibaba-arthas"><strong>3 Java 性能分析神器 Alibaba Arthas</strong></h2>
+<h3 id="3-1-arthas"><strong>3-1 Arthas 的核心应用场景如下</strong></h3>
+<ul>
+<li>场景 1：这个类从哪个 jar 包加载的？为什么会报各种类相关的 Exception？</li>
+<li>场景 2：我改的代码为什么没有执行？难道是我没 commit？分支搞错了？</li>
+<li>场景 3：遇到问题无法在线上 debug，难道只能通过加日志再重新发布吗？</li>
+<li>场景 4：线上遇到某个用户的数据处理有问题，但线上同样无法 debug，线下无法重现！</li>
+<li>场景 5：是否有一个全局视角来查看系统的运行状况？</li>
+<li>场景 6：有什么办法可以监控到 JVM 的实时运行状态？</li>
+<li>场景 7：怎么快速定位应用的热点，生成火焰图？</li>
+</ul>
+<p><strong>总结起来就是，Arthas 不仅能解决开发者无法对线上服务进行 Remote Debug 的难题，还能以全局的视角进行在线监控诊断和热修复</strong></p>
+<h3 id="3-2"><strong>3-2 学习路径：命令+场景+原理</strong></h3>
+<p>Arthas 目前已经集成了 41 个在线命令</p>
+<ul>
+<li>1.通过实操，熟悉命令</li>
+</ul>
+<p><a href="https://arthas.aliyun.com/doc/arthas-tutorials.html?fileGuid=xxQTRXtVcqtHK6j8">根据官网的在线教程</a>，按照四个分类：基础命令、系统命令、类命令和增强命令，将这些命令通通实操一遍，对 Arthas 命令有个全局的感性认知。</p>
+<ul>
+<li>2.深入场景，进行诊断</li>
+</ul>
+<p>下面便是我对 Arthas 官网上七大场景的总结，这七个场景也最能体现 Arthas 产品的价值。</p>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_6.png" title="Body image" /></p>
+<h3 id="3-3"><strong>3-3 两套部署方案</strong></h3>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_7.png" title="Body image" /></p>
+<h2 id="4-alibaba-sentinel"><strong>4 Alibaba Sentinel 时刻守卫流量健康</strong></h2>
+<p>Sentinel 是阿里开源的分布式架构的高可用防护工具，<strong>它以流量为切入点，提供流量控制、流量塑形、熔断降级和过载保护等多维度的高可用保障策略</strong></p>
+<p>Sentinel 便开始着力生态发展，如下图所示：Sentinel 提供更多 Java 微服务框架的开箱即用能力；同时 Sentinel 专注 API 网关服务，让开发者的高可用配置尽可能地收口，并着力于拥抱多语言生态和云原生支持的能力建设。</p>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_8.png" title="Body image" /></p>
+<ul>
+<li>Java 微服务框架适配： Sentinel 与其他 APM 系统（如 SkyWalking、CAT）监控框架的实现方式类似，通过插件化扩展和实现框架拦截器的方式，对 Java 微服务的 Web 服务端、RPC 框架、HTTP 客户端、消息队列等多个方向的框架进行适配。<ul>
+<li>引入相应的组件依赖，并完成简单的配置，即可完成相应的框架接入 Sentinel。如上图右侧所示：Sentinel 适配的框架有 Spring、Dubbo、RocketMQ 等 Java 微服务框架。</li>
+</ul>
+</li>
+<li><strong>API 网关服务： Sentinel 对很多常用的网关服务进行了适配</strong>。<ul>
+<li>Sentinel 认为：在流量处于入口或是转发时进行高可用防护，要比流量来到应用服务后再进行流量控制，有效得多。如上图左侧所示：Sentinel 支持的 API 网关组件有 ZUUL、Spring Cloud Gateway 和 Nginx</li>
+</ul>
+</li>
+<li><strong>多语言支持： Sentinel 在开源后，一直在探索多语言生态演进的路线</strong>。<ul>
+<li>开源之初，Sentinel 只支持 Java；开源后，社区大力发展多语言生态。到目前为止，已经扩展支持了 C++ 和 GO 语言的原生客户端版本。借助多语言的生态，Sentinel 覆盖了更多、更广的场景，如 GO 语言的 Web 应用等。如上图中部所示：Sentinel 支持了 GO 语言和多种云原生产品</li>
+</ul>
+</li>
+</ul>
+<p>Sentinel 一直在做云原生方向上的探索，目前已经具备支持 Service Mesh 高可用的能力，包括 Istio、envoy 和蚂蚁 MOSN 等架构的原生流控支持，未来会对云原生进行更多场景落地，比如 kubernetes 平台整合等。</p>
+<h3 id="1"><strong>1.技术骨架图，深入设计原理</strong></h3>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_9.png" title="Body image" /></p>
+<h3 id="2-treenodebuilder-cluster-node-builder"><strong>2 构建调用树（TreeNodeBuilder 和 Cluster NODE Builder）</strong></h3>
+<p><strong>规则控制（Action）</strong></p>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_10.png" title="Body image" /></p>
+<h3 id="3"><strong>3 服务节点引入</strong></h3>
+<ul>
+<li>
+<p><strong>对于客户端，我们将统一的基建脚手架中引入 Sentinel 客户端，即可完成部署</strong>。如果应用服务没有脚手架基建，网关的应用服务引入 Sentinel 客户端可以优先于业务的应用服务。</p>
+</li>
+<li>
+<p>对于服务端，我们需要对 Sentinel 引入动态数据源，解决应用服务重启后，规则丢失的问题。Sentinel 已经适配了所有常见的动态数据源组件，你可以因地制宜地选择其一进行部署。例如，企业内部使用 Apollo 解决了分布式配置统一管理的问题，那 Sentinel 动态数据源可以使用<a href="https://github.com/alibaba/Sentinel/tree/master/sentinel-extension/sentinel-datasource-apollo?fileGuid=xxQTRXtVcqtHK6j8">sentinel-datasource-apollo</a>组件完成 Sentinel 服务端的动态数据源。</p>
+</li>
+</ul>
+<h2 id="4-java-visualvm"><strong>4 故障定位：Java VisualVM</strong></h2>
+<p><strong>Java VisualVM（All-in-One Java Troubleshooting Tool）</strong>，VisualVM 是第一款集成了Java 命令行工具和支持实时在线问题分析的轻量级可视化工具，作为 Oracle Java 6 的一部分对外发布。</p>
+<h3 id="1_1"><strong>1.操作权限</strong></h3>
+<p><strong>VisualVM 不支持多用户-角色模式，所以我们需要尽可能缩小使用 VisualVM 操作应用服务的人员范围。</strong></p>
+<p>动态管理产品树上每个应用服务节点上的归属成员，就可以实现 VisualVM 工具权限的统一管理。使用产品树对所有 APM 工具的使用权限进行收口，在团队愈发壮大时，收益也会越来越大。</p>
+<h3 id="2"><strong>2.安全限制</strong></h3>
+<p>JMX（Java Management Extensions）</p>
+<p>JMX 是一个规范，它实现了 Java 远程监控管理的接口。</p>
+<h3 id="3-visualvm"><strong>3 VisualVM 四个选项卡都有哪些能力？</strong></h3>
+<ul>
+<li>
+<p><strong>概述：此界面展示进程相关的概览信息、JVM 参数和系统属性</strong>。因为企业中开发人员是无法直观查看线上配置，所以概述选项卡很好地展示进程使用的线上环境信息，可以让我们快速确定是否是环境问题造成的线上问题。</p>
+</li>
+<li>
+<p><strong>监视：此界面展示实时的 CPU 使用情况、JVM 堆信息，以及 Java 8 的元空间信息、类加载情况、进程中的线程情况</strong>。此页面的监视数据不支持追溯历史，所以追溯历史可以使用 CAT 等 APM 工具解决。监视界面的执行 GC、堆 Dump 可以以最快速度进行现场保留。</p>
+</li>
+<li>
+<p>线程：此页界面展示实时运行的各个线程情况，主要包括线程在一段时间内的运行状况，通过不同颜色的标识线程分别处于的 5 种常见状态：<strong>运行、休眠、等待、驻留、监视</strong>；右上角“线程 Dump”按钮，可以对线程进行快照操作。</p>
+</li>
+<li>
+<p><strong>抽样器：此界面对进程使用的 CPU 和内存进行采样，进行性能分析</strong>。CPU 抽样，通过方法的视角，查看方法占用 CPU 的情况；内存抽样，通过类名归类和线程使用内存的视角，进行内存分配的调优。</p>
+</li>
+</ul>
+<h3 id="4-visualvm"><strong>4 VisualVM 的插件体系</strong></h3>
+<ul>
+<li>对于使用 Java 8 的用户，VisualVM 已经在 JDK 的 bin 目录中了。但当你打开插件仓库，会发现没有可以安装的插件，是因为插件的地址已失效，需要我们手动更新官方的插件中心地址。</li>
+<li>对于使用 Java 11 的用户，VisualVM 在 JDK9 后，已不再为 Oracle JDK 的一部分，我们需要去<a href="https://visualvm.github.io/?fileGuid=xxQTRXtVcqtHK6j8">VisualVM官网</a>进行下载。</li>
+</ul>
+<p>目前 VisualVM 历经了十几年的发展，总共有 20 个多插件，根据插件类型可以分为以下 8 种。</p>
+<ul>
+<li>Profiling（性能剖析）：Startup Profiler、BTrace Workbench</li>
+<li>Sources（代码资源）：VisualVM-GoToSource</li>
+<li>Tools（工具）：Threads Inspector、VisualVM-JConsole、VisualVM-BufferMonitor、VisualVM-TDA-Module、KillApplication、VisualVM-Coherence、Visual GC、VisualVM-MBeans</li>
+<li>Platform（监控）：VisualVM-Extensions</li>
+<li>Security（安全）：VisualVM-Security</li>
+<li>Tracer（追踪）：Tracer-Monitor Probes、Tracer-Collections Probes、Tracer-JavaFX Probes、Tracer-IO Probes、Tracer-Swing Probes、Tracer-Jvmstat Probes、Tracer-JVM Probes</li>
+<li>UI（页面增强）：OQL Syntax Support</li>
+<li>Libraries（类库）：GraalJS</li>
+</ul>
+<p>比如：Startup Profiler插件是在应用程序的启动阶段进行剖析的工具；GoToSource 插件是支持源代码导航和展示。</p>
+<h2 id="4-kibana"><strong>4 日志可视化：Kibana</strong></h2>
+<p>ELK 是 Elastic 公司的三个开源项目的缩写，这三个项目分别如下。</p>
+<ul>
+<li>Elasticsearch：基于 Apache Lucene 搜索引擎，使用 RESTful 接口屏蔽了搜索架构的复杂性。</li>
+<li>Logstash：服务器数据处理管道。</li>
+<li>Kibana：Elasticsearch 搜索引擎的可视化平台。</li>
+</ul>
+<h3 id="1_2"><strong>1 重新认识日志</strong></h3>
+<p>当下的业务开发人员都是将日志信息委托给日志框架进行打印，所以日志内容可以分为两类：</p>
+<ul>
+<li>日志框架打印的日志信息</li>
+<li>一线开发人员打印的日志信息</li>
+</ul>
+<p>除了业务开发人员通过日志框架打印业务日志外，在框架层面还有框架日志。</p>
+<p>其中日志框架打印的信息，常用的属性如下。</p>
+<ul>
+<li><strong>时间戳</strong>：调用日志方法时生成时间戳，解决异步打印、异步收集造成的时间不精准问题。</li>
+<li><strong>线程名称</strong>：由于线程 ID 不直观，所以通常使用线程名称来标识线程（注意不可以使用默认线程名称，需要根据使用线程情况来重命名线程名称）。</li>
+<li><strong>日志级别</strong>：根据日志级别的不同，可粗略地对日志进行预处理。比如 DEBUG、TRACE 级别的日志只有在定位问题时才记录；当日志为 ERROR 级别时，立刻发出告警。</li>
+<li><strong>调用位置</strong>：记录打印日志的类名和行号，有助于开发人员快速寻找源代码的上下文现场。</li>
+<li><strong>增强属性</strong>：如全链路跟踪 ID，用于追溯引起日志打印的上下游。</li>
+</ul>
+<h3 id="2-kibana"><strong>2 Kibana 探索和分析日志</strong></h3>
+<ul>
+<li>第一种：通过 Kibana 探索（Discovery）功能，进行准确、实时的集中日志搜索。</li>
+<li>第二种：创建多样的可视化视图（Visualize），将相关联的视图组合成仪表盘（Dashboard）。</li>
+<li>第三种：通过 Elasticsearch SQL 直接从 Elasticsearch 中提取数据，加上丰富元素布局绘制画布（Canvas）。</li>
+</ul>
+<p>使用方式都是必须基于创建索引模式（index pattern）</p>
+<ul>
+<li><strong>1.创建索引模式</strong></li>
+</ul>
+<p>索引模式告诉 Kibana 哪些 Elasticsearch 索引包含了你想处理的日志数据，创建索引模式有多种方式，最常见的就是使用后置通配符。</p>
+<p>在单个 Elasticsearch 集群内部完成索引模式的创建。如下图所示，集群内部有多个以“天”为切分维度的日志索引。如 <code>data_logs-20210307</code>、<code>data_logs-20210306</code>、d<code>ata_logs-20210305</code> 等，我们可以通过 <code>data_logs-*</code> 的正则表达式完成索引的匹配。</p>
+<ul>
+<li>
+<p><strong>2.探索日志</strong></p>
+<ul>
+<li>搜索条件：网站请求非正常返回（HTTP 状态码非 200），且地域为中国流量。</li>
+<li>结果过滤：由于日志属性较多，实现只返回 IP 地址、机器设备和请求的 host。</li>
+<li>时间范围：最近七天。</li>
+</ul>
+</li>
+<li>
+<p><strong>3.制作多样的可视化视图</strong></p>
+</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_11.png" title="Body image" /></p>
+<ul>
+<li><strong>4.构建仪表盘</strong></li>
+</ul>
+<p>仪表盘是相关可视化视图的集合，进入仪表盘的编辑模式，引入相关主题的可视化视图。然后对可视化视图进行展示布局调整，就完成了仪表盘的创建。</p>
+<ul>
+<li>
+<p><strong>5.绘制画布</strong></p>
+<ul>
+<li>创建空白工作区域（workpad）</li>
+<li>选择元素，设置元素的颜色、图像和数据</li>
+<li>指定元素的尺寸和调整布局</li>
+<li>保存画布的演示布局</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_12.png" title="Body image" /></p>
+<h2 id="5-grafana"><strong>5 多数据源让 Grafana 监控报警更高效</strong></h2>
+<h3 id="5-1-grafana"><strong>5-1 Grafana 的核心设计</strong></h3>
+<ul>
+<li><strong>Zabbix</strong></li>
+</ul>
+<p>但当下对物理节点的监控诉求还是很需要的。接下来，我将讲述 Grafana 如何通过插件生态，集成 Zabbix 数据源，完成对物理节点的性能指标监控。</p>
+<p>Zabbix 是监控分布式系统的解决方案，其具备物理机性能监控和对网络状况的监控。使用客户端、服务端模式进行收集数据，即物理机安装 Zabbix Agent 客户端采集数据传送给服务端，通过 web 服务直接对接服务端完成展示。由于 Zabbix web 展示监控数据不理想，所以解决方案是通过 Grafana 集成 Zabbix 数据源完成监控数据的展示。</p>
+<p>Zabbix 数据源属于非官方支持的数据源，需要从开放的插件生态引入，重启 Grafana 服务后，即可在数据源中看到 Zabbix 数据源。</p>
+<ul>
+<li><strong>多维度报警</strong></li>
+</ul>
+<p>相较于 Kibana 需要将用户升级为黄金用户以上级别才支持报警功能，Grafana 报警功能是完全开放的，只要将 Grafana 升级到 4.0 版本以上即可。</p>
+<p>在报警配置界面，可以将报警信息发送至聊天工具 Slack、事件管理平台 PagerDuty 等在 Github 主流的报警媒介；也可以按照企业微信和钉钉的 API 开发文档，对接国内主流办公平台。通过配置报警媒介并集成监控数据源后，便能依据可视化面板的指标配置报警的规则了。</p>
+<p>Grafana报警规则的设计是通过后台的一个调度程序，定时地通过查询引擎识别出当前可视化面板中的指标是否触及报警规则。如果触及，则调用报警媒介下达报警通知。</p>
+<p>由于 Grafana 是可视化平台，监控数据的获取方式可视作为“拉模式”，且报警设计通过后台调度程序完成，所以此方案的设计来报警会稍许滞后。</p>
+<h3 id="grafana"><strong>应用服务配置 Grafana 指标</strong></h3>
+<p><strong>1.用户行为监控</strong></p>
+<p>1）用户生命周期监控</p>
+<p>常见生命周期分为如下图的 5 层，从用户接触产品到遗忘产品的整个过程中，我们可以通过监控分析用户在不同阶段的表现，有的放矢地优化产品体验，引导用户完成运营策略。</p>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_13.png" title="Body image" /></p>
+<p><strong>2.核心场景监控</strong></p>
+<ul>
+<li>业务场景：通过一组相关联的数据或事件，来反映自然语言描述的业务场景。</li>
+<li>业务假设：通过业务场景可能在未来发生的事情做一系列的业务假设。</li>
+<li>监控方案：以业务场景的数据指标为依据，监控业务假设是否成立。</li>
+<li>关键举措：当假设成立时，启动一些应急举措。</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_14.png" title="Body image" /></p>
+<ul>
+<li>1.预防拖垮核心资源</li>
+<li>2.用户权限隔离</li>
+</ul>
+<h2 id="6-apm"><strong>6 熟悉 APM 产品</strong></h2>
+<p><strong>APM 是应用性能管理（Application Performance Management）的缩写。从宏观角度上看，面向解决产品（对用户）体验不好的行为，都可以称为 APM，因此 APM 涉及的范畴非常广泛</strong></p>
+<p><img alt="Alt Image Text" src="../../images/apm1_1_15.png" title="Body image" /></p>
+<h3 id="apache-skywalking"><strong>Apache SkyWalking</strong></h3>
+<ul>
+<li>通过链路追踪页面获取慢链路的 Endpoint；</li>
+<li>再通过性能剖析页面上的输入框，描述你要剖析的 Endpoint；</li>
+<li>最后 SkyWalking 会通过抽样展示这个 Endpoint 关联的线程堆栈信息</li>
+</ul>
+<h3 id="alibaba-arthas"><strong>Alibaba Arthas</strong></h3>
+<ul>
+<li>通过日志上的数据面板（dashboard）命令或线程（thread）命令，获取想要 Dump 的线程 ID；</li>
+<li>再通过线程命令，追加线程 ID 参数获取线程的堆栈信息；</li>
+<li>最后通过各种在线故障排查命令，从而去诊断问题。</li>
+</ul>
+<h3 id="java-visualvm"><strong>Java VisualVM</strong></h3>
+<ul>
+<li>通过应用服务使用日志框架中打印的线程名称，或 VisualVM 可视化客户端的线程选项卡展示的应用名称，从而获取线程实时工作状态；</li>
+<li>再通过线程名称，使用 Threads intspector 插件获取线程的堆栈信息；</li>
+<li>最后使用各种插件进行问题诊断。</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      
+        
+        <a href="../../chap12/73vm_pressure/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 第七节 对Prometheus兼容的时序数据库进行压力测试" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              第七节 对Prometheus兼容的时序数据库进行压力测试
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../2opentracing/" class="md-footer__link md-footer__link--next" aria-label="下一页: 第二节 APM + OpenTracing原理" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              第二节 APM + OpenTracing原理
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\uff0c\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.39f04ddb.min.js"></script>
+      
+    
+  </body>
+</html>
