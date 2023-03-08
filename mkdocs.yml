@@ -20,6 +20,7 @@ nav:
     - '第七节 为Go应用添加Prometheus监控指标': 'chap1/55prometheus_go_metrics.md'
     - '第八节 从kubectl top看K8S监控原理': 'chap1/37kubectl_top.md'
     - '第九节 通过 kube-state-metrics 添加 CRD 状态指标': 'chap1/9kube-state-metrics_crd.md'
+    - '第十节 kube-state-metrics 在大规模集群下的优化(2023)': 'chap1/10kube-state-metrics-cluster-opt.md'
   - 'Prometheus on Linux':
     - '第一节 Centos7 Prometheus安装部署+监控+绘图+告警': 'chap2/19centos7_Prometheus_Alertmanager_Grafana.md'
     - '第二节 使用Node Exporter监控Linux主机&常用监控指标': 'chap2/59node_exporter.md'
