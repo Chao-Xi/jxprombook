@@ -99,6 +99,7 @@ nav:
     - '2 Prometheus与OpenTelemetry该选哪个？': 'chap13/2Prometheus_opentele.md'
     - '3 Prometheus的四种指标类型': 'chap13/3Prometheus_index.md'
     - '4 透彻理解OpenTelemetry': 'chap13/4OpenTelemetry.md'
+    - '5 使用OpenTelemetry Tracing最大化Kubernetes效率': 'chap13/4OpenTelemetry_tracing.md'
   - 'Thanos':
     - '第一节 大规模场景下Prometheus的优化手段&Thanos架构详解': 'chap11/39Thanos_tutorial.md'
     - '第二节 使用Thanos实现Prometheus的高可用介绍': 'chap11/34Thanos_intro.md'
