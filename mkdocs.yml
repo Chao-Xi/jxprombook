@@ -9,6 +9,9 @@ plugins:
 
 nav:
   - 'Welcome': "index.md"
+  - '监控解决方案': 
+    - '1 监控解决方案：10个 Kubernetes 监控工具': 'chap0/1monitor_tools10.md'
+    - '2023 云原生系统监控': 'chap1/11Prom_intro_2023-CN.md'
   - 'Prometheus技术介绍,K8S Metrics介绍&查看':
     - '第零节 Promethues 应用监控的一些实践': 'chap1/57prometheus_best_practice.md'
     - '第一节 Prometheus 系统介绍 2022' : 'chap1/1prometheus2022.md'
