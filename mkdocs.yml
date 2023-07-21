@@ -60,6 +60,7 @@ nav:
     - '第十二节 通过Prometheus来做SLI/SLO监控展示': 'chap4/49Prometheus_SLI_SLO.md'
     - '第十三节 Prometheus使用missing-container-metrics监控Pod oomkill': 'chap4/51missing-container-metrics.md'
     - '第十四节 如何在Prometheus中进行黑盒监控(ICMP/DNS/TCP/HTTP/gRPC)': 'chap4/chap4_blackbox.md'
+    - '第十五节 Prometheus Operator中探针的使用（Blackbox Exporter）': 'chap4/chap4_Operator_probe.md'
   - 'Prometheus服务发现':
     - '第一节 Prometheus服务的自动发现使用': 'chap5/53Prometheus_auto_discovery.md'
     - '第二节 Prometheus Relabeling重新标记的使用': 'chap5/52Prometheus_Relabeling.md'
