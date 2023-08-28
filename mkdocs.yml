@@ -131,6 +131,9 @@ nav:
   - 'OpenTelemetry 介绍':
     - '1 云原生可观测 OpenTelemetry 基础知识': 'chap_ot/1OpenTelemetry_intro.md'
     - '2 Sentry+OpenTelemetry前后端全链路打通': 'chap_apm/5apm_Sentry.md'
+    - '2 使用 OpenTelemetry Tracing 了解您的微服务': 'chap_apm/2OpenTelemetry_MS.md'
+    - '3 使用 OpenTelemetry Tracing 最大化Kubernetes效率': 'chap_apm/3OpenTelemetry_K8S.md'
+    - '4 聊聊可观测性之数据模型': 'chap_apm/4OpenTelemetry_datamon.md'
 
 repo_url: https://github.com/Chao-Xi/jxprombook.git
 repo_name: "jxprombook"
