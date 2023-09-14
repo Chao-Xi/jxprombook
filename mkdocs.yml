@@ -129,6 +129,7 @@ nav:
     - '第四节 在生产环境中如何选择靠谱的APM系统？': 'chap_apm/4apm_prod.md'
     - '第六节 聊聊可观测性之数据模型': 'chap_apm/6k8s_watching.md'
   - 'OpenTelemetry 介绍':
+    - '0 OpenTelemetry保姆入门攻略可PPT-2023': 'chap_ot/0OpenTelemetrey_intro.md'
     - '1 云原生可观测 OpenTelemetry 基础知识': 'chap_ot/1OpenTelemetry_intro.md'
     - '2 Sentry+OpenTelemetry前后端全链路打通': 'chap_apm/5apm_Sentry.md'
     - '2 使用 OpenTelemetry Tracing 了解您的微服务': 'chap_apm/2OpenTelemetry_MS.md'
