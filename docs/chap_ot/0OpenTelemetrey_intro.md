@@ -36,6 +36,9 @@
 
 ![Alt Image Text](../images/ot0_1_2.png "Body image")
 
+**整个的这一个它叫做Trace一个链路， 然后比如说A到B，B到C这些，这些其实叫做一个一个的Span**
+
+
 ## 如何实现追踪？
 
 为了实现追踪，我们需要做以下几件事：
@@ -44,7 +47,7 @@
 2. 收集和处理数据
 3. 存储和可视化数据，以便我们可以查询它
 
-为此我们可以使用两个开源项目：**OpenTelemetry 和 Jaeger**。
+为此我们可以使用两个开源项目：**OpenTelemetry 和 Grafana Tempo**。
 
 ![Alt Image Text](../images/ot0_1_3.png "Body image")
 
@@ -55,6 +58,17 @@ OpenTelemetry 可以用于从应用程序收集数据。
 它是一组工具、API 和 SDK 集合，我们可以使用它们来检测、生成、收集和导出遥测数据（指标、日志和追踪），以帮助分析应用的性能和行为。
 
 ![Alt Image Text](../images/ot0_1_4.png "Body image")
+
+* **Microservice 是应用程序代码**
+	* 可能需要通过API或者SDK集成
+	* **应用手动去做一些埋点**
+	* 有一些编程语言，比如说像java， Python这些，也支持auto埋点
+	* 把埋点埋进去之后，会生成一生成我们的遥测数据，可以用这里的OTLP
+
+* 所谓的OpenTelemetry 是一个数据规范的一个协议，会把这个数据发送到发送到一个采集器，**按照我们这种规范的话**， 都可以直接发送到这个采集器这边， **然后采集器这边**，他可以去做一系列的处理， 比如加一些原信息，做一些裁剪，采样。
+* 处理完成过后，可以去选择发送到Jager, metrics 数据可以发送到Prometheus里面去，日志数据发送到Loki
+
+![Alt Image Text](../images/ot0_1_4a.png "Body image")
 
 OpenTelemetry 是：
 
@@ -107,6 +121,17 @@ OpenTelemetry 为我们提供了创建跟踪数据的工具，为了获取这些
 * **Trace Context：用于在 HTTP headers 中编码 trace 数据，以便在不同的服务间传递这些数据**。
 * Baggage：用于在 span 之间传递键值对数据，例如用户 ID、请求 ID 等。
 * B3：用于在 HTTP headers 中编码 trace 数据，以便在不同的服务间传递这些数据（主要用于 Zipkin 或其兼容的系统）。
+
+
+**Trace Context**
+
+在整个链路的形成过程当中， 怎么知道B是C的父级，所谓的**传播器**来实现的，在OpenTelemetry里面，它有个Propagator的一个API接口。有几种规范。
+
+目前的话OpenTelemetry主要支持的就是W3C，W3C他们规范的一个trace context. 
+
+比如父级的trace id以及父极的一个span id, 以及它的采样是否采样，这此信息给他以header的形式， 那个header的一个key叫做TRSPARENT, 通过这个header就可以传递下去, 然后传递到下一级的时候，当下一级肯定要从你的请求头里面去取。 **如果你从请求头里面能取到的一个， Traceparent 这样的一个header，就会把它解析出来**。  就会把上一层的这个Span head, 作为这一层的一个父级ID， 
+
+
 
 **采样**
 
@@ -210,7 +235,7 @@ service:
       exporters: [logging, otlp]
 ```
 
-OpenTelemetry 附带了各种导出器，在 OpenTelemetry 收集器 Contrib 存储库中可以找到。
+OpenTelemetry 附带了各种导出器，在 OpenTelemetry 收集器 [Contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter) 存储库中可以找到。
 
 **Extensions**
 
@@ -340,6 +365,8 @@ $ helm repo update
 $ helm upgrade --install --set admissionWebhooks.certManager.enabled=false --set admissionWebhooks.certManager.autoGenerateCert=true opentelemetry-operator open-telemetry/opentelemetry-operator --namespace kube-otel --create-namespace
 ```
 
+* `--set admissionWebhooks.certManager.enabled=false`
+
 正常部署完成后可以看到对应的 Pod 已经正常运行：
 
 ```
@@ -403,6 +430,12 @@ spec:
 
 然后我们将使用 Sidecar 模式部署 OpenTelemetry 代理。该代理会将应用程序的追踪发送到我们的中心（网关）OpenTelemetry 收集器。
 
+![Alt Image Text](../images/ot0_1_21a.png "Body image")
+
+![Alt Image Text](../images/ot0_1_21b.png "Body image")
+
+![Alt Image Text](../images/ot0_1_21c.png "Body image")
+
 ```
 # sidecar.yaml
 apiVersion: opentelemetry.io/v1alpha1
@@ -427,12 +460,17 @@ spec:
       telemetry:
         logs:
           level: "debug"
+         metrics:
+           address: 0.0.0.0:8888
       pipelines:
         traces:
           receivers: [otlp]
-          processors: []
+          processors: [batch]
           exporters: [logging, otlp]
 ```
+
+![Alt Image Text](../images/ot0_1_21d.png "Body image")
+
 
 ### 自动检测
 
@@ -472,7 +510,7 @@ spec:
   python:
 ```
 
-要启用检测，我们需要更新部署文件并向其添加注解。通过这种方式，我们告诉 OpenTelemetry Operator 将 sidecar 和 java 工具注入到我们的应用程序中。
+**要启用检测，我们需要更新部署文件并向其添加注解。通过这种方式，我们告诉 OpenTelemetry Operator 将 sidecar 和 java 工具注入到我们的应用程序中。**
 
 ```
 annotations:
@@ -536,6 +574,11 @@ spec:
     type: always_on
   java:
     image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:latest
+    go:
+    	image: ghcr.io/open-telemetry/opentelemetry-go-instrumentation/autoinstrumentation-go:latest
+		env:
+			name: OTEL_EXPORTER_OTLP_INSECURE
+			value: "true"
 ```
 
 为了启用自动检测，我们需要更新部署文件并向其添加注解。**这样我们可以告诉 OpenTelemetry Operator 将 sidecar 和 java-instrumentation 注入到我们的应用程序中。修改 Deployment 配置如下**：
@@ -629,6 +672,10 @@ $ kubectl logs -f simplest-collector-677f4779ff-x8h2m
 所以在 Grafana Tempo 中也可以看到对应的追踪数据：
 
 ![Alt Image Text](../images/ot0_1_23.png "Body image")
+
+![Alt Image Text](../images/ot0_1_23a.png "Body image")
+
+![Alt Image Text](../images/ot0_1_23b.png "Body image")
 
 
 同样如果你再添加一个 Jaeger 的导出器，那么你也可以在 Jaeger 中看到对应的追踪数据。

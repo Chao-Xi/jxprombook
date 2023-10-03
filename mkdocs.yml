@@ -131,6 +131,8 @@ nav:
   - 'OpenTelemetry 介绍':
     - '0 OpenTelemetry保姆入门攻略可PPT-2023': 'chap_ot/0OpenTelemetrey_intro.md'
     - '1 云原生可观测 OpenTelemetry 基础知识': 'chap_ot/1OpenTelemetry_intro.md'
+    - '1 使用 OpenTelemetry Collector 采集 Kubernetes 指标数据': 'chap_ot/1OpenTelemetry_k8s_metrics.md'
+    - '5 使用 OpenTelemetry Collector 收集 Kubernetes 日志数据': 'chap_ot/5OpenTelemetry_log.md'
     - '2 Sentry+OpenTelemetry前后端全链路打通': 'chap_apm/5apm_Sentry.md'
     - '2 使用 OpenTelemetry Tracing 了解您的微服务': 'chap_apm/2OpenTelemetry_MS.md'
     - '3 使用 OpenTelemetry Tracing 最大化Kubernetes效率': 'chap_apm/3OpenTelemetry_K8S.md'
