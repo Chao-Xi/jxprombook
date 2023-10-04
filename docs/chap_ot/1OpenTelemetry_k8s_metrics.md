@@ -1,4 +1,4 @@
-# 1 使用 OpenTelemetry Collector 采集 Kubernetes 指标数据
+# 2 使用 OpenTelemetry Collector 采集 Kubernetes 指标数据
 
 Kubernetes 已成为一个被广泛采用的行业工具，对可观测性工具的需求也在不断增加。
 

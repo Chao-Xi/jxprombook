@@ -1,4 +1,4 @@
-# 5 使用 OpenTelemetry Collector 收集 Kubernetes 日志数据
+# 3 使用 OpenTelemetry Collector 收集 Kubernetes 日志数据
 
 ### 安装 Loki
 

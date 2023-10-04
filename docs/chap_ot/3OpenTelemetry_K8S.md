@@ -1,4 +1,4 @@
-# 3 使用 OpenTelemetry Tracing 最大化 Kubernetes 效率
+# 6 使用 OpenTelemetry Tracing 最大化 Kubernetes 效率
 
 **OpenTelemetry 是一种开源的可观测性框架，提供一组 API 和库，用于收集、处理和导出遥测数据，如追踪、指标和日志**。
 
