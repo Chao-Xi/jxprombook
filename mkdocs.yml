@@ -138,6 +138,7 @@ nav:
     - '6 使用 OpenTelemetry Tracing 最大化Kubernetes效率': 'chap_apm/3OpenTelemetry_K8S.md'
     - '7 聊聊可观测性之数据模型': 'chap_apm/4OpenTelemetry_datamon.md'
     - '8 Java 应用通过 OpenTelemetry API 实现手动埋点' : 'chap_apm/6OpenTelemetry_java.md'
+    - '9 Opentelemetry 采样最佳实践(概率采样器/尾部采样器)': 'chap_ot/7OT_practice.md'
 
 
 repo_url: https://github.com/Chao-Xi/jxprombook.git
