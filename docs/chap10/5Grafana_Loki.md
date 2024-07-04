@@ -287,7 +287,7 @@ metadata:
 
 上面就是一个典型的 Nginx 配置，从配置可以看出会把请求 `/api/prom/push` 和 `/loki/api/v1/push` 这两个 Push API 代理到 `http://loki-write.logging.svc.cluster.local:3100$request_uri`;，
 
-**也就是上面的两个 `loki-write` 节点，而读取相关的接口被代理到 `loki-read` 节点，然后 `loki-write 启动参数配置 `-target=write`， `loki-read` 启动参数配置 `-target=read`，这样去实现读写分离。**不过读写的应用是共享同一个配置文件的，如下所示：
+**也就是上面的两个 `loki-write` 节点，而读取相关的接口被代理到 `loki-read` 节点，然后 `loki-write 启动参数配置 `-target=write`， `loki-read` 启动参数配置 `-target=read`，这样去实现读写分离** 不过读写的应用是共享同一个配置文件的，如下所示：
 
 
 ```
