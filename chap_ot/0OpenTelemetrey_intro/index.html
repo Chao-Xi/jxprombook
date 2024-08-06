@@ -1,0 +1,4272 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Prometheus 技术实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      
+        <link rel="prev" href="../../chap_apm/6k8s_watching/">
+      
+      
+        <link rel="next" href="../1OpenTelemetry_intro/">
+      
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
+    
+    
+      
+        <title>0 OpenTelemetry保姆入门攻略可PPT-2023 - Jacob Prometheus Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3cba04c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="orange" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#0-opentelemetryppt-2023" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob Prometheus Book" class="md-header__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob Prometheus Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              0 OpenTelemetry保姆入门攻略可PPT-2023
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob Prometheus Book" class="md-nav__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob Prometheus Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    监控解决方案
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            监控解决方案
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap0/1monitor_tools10/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 监控解决方案：10个 Kubernetes 监控工具
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/11Prom_intro_2023-CN/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2023 云原生系统监控
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Prometheus技术介绍,K8S Metrics介绍&查看
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus技术介绍,K8S Metrics介绍&查看
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/57prometheus_best_practice/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第零节 Promethues 应用监控的一些实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1prometheus2022/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Prometheus 系统介绍 2022
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/18Adv_Prometheus_index_classfication/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 深入Prometheus设计-指标定义与分类(PromQL)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/k8s_adv39_kube_state_metrics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 kube-state-metrics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/17Adv_K8S_Metrics_Server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 Metrics Server 安装
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/20Install_metrics_server_SAP_CC/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节 Install Kubernetes Metrics Server on SAP Converged Cloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/38k8s_hpa_metricsserver/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/55prometheus_go_metrics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第七节 为Go应用添加Prometheus监控指标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/37kubectl_top/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第八节 从kubectl top看K8S监控原理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/9kube-state-metrics_crd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第九节 通过 kube-state-metrics 添加 CRD 状态指标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/10kube-state-metrics-cluster-opt/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十节 kube-state-metrics 在大规模集群下的优化(2023)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Prometheus on Linux
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus on Linux
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/19centos7_Prometheus_Alertmanager_Grafana/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Centos7 Prometheus安装部署+监控+绘图+告警
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/59node_exporter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 使用Node Exporter监控Linux主机&常用监控指标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/36Prometheus_Mysql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 基于Prometheus构建MySQL可视化监控平台
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4mysql_exporter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 官方 mysqld_exporter支持抓取多MySQL实例
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/5prom_grafana_chatops/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节 使用 Grafana、Prometheus 和 Slack 构建一个简单的 ChatOps 机器人
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    手动部署Kubernetes Prometheus
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            手动部署Kubernetes Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1prometheus_setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Kubernetes使用Prometheus搭建监控平台(2018)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2prometheus_AlertManager/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 Prometheus报警 && AlertManager实战（2018）
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3changes_on_Grafana/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 Grafana 显示参数设置(2018)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4Adv_Prometheus_setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 在 Kubernetes 中手动部署 Prometheus (adv)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5Adv_Prometheus_monitor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节 应用监控（Metrics/Exporter的配置）
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6Adv_K8S_Nodes_monitor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 监控K8S集群节点&Node-exporter DaemonSet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7Adv_K8S_Resource_monitor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第七节 监控常用资源对象（容器/apiserver/Service监控/kube-state-metric）
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8Adv_K8S_Grafana/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第八节 Grafana 在 Kubernetes 中的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/10Adv_k8s_AlertManger/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第九节 报警神器 AlertManager 的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/16Adv_Prometheus_Del_index/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十节 Prometheus 删除数据指标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/50PrometheusAlert/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十一节 Prometheus中使用PrometheusAlert进行聚合报警
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/12gpu_monitor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十二节 监控Kubernetes集群的GPU资源
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/29AlertManager_SendAlerts_when/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十三节 AlertManager何时报警
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/41Prometheus_Monitor_OutCluster/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十四节 Prometheus监控外部Kubernetes集群
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    玩转Prometheus Operator
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            玩转Prometheus Operator
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11Adv_Prometheus_Operator/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Prometheus Operator 初体验
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/13Adv_Prometheus_Operator_etcd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 使用 Prometheus Operator 监控 etcd
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/14Adv_Prometheus_Operator_alarm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 Prometheus Operator 自定义报警
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/22Customize_Alert_Email/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 Add Custom Alert and Send Alert Email with Alertmanager
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/24Kubernetes_Prometheus_blackbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节 Prometheus 黑盒监控
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/32Prometheus_troubleshoot_Servicemonitor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 Troubleshooting ServiceMonitor changes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/43Prometheus_operator_ssl_exporter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第七节 使用ssl_exporter监控K8S集群证书
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/44Prometheus_KubeNurse/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第八节 Operator2021-使用KubeNurse进行集群网络监控
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/45Prom-operator_2021/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第九节 Prometheus Operator安装配置(2021)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/46Prometheus_traefik/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十节 Traefik之使用Prometheus Operator进行监控报警2021
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/47Prometheus_opt_AlertmanagerConfig/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十一节 Operator使用AlertmanagerConfig进行报警配置
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/49Prometheus_SLI_SLO/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十二节 通过Prometheus来做SLI/SLO监控展示
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/51missing-container-metrics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十三节 Prometheus使用missing-container-metrics监控Pod oomkill
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/chap4_blackbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十四节 如何在Prometheus中进行黑盒监控(ICMP/DNS/TCP/HTTP/gRPC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/chap4_Operator_probe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十五节 Prometheus Operator中探针的使用（Blackbox Exporter）
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Prometheus服务发现
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus服务发现
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/53Prometheus_auto_discovery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Prometheus服务的自动发现使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/52Prometheus_Relabeling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 Prometheus Relabeling重新标记的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/54prometheus_go_metrics_guideline/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 如何使用Prometheus仪表化应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Jam prometheus Monitor
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Jam prometheus Monitor
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/25Alertmanager_AWS_SES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chap1 Alertmanager alerts with Amazon SES SMTP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/26Prometheus_Monitor_Argocd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chap2 Prometheus Operator Monitor on ArgoCD
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/27Prometheus_Monitor_elasticsearch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chap3 Prometheus Operator Monitor on ElasticSearch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/31Prometheus_Monitor_rabbitmq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chap4 Prometheus Operator Monitor on Rabbitmq
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/33Prometheus_Monitor_memcached/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chap5 Prometheus Operator Monitor on Memcached
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Prometheus-Adapter
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus-Adapter
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/23Kubernetes_Scale_Prometheus-Adapter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    应用进行自定义指标扩缩容 by Prometheus-Adapter and Flask-Exporter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    PromQL学习
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            PromQL学习
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/1Promql_basic1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 初识 PromQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/2Promql_basic2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2 PromQL 操作符 & 内置函数
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/3Promql_basic3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3 PromQL 内置函数
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/4Promql_basic4/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4 PromQL简单示例
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/5Promql_basic5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5 在 HTTP API中使用 PromQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/6Promql_adv1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6 Prometheus记录规则的使用(Recording Rule)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/56prometheus_promql_rate/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7 PromQL查询之rate函数的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/60prometheus_job/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8 解决Prometheus监控Kubernetes Job误报的坑
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap8/9promql_6errors/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9 使用 Prometheus PromQL时需要避免这6个错误
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Awesome alerts rules
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Awesome alerts rules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1basic_resource/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 Basic resource monitoring
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2database_broker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2 Databases and brokers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3proxy_lb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3 Reverse proxies and load balancers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4runtimes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4 Runtimes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5Orchestrators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5 Orchestrators
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/6network_sec_storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6 Network, security and storage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/7other/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7 Others
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/8Alerting_sleep/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8 Alert Sleep Peacefully
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据可视化&Grafana Plugin
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            数据可视化&Grafana Plugin
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/58grafana_init/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 使用 Grafana 构建你的第一个仪表盘
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/28Grafana_plugin_DevOpsProdigy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2 优秀的Grafana K8S 插件-DevOpsProdigy KubeGraf
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/30Create_Grafana_dashboards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3 用 Kubernetes darks资源对象创建Grafana Dashboard
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/48grafana_Trickster/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4 Grafana 图表加速神器-Trickster
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/5Grafana_Loki/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5 使用读写分离模式扩展 Grafana Loki
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/6Prometheus_grafaa_docker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6 使用 Prometheus 和 Grafana 实现服务器运行状态监控（基于 Docker）
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/7loki_promtail_grafana/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7 Docker上部署LPG（loki+promtail+grafana）踩坑复盘
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Prometheus(OpenTelemetry)架构设计与工具平台
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus(OpenTelemetry)架构设计与工具平台
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1deepflow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 DeepFlow AutoTagging之Prometheus标签标准化
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2Prometheus_opentele/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2 Prometheus与OpenTelemetry该选哪个？
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/3Prometheus_index/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3 Prometheus的四种指标类型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/4OpenTelemetry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4 透彻理解OpenTelemetry
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/4OpenTelemetry_tracing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5 使用OpenTelemetry Tracing最大化Kubernetes效率
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Thanos
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            Thanos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/39Thanos_tutorial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 大规模场景下Prometheus的优化手段&Thanos架构详解
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/34Thanos_intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 使用Thanos实现Prometheus的高可用介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/35Thanos_install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 Prometheus高可用Thanos学习-sidercar和query&Thanos部署
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/61thanos_sidecar_receiver/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节（2022）如何选择Thanos的Sidecar和Receiver两种模式？
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/62thanos_query/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节（2022）使用Thanos查询前端优化查询性能
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/63prometheus_optimiztion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 (Thaos1-2022)大规模场景下Prometheus的优化手段
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/64thanos_detail/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第七节 (Thaos2-2022)Thanos架构详解
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/65thanos_setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第八节 (Thaos3-2022)Thanos部署与实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/66thanos_ruler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第九节（2022）Thanos Ruler组件的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    VictoriaMetrics
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            VictoriaMetrics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/67vm_intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Prometheus远程存储VictoriaMetrics简介
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/68vm_setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 Prometheus长期远程存储方案VictoriaMetrics入门实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/69vm_cluster/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 VictorialMetrics 集群模式的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/70vm_vmagent/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 使用vmagent代替Prometheus采集监控指标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/71vm_operator/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节 使用Victoria Metrics Operator管理VM集群
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/72vm_vmalert/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 使用 vmalert 代替 Prometheus 监控报警
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/73vm_pressure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第七节 对Prometheus兼容的时序数据库进行压力测试
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    APM 工具及功能介绍
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            APM 工具及功能介绍
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/1apm_prods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 APM产品落地实战
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/2opentracing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 APM + OpenTracing原理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/3apm_tracing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 怎么理解分布式链路追踪技术？
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/4apm_prod/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 在生产环境中如何选择靠谱的APM系统？
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/6k8s_watching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 聊聊可观测性之数据模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_17" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_17" id="__nav_17_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    OpenTelemetry 介绍
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_17_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_17">
+            <span class="md-nav__icon md-icon"></span>
+            OpenTelemetry 介绍
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    0 OpenTelemetry保姆入门攻略可PPT-2023
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    0 OpenTelemetry保姆入门攻略可PPT-2023
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      分布式追踪
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="分布式追踪">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      为什么我们需要追踪？
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何实现追踪？
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry 是什么？
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenTelemetry 是什么？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opentelemetry_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry 与供应商无关
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      检测（埋点）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry-otlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry 协议（OTLP）
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry-collectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry Collectors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry Collector 部署模式/策略
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry 后端
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry-on-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry on Kubernetes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenTelemetry on Kubernetes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      部署
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      自动检测
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      示例应用
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1OpenTelemetry_intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 云原生可观测 OpenTelemetry 基础知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1OpenTelemetry_k8s_metrics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2 使用 OpenTelemetry Collector 采集 Kubernetes 指标数据
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5OpenTelemetry_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3 使用 OpenTelemetry Collector 收集 Kubernetes 日志数据
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/5apm_Sentry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4 Sentry+OpenTelemetry前后端全链路打通
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/2OpenTelemetry_MS.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5 使用 OpenTelemetry Tracing 了解您的微服务
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/3OpenTelemetry_K8S.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6 使用 OpenTelemetry Tracing 最大化Kubernetes效率
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/4OpenTelemetry_datamon.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7 聊聊可观测性之数据模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/6OpenTelemetry_java.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8 Java 应用通过 OpenTelemetry API 实现手动埋点
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7OT_practice/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9 Opentelemetry 采样最佳实践(概率采样器/尾部采样器)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      分布式追踪
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="分布式追踪">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      为什么我们需要追踪？
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      如何实现追踪？
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry 是什么？
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenTelemetry 是什么？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opentelemetry_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry 与供应商无关
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      检测（埋点）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry-otlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry 协议（OTLP）
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry-collectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry Collectors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry Collector 部署模式/策略
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry 后端
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opentelemetry-on-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenTelemetry on Kubernetes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenTelemetry on Kubernetes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      部署
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      自动检测
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      示例应用
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="0-opentelemetryppt-2023">0 OpenTelemetry保姆入门攻略可PPT-2023</h1>
+<ul>
+<li>分布式追踪</li>
+<li>OpenTelemetry 是什么？</li>
+<li>OpenTelemetry 检测（自动和手动）</li>
+<li>OpenTelemetry 协议（OTLP）</li>
+<li>OpenTelemetry Collectors</li>
+<li>OpenTelemetry Collectors 部署模式</li>
+<li>OpenTelemetry 后端</li>
+<li>OpenTelemetry on Kubernetes</li>
+<li>OpenTelemetry Operator</li>
+<li>OpenTelemetry 示例应用程序</li>
+</ul>
+<h2 id="_1">分布式追踪</h2>
+<h3 id="_2">为什么我们需要追踪？</h3>
+<p>我们需要为什么分布式追踪？为什么我们不能只使用指标和日志呢？假设你有一个如下所示的微服务架构</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_1.png" title="Body image" /></p>
+<p>现在想象一下来自客户端的请求。</p>
+<p>从上面的架构图中我们可以看出，一个请求可能要经过几十个或几百个网络调用。这使得我们很难知道请求所经过的整个路径，如果只有日志和指标，那么故障排查会非常复杂。</p>
+<p>当我们的应用出现问题时，我们需要解决很多问题。</p>
+<ul>
+<li>我们如何找出根本原因？</li>
+<li>我们如何监视它所经过的所有服务？</li>
+</ul>
+<blockquote>
+<p>分布式跟踪可以帮助查看整个请求过程中服务之间的交互，并可以让我们深入了解系统中请求的整个生命周期。它帮助我们发现应用程序中的错误、瓶颈和性能问题。</p>
+</blockquote>
+<p>追踪从用户与应用程序进行交互的一刻开始，我们应该能够看到整个请求直到最后一层。</p>
+<p><strong>跟踪数据（以 span 的形式）生成信息（元数据）</strong>，可以帮助了解请求延迟或错误是如何发生的，以及它们对整个请求会产生什么样的影响。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_2.png" title="Body image" /></p>
+<p><strong>整个的这一个它叫做Trace一个链路， 然后比如说A到B，B到C这些，这些其实叫做一个一个的Span</strong></p>
+<h2 id="_3">如何实现追踪？</h2>
+<p>为了实现追踪，我们需要做以下几件事：</p>
+<ol>
+<li>检测我们的应用程序</li>
+<li>收集和处理数据</li>
+<li>存储和可视化数据，以便我们可以查询它</li>
+</ol>
+<p>为此我们可以使用两个开源项目：<strong>OpenTelemetry 和 Grafana Tempo</strong>。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_3.png" title="Body image" /></p>
+<h2 id="opentelemetry">OpenTelemetry 是什么？</h2>
+<p>OpenTelemetry 可以用于从应用程序收集数据。</p>
+<p>它是一组工具、API 和 SDK 集合，我们可以使用它们来检测、生成、收集和导出遥测数据（指标、日志和追踪），以帮助分析应用的性能和行为。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_4.png" title="Body image" /></p>
+<ul>
+<li>
+<p><strong>Microservice 是应用程序代码</strong></p>
+<ul>
+<li>可能需要通过API或者SDK集成</li>
+<li><strong>应用手动去做一些埋点</strong></li>
+<li>有一些编程语言，比如说像java， Python这些，也支持auto埋点</li>
+<li>把埋点埋进去之后，会生成一生成我们的遥测数据，可以用这里的OTLP</li>
+</ul>
+</li>
+<li>
+<p>所谓的OpenTelemetry 是一个数据规范的一个协议，会把这个数据发送到发送到一个采集器，<strong>按照我们这种规范的话</strong>， 都可以直接发送到这个采集器这边， <strong>然后采集器这边</strong>，他可以去做一系列的处理， 比如加一些原信息，做一些裁剪，采样。</p>
+</li>
+<li>处理完成过后，可以去选择发送到Jager, metrics 数据可以发送到Prometheus里面去，日志数据发送到Loki</li>
+</ul>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_4a.png" title="Body image" /></p>
+<p>OpenTelemetry 是：</p>
+<ul>
+<li>开源的</li>
+<li>受到可观测领域行业领导者的采用和支持</li>
+<li>一个 CNCF 项目</li>
+<li>与供应商无关的</li>
+</ul>
+<p>OpenTelemetry 包括可观测性的三个支柱：<strong>追踪、指标和日志</strong>。（本文将重点关注追踪）</p>
+<ul>
+<li><strong>分布式追踪</strong>是一种跟踪服务请求在分布式系统中从开始到结束的方法。</li>
+<li><strong>指标</strong>是对一段时间内活动的测量，以便了解系统或应用程序的性能。</li>
+<li><strong>日志</strong>是系统或应用程序在特定时间点发生的事件的文本记录。</li>
+</ul>
+<h3 id="opentelemetry_1">OpenTelemetry 与供应商无关</h3>
+<p>OpenTelemetry 提供了一个与供应商无关的<strong>可观测性标准</strong>，因为它旨在标准化跟踪的生成。<strong>通过 OpenTelemetry，我们可以将检测埋点与后端分离</strong>。这意味着我们不依赖于任何工具（或供应商）</p>
+<p>我们不仅可以使用任何我们想要的编程语言，还可以挑选任何兼容的存储后端，从而避免被绑定在特定的商业供应商上面。</p>
+<p>开发人员可以检测他们的应用程序，而无需知道数据将存储在哪里。</p>
+<p>OpenTelemetry 为我们提供了创建跟踪数据的工具，为了获取这些数据，我们首先需要检测应用程序来收集数据。<strong>为此，我们需要使用 OpenTelemetry SDK。</strong></p>
+<h3 id="_4">检测（埋点）</h3>
+<p>应用程序的检测数据可以使用自动或手动（或混合）方式生成。 要使用 OpenTelemetry 检测应用程序，可以前往访问 OpenTelemetry 存储库，选择适用于的应用程序的语言，然后按照说明进行操作。</p>
+<p><strong>自动检测</strong></p>
+<p>使用自动检测是一个很好的方式，因为它简单、容易，不需要进行很多代码更改。</p>
+<p>如果你没有必要的知识（或时间）来创建适合你应用程序量身的追踪代码，那么这种方法就非常合适。</p>
+<p><strong>当使用自动检测时，将创建一组预定义的 spans，并填充相关属性</strong>。</p>
+<p><strong>手动检测</strong></p>
+<p><strong>手动检测是指为应用程序编写特定的埋点代码</strong>。这是向应用程序添加可观测性代码的过程。这样做可以更有效地满足你的需求，因为可以自己添加属性和事件。这样做的缺点是需要导入库并自己完成所有工作。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_5.png" title="Body image" /></p>
+<p><strong>传播器</strong></p>
+<p>可以将 W3C tracecontext、baggage 和b3 等传播器（Propagators）添加到配置中。</p>
+<blockquote>
+<p>不同的传播器定义特定的行为规范，以便跨进程边界传播带上上下文数据。</p>
+</blockquote>
+<ul>
+<li><strong>Trace Context：用于在 HTTP headers 中编码 trace 数据，以便在不同的服务间传递这些数据</strong>。</li>
+<li>Baggage：用于在 span 之间传递键值对数据，例如用户 ID、请求 ID 等。</li>
+<li>B3：用于在 HTTP headers 中编码 trace 数据，以便在不同的服务间传递这些数据（主要用于 Zipkin 或其兼容的系统）。</li>
+</ul>
+<p><strong>Trace Context</strong></p>
+<p>在整个链路的形成过程当中， 怎么知道B是C的父级，所谓的<strong>传播器</strong>来实现的，在OpenTelemetry里面，它有个Propagator的一个API接口。有几种规范。</p>
+<p>目前的话OpenTelemetry主要支持的就是W3C，W3C他们规范的一个trace context. </p>
+<p>比如父级的trace id以及父极的一个span id, 以及它的采样是否采样，这此信息给他以header的形式， 那个header的一个key叫做TRSPARENT, 通过这个header就可以传递下去, 然后传递到下一级的时候，当下一级肯定要从你的请求头里面去取。 <strong>如果你从请求头里面能取到的一个， Traceparent 这样的一个header，就会把它解析出来</strong>。  就会把上一层的这个Span head, 作为这一层的一个父级ID， </p>
+<p><strong>采样</strong></p>
+<p>采样是一种通过减少收集和发送到后端的追踪样本数量来控制 OpenTelemetry 引入的噪声和开销的机制。</p>
+<p>可以告诉 OpenTelemetry 根据要发送的追踪/流量的数量执行采样。（比如只采样 10% 的追踪数据）。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_6.png" title="Body image" /></p>
+<p><strong>两种常见的采样技术是头采样和尾采样。</strong></p>
+<h2 id="opentelemetry-otlp">OpenTelemetry 协议（OTLP）</h2>
+<p><strong>OpenTelemetry 协议（OTLP）规范描述了遥测数据在遥测源、收集器和遥测后端之间的编码、传输和传递机制。</strong></p>
+<p>每种语言的 SDK <strong>都提供了一个 OTLP 导出器，可以配置该导出器来通过 OTLP 导出数据</strong>。然后，OpenTelemetry SDK 会将事件转换为 OTLP 数据。</p>
+<p><strong>OTLP 是代理（配置为导出器）和收集器（配置为接收器）之间的通信。</strong></p>
+<h2 id="opentelemetry-collectors">OpenTelemetry Collectors</h2>
+<p>应用程序的遥测数据可以发送到 OpenTelemetry Collectors 收集器。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_7.png" title="Body image" /></p>
+<p>收集器是 OpenTelemetry 的一个组件，它接收遥测数据（span、metrics、logs 等），处理（预处理数据）并导出数据（将其发送到想要的通信后端）。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_8.png" title="Body image" /></p>
+<p><strong>Receivers</strong></p>
+<p>接收器 Receivers 是数据进入收集器的方式，可以是推送或拉取。OpenTelemetry 收集器可以以多种格式接收遥测数据。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_9.png" title="Body image" /></p>
+<pre><code>otlp:
+  protocols:
+    http:
+    grpc:
+      endpoint: &quot;0.0.0.0:4317&quot;
+</code></pre>
+<p>同样下面的示例，它可以以 Jaeger Thrift HTTP 协议方式接收遥测数据。</p>
+<pre><code>jaeger: # Jaeger 协议接收器
+  protocols: # 定义接收器支持的协议
+    thrift_http: # 通过 Jaeger Thrift HTTP 协议接收数据
+      endpoint: &quot;0.0.0.0:14278&quot;
+</code></pre>
+<p><strong>Processors</strong></p>
+<p>一旦接收到数据，收集器就可以处理数据。处理器在接收和导出之间处理数据。处理器是可选的，但有些是推荐的。</p>
+<p><strong>比如 batch 处理器是非常推荐的。批处理器接收跨度、指标或日志，并将它们放入批次中</strong>。批处理有助于更好地压缩数据，减少传输数据所需的传出连接数量。该处理器支持基于大小和时间的批处理。</p>
+<pre><code>processors:
+  batch:
+</code></pre>
+<p>需要注意的是配置处理器并不会启用它。<strong>需要通过 service 部分的 pipelines 启用</strong>。</p>
+<pre><code>service:
+  pipelines:
+    traces:
+      receivers: [jaeger]
+      processors: [batch]
+      exporters: [zipkin]
+</code></pre>
+<p><strong>Exporters</strong></p>
+<p>为了可视化和分析遥测数据，我们还需要使用导出器。导出器是 OpenTelemetry 的一个组件，也是数据发送到不同系统/后端的方式。</p>
+<p>比如 <code>console exporter</code> 是一种常见的导出器，对于开发和调试任务非常有用，他会将数据打印到控制台。</p>
+<p>在 exporters 部分，可以添加更多目的地。例如，如果想将追踪数据发送到 Grafana Tempo，只需添加如下所示的配置：</p>
+<pre><code>exporters:
+  logging:
+  otlp:
+    endpoint: &quot;&lt;tempo_endpoint&gt;&quot;
+    headers:
+      authorization: Basic &lt;api_token&gt;
+</code></pre>
+<p>当然最终要生效也需要在 service 部分的 pipelines 中启用。</p>
+<pre><code>service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: []
+      exporters: [logging, otlp]
+</code></pre>
+<p>OpenTelemetry 附带了各种导出器，在 OpenTelemetry 收集器 <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter">Contrib</a> 存储库中可以找到。</p>
+<p><strong>Extensions</strong></p>
+<p>扩展主要适用于不涉及处理遥测数据的任务。扩展的示例包括健康监控、服务发现和数据转发。扩展是可选的。</p>
+<p>扩展主要用于不涉及处理遥测数据的任务。比如健康监控、服务发现和数据转发等。扩展是可选的。</p>
+<pre><code>extensions:
+  health_check:
+  pprof:
+  zpages:
+  memory_ballast:
+    size_mib: 512
+</code></pre>
+<h2 id="opentelemetry-collector">OpenTelemetry Collector 部署模式/策略</h2>
+<p>OpenTelemetry 收集器可以通过不同的方式进行部署，所以我们要考虑下如何部署它。具体选择哪种策略取决于你的团队和组织情况。</p>
+<p><strong>Agent 模式</strong></p>
+<p>在这种情况下，OpenTelemetry 检测的应用程序将数据发送到与应用程序一起驻留的（收集器）代理。然后，该代理程序将接管并处理所有来自应用程序的追踪数据。</p>
+<p>收集器可以通过 sidecar 方式部署为代理，sidecar 可以配置为直接将数据发送到存储后端。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_10.png" title="Body image" /></p>
+<p><strong>Gateway 模式</strong></p>
+<p>还可以决定将数据发送到另一个 OpenTelemetry 收集器，然后从（中心）收集器进一步将数据发送到存储后端。在这种配置中，我们有一个中心的 OpenTelemetry 收集器，它使用 deployment 模式部署，具有许多优势，如自动扩展。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_11.png" title="Body image" /></p>
+<p>使用中心收集器的一些优点是：</p>
+<ul>
+<li>消除对团队的依赖</li>
+<li>强制执行批处理、重试、加密、压缩的配置/策略</li>
+<li>在中心位置进行身份验证</li>
+<li>丰富的元数据信息</li>
+<li>进行抽样决策</li>
+<li>通过 HPA 进行扩展</li>
+</ul>
+<p><strong>部署模式总结</strong></p>
+<p>下面我们总结下常见的一些部署策略。</p>
+<p><strong>基本版 - 客户端使用 OTLP 进行检测，将数据发送到一组收集器。</strong></p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_12.png" title="Body image" /></p>
+<p>可以将数据发送到多个导出器。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_13.png" title="Body image" /></p>
+<p><strong>在 Kubernetes 上部署 OpenTelemetry Collector 时可以使用的模式</strong></p>
+<p><strong>sidecar 模式：</strong></p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_14.png" title="Body image" /></p>
+<p>代理作为 sidecar，其中使用 OpenTelemetry Collector 将容器添加到工作负载 Pod。然后，该实例被配置为将数据发送到可能位于不同命名空间或集群中的外部收集器。</p>
+<p>daemonset 模式：</p>
+<p><strong>Agent 作为 DaemonSet，这样我们每个 Kubernetes 节点就有一个代理 pod。</strong></p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_15.png" title="Body image" /></p>
+<p>负载均衡 - 基于 trace id 的负载均衡：</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_16.png" title="Body image" /></p>
+<p>多集群 - 代理、工作负载和控制平面收集器：</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_17.png" title="Body image" /></p>
+<p><strong>多租户模式</strong></p>
+<p>两个租户，每个租户都有自己的 Jaeger。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_18.png" title="Body image" /></p>
+<p><strong>信号模式</strong></p>
+<p>两个收集器，每个收集器对应一种遥测数据类型。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_19.png" title="Body image" /></p>
+<h2 id="opentelemetry_2">OpenTelemetry 后端</h2>
+<p>OpenTelemetry <strong>收集器并不提供自己的后端，所以可以使用任何供应商或开源产品！</strong></p>
+<blockquote>
+<p>尽管 OpenTelemetry 不提供自己的后端，但通过使用它，我们不会依赖于任何工具或供应商，因为它与供应商无关。我们不仅可以使用我们想要的任何编程语言，而且还可以选择存储后端，并且只需配置另一个导出器即可轻松切换到另一个后端/供应商</p>
+</blockquote>
+<p>为了可视化和分析遥测数据，我们只需要在 OpenTelemetry 采集器种配置一个导出器。<strong>比如 Jaeger 就是一个非常流行的用于分析和查询数据的开源产品</strong>。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_20.png" title="Body image" />]</p>
+<p>我们可以在 OpenTelemetry 收集器中配置 Jaeger 导出器，以便将数据发送到 Jaeger。</p>
+<pre><code>exporters:
+  jaeger:
+    endpoint: &quot;http://localhost:14250&quot;
+</code></pre>
+<h2 id="opentelemetry-on-kubernetes"><strong>OpenTelemetry on Kubernetes</strong></h2>
+<p>在 Kubernetes 上使用 OpenTelemetry，主要就是部署 OpenTelemetry 收集器。我们建议使用 OpenTelemetry Operator 来部署，因为它可以帮助我们轻松部署和管理 OpenTelemetry 收集器，还可以自动检测应用程序。</p>
+<h3 id="_5">部署</h3>
+<p>这里我们使用 Helm Chart 来部署 OpenTelemetry Operator，首先添加 Helm Chart 仓库：</p>
+<pre><code>$ helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+$ helm repo update
+</code></pre>
+<p><strong>默认情况下会部署一个准入控制器，用于验证 OpenTelemetry Operator 的配置是否正确，为了使 APIServer 能够与 Webhook 组件进行通信，Webhook 需要一个由 APIServer 配置为可信任的 TLS 证书</strong>。</p>
+<p>为了简单我们这里直接使用自动生成签名证书的方式，<strong>使用下面的命令一键安装 OpenTelemetry Operator</strong>：</p>
+<pre><code>$ helm upgrade --install --set admissionWebhooks.certManager.enabled=false --set admissionWebhooks.certManager.autoGenerateCert=true opentelemetry-operator open-telemetry/opentelemetry-operator --namespace kube-otel --create-namespace
+</code></pre>
+<ul>
+<li><code>--set admissionWebhooks.certManager.enabled=false</code></li>
+</ul>
+<p>正常部署完成后可以看到对应的 Pod 已经正常运行：</p>
+<pre><code>$ kubectl get pods -n kube-otel -l app.kubernetes.io/name=opentelemetry-operator
+NAME                                      READY   STATUS    RESTARTS   AGE
+opentelemetry-operator-6f77dc895c-4wn8z   2/2     Running   0          33s
+</code></pre>
+<p>此外还会自动为我们添加两个 OpenTelemetry 相关的 CRD：</p>
+<pre><code>$ kubectl get crd |grep opentelemetry
+instrumentations.opentelemetry.io           2023-09-05T03:23:28Z
+opentelemetrycollectors.opentelemetry.io    2023-09-05T03:23:28Z
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_21.png" title="Body image" /></p>
+<p>到这里 OpenTelemetry Operator 就部署完成了。</p>
+<p><strong>然后我们这里选择使用中心 OpenTelemetry 收集器，并让其他 OpenTelemetry 代理将数据发送到该收集器。从代理接收的数据将在此收集器上进行处理，并通过导出器发送到存储后端</strong>。整个工作流如下图所示：</p>
+<pre><code># central-collector.yaml
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: simplest
+spec:
+  config: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+          http:
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+        spike_limit_percentage: 15
+      batch:
+        send_batch_size: 10000
+        timeout: 10s
+
+    exporters:
+      logging:
+      otlp:
+        endpoint: &quot;&lt;tempo_endpoint&gt;&quot;
+        headers:
+          authorization: Basic &lt;api_token&gt; # echo -n &quot;&lt;your user id&gt;:&lt;your api key&gt;&quot; | base64
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [logging, otlp]
+</code></pre>
+<p>在这里 OpenTelemetry Collector 通过 grpc 和 http 两种协议来接收遥测数据，并通过日志记录导出和 Grafana Tempo 来记录这些 Span，这会将 Span 写入接收 Span 的 OpenTelemetry Collector 实例的控制台和 Grafana Tempo 后端去。</p>
+<p>然后我们将使用 Sidecar 模式部署 OpenTelemetry 代理。该代理会将应用程序的追踪发送到我们的中心（网关）OpenTelemetry 收集器。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_21a.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_21b.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_21c.png" title="Body image" /></p>
+<pre><code># sidecar.yaml
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: sidecar
+spec:
+  mode: sidecar
+  config: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+          http:
+    processors:
+      batch:
+    exporters:
+      logging:
+      otlp:
+        endpoint: &quot;&lt;path_to_central_collector&gt;.&lt;namespace&gt;:4317&quot;
+    service:
+      telemetry:
+        logs:
+          level: &quot;debug&quot;
+         metrics:
+           address: 0.0.0.0:8888
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [logging, otlp]
+</code></pre>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_21d.png" title="Body image" /></p>
+<h3 id="_6">自动检测</h3>
+<p>OpenTelemetry Operator 可以注入和配置 OpenTelemetry 自动检测库。<strong>目前支持 DotNet、Java、NodeJS、Python 和 Golang（需要手动开启）</strong>。</p>
+<p><strong>要使用自动检测，需要为 SDK 和检测配置添加一个 Instrumentation 资源。比如对于 Java 应用程序，配置如下</strong></p>
+<pre><code>apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: java-instrumentation
+spec:
+  propagators:
+    - tracecontext
+    - baggage
+    - b3
+  sampler:
+    type: always_on
+  java:
+</code></pre>
+<p>如果是 Python 应用程序，配置如下：</p>
+<pre><code>apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: python-instrumentation
+spec:
+  propagators:
+    - tracecontext
+    - baggage
+    - b3
+  sampler:
+    type: always_on
+  python:
+</code></pre>
+<p><strong>要启用检测，我们需要更新部署文件并向其添加注解。通过这种方式，我们告诉 OpenTelemetry Operator 将 sidecar 和 java 工具注入到我们的应用程序中。</strong></p>
+<pre><code>annotations:
+  instrumentation.opentelemetry.io/inject-java: &quot;true&quot;
+  sidecar.opentelemetry.io/inject: &quot;true&quot;
+</code></pre>
+<h3 id="_7">示例应用</h3>
+<p>这里我们将使用一个名为 Petclinic 的 Java 应用程序，这是一个使用 Maven 或 Gradle 构建的 Spring Boot 应用程序。该应用程序将使用 OpenTelemetry 生成数据</p>
+<p>对于 Java 应用，我们可以通过下载 OpenTelemetry 提供的 opentelemetry-javaagent 这个 jar 包来使用 OpenTelemetry 自动检测应用程序。</p>
+<p>只需要将这个 jar 包添加到应用程序的启动命令中即可，比如：</p>
+<pre><code>java -javaagent:opentelemetry-javaagent.jar -jar target/*.jar
+</code></pre>
+<p>Java 自动检测使用可附加到任何 Java 8+ 应用程序的 Java 代理 JAR。<strong>它动态注入字节码以从许多流行的库和框架捕获遥测数据</strong>。</p>
+<p><strong>它可用于捕获应用程序或服务“边缘”的遥测数据，例如入站请求、出站 HTTP 调用、数据库调用等。</strong>通过运行以上命令，我们可以对应用程序进行插桩，并生成链路数据，而对我们的应用程序没有任何修改。</p>
+<p><strong>尤其是在 Kubernetes 环境中，我们可以使用 OpenTelemetry Operator 来注入和配置 OpenTelemetry 自动检测库，这样连 javaagent 我们都不需要去手动注入了</strong>。</p>
+<p>我们首先部署 Petclinic 应用程序。</p>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: petclinic
+spec:
+  selector:
+    matchLabels:
+      app: petclinic
+  template:
+    metadata:
+      labels:
+        app: petclinic
+    spec:
+      containers:
+        - name: app
+          image: cnych/spring-petclinic:latest
+</code></pre>
+<p><strong>然后我们为 Java 应用程序添加一个 Instrumentation 资源</strong>。</p>
+<pre><code># java-instrumentation.yaml
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: java-instrumentation
+spec:
+  propagators:
+    - tracecontext
+    - baggage
+    - b3
+  sampler:
+    type: always_on
+  java:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:latest
+    go:
+        image: ghcr.io/open-telemetry/opentelemetry-go-instrumentation/autoinstrumentation-go:latest
+        env:
+            name: OTEL_EXPORTER_OTLP_INSECURE
+            value: &quot;true&quot;
+</code></pre>
+<p>为了启用自动检测，我们需要更新部署文件并向其添加注解。<strong>这样我们可以告诉 OpenTelemetry Operator 将 sidecar 和 java-instrumentation 注入到我们的应用程序中。修改 Deployment 配置如下</strong>：</p>
+<pre><code># petclinic.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: petclinic
+spec:
+  selector:
+    matchLabels:
+      app: petclinic
+  template:
+    metadata:
+      labels:
+        app: petclinic
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: &quot;true&quot;
+        sidecar.opentelemetry.io/inject: &quot;sidecar&quot;
+    spec:
+      containers:
+        - name: app
+          image: cnych/spring-petclinic:latest
+</code></pre>
+<p>然后再创建一个 NodePort 类型的 Service 服务来暴露应用程序。</p>
+<pre><code># petclinic-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: petclinic
+spec:
+  selector:
+    app: petclinic
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080  
+</code></pre>
+<p>直接应用上面的资源清单即可：</p>
+<pre><code>$ kubectl apply -f central-collector.yaml
+$ kubectl apply -f sidecar.yaml
+$ kubectl apply -f java-instrumentation.yaml
+$ kubectl apply -f petclinic.yaml
+$ kubectl apply -f petclinic-svc.yaml
+</code></pre>
+<p>正常部署完成后可以看到对应的 Pod 已经正常运行：</p>
+<pre><code>$ kubectl get pods
+NAME                                 READY   STATUS    RESTARTS   AGE
+petclinic-6fdd56f4d7-qfff7           2/2     Running   0          62s
+simplest-collector-87d8bf9bf-dh8pl   1/1     Running   0          36m
+$ kubectl get svc
+NAME                            TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                        AGE
+petclinic                       NodePort    10.103.6.52      &lt;none&gt;        80:30941/TCP                   46s
+simplest-collector              ClusterIP   10.102.131.126   &lt;none&gt;        4317/TCP,4318/TCP              17m
+simplest-collector-headless     ClusterIP   None             &lt;none&gt;        4317/TCP,4318/TCP              17m
+simplest-collector-monitoring   ClusterIP   10.98.65.171     &lt;none&gt;        8888/TCP                       17m
+</code></pre>
+<p>然后我们就可以通过 <code>http://&lt;node_ip&gt;:30941</code> 来访问 Petclinic 应用程序了。</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_22.png" title="Body image" /></p>
+<p>当我们访问应用程序时，应用程序就将生成追踪数据，并将其发送到我们的中心收集器。我们可以通过访问 Grafana Tempo 来查看追踪数据，同时也可以通过访问中心收集器的控制台来查看追踪数据。因为我们在中心收集器中配置了日志记录导出器和 Grafana Tempo 两个导出器，当然也可以配置其他导出器。</p>
+<pre><code>$ kubectl logs -f petclinic-6fdd56f4d7-qfff7 -c otc-container
+# ......
+2023-09-10T04:11:41.164Z        info    TracesExporter  {&quot;kind&quot;: &quot;exporter&quot;, &quot;data_type&quot;: &quot;traces&quot;, &quot;name&quot;: &quot;logging&quot;, &quot;resource spans&quot;: 1, &quot;spans&quot;: 76}
+2023-09-10T04:12:11.012Z        info    TracesExporter  {&quot;kind&quot;: &quot;exporter&quot;, &quot;data_type&quot;: &quot;traces&quot;, &quot;name&quot;: &quot;logging&quot;, &quot;resource spans&quot;: 1, &quot;spans&quot;: 3}
+2023-09-10T04:12:16.221Z        info    TracesExporter  {&quot;kind&quot;: &quot;exporter&quot;, &quot;data_type&quot;: &quot;traces&quot;, &quot;name&quot;: &quot;logging&quot;, &quot;resource spans&quot;: 1, &quot;spans&quot;: 23}
+^C
+$ kubectl logs -f simplest-collector-677f4779ff-x8h2m
+# ......
+2023-09-10T04:11:09.221Z        info    service/service.go:161  Everything is ready. Begin running and processing data.
+2023-09-10T04:11:49.222Z        info    TracesExporter  {&quot;kind&quot;: &quot;exporter&quot;, &quot;data_type&quot;: &quot;traces&quot;, &quot;name&quot;: &quot;logging&quot;, &quot;resource spans&quot;: 1, &quot;spans&quot;: 76}
+2023-09-10T04:12:19.224Z        info    TracesExporter  {&quot;kind&quot;: &quot;exporter&quot;, &quot;data_type&quot;: &quot;traces&quot;, &quot;name&quot;: &quot;logging&quot;, &quot;resource spans&quot;: 2, &quot;spans&quot;: 26}
+</code></pre>
+<p>所以在 Grafana Tempo 中也可以看到对应的追踪数据：</p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_23.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_23a.png" title="Body image" /></p>
+<p><img alt="Alt Image Text" src="../../images/ot0_1_23b.png" title="Body image" /></p>
+<p>同样如果你再添加一个 Jaeger 的导出器，那么你也可以在 Jaeger 中看到对应的追踪数据。</p>
+<p>如果在部署中遇到任何问题，我们可以通过查看应用程序和容器的日志来进行排查</p>
+<ul>
+<li>https://medium.com/@magstherdev/opentelemetry-up-and-running-b4c58eaf8c05</li>
+<li>https://medium.com/@magstherdev/opentelemetry-on-kubernetes-c167f024b35f</li>
+<li>https://medium.com/@magstherdev/opentelemetry-in-action-fc61263c852</li>
+<li>https://github.com/open-telemetry/opentelemetry-go-instrumentation</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+    
+  </body>
+</html>

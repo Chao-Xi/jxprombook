@@ -1,0 +1,4592 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Jacob's Prometheus 技术实战教程">
+      
+      
+        <meta name="author" content="Jacob Xi">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
+    
+    
+      
+        <title>9 Prometheus Operator 常用指标 - Jacob Prometheus Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3cba04c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="orange" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#9-prometheus-operator" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="Jacob Prometheus Book" class="md-header__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jacob Prometheus Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              9 Prometheus Operator 常用指标
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Jacob Prometheus Book" class="md-nav__button md-logo" aria-label="Jacob Prometheus Book" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Jacob Prometheus Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Chao-Xi/jxprombook.git" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jxprombook
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    监控解决方案
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            监控解决方案
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap0/1monitor_tools10/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 监控解决方案：10个 Kubernetes 监控工具
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/11Prom_intro_2023-CN/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2023 云原生系统监控
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Prometheus技术介绍,K8S Metrics介绍&查看
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus技术介绍,K8S Metrics介绍&查看
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/57prometheus_best_practice/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第零节 Promethues 应用监控的一些实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/1prometheus2022/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Prometheus 系统介绍 2022
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/18Adv_Prometheus_index_classfication/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 深入Prometheus设计-指标定义与分类(PromQL)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/k8s_adv39_kube_state_metrics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 kube-state-metrics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/17Adv_K8S_Metrics_Server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 Metrics Server 安装
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/20Install_metrics_server_SAP_CC/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节 Install Kubernetes Metrics Server on SAP Converged Cloud
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/38k8s_hpa_metricsserver/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 Kubernetes HPA 使用详解(Metrics Server/CPU/Mem/adapater)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/55prometheus_go_metrics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第七节 为Go应用添加Prometheus监控指标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/37kubectl_top/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第八节 从kubectl top看K8S监控原理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/9kube-state-metrics_crd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第九节 通过 kube-state-metrics 添加 CRD 状态指标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap1/10kube-state-metrics-cluster-opt/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十节 kube-state-metrics 在大规模集群下的优化(2023)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Prometheus on Linux
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus on Linux
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/19centos7_Prometheus_Alertmanager_Grafana/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Centos7 Prometheus安装部署+监控+绘图+告警
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/59node_exporter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 使用Node Exporter监控Linux主机&常用监控指标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/36Prometheus_Mysql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 基于Prometheus构建MySQL可视化监控平台
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/4mysql_exporter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 官方 mysqld_exporter支持抓取多MySQL实例
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap2/5prom_grafana_chatops/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节 使用 Grafana、Prometheus 和 Slack 构建一个简单的 ChatOps 机器人
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    手动部署Kubernetes Prometheus
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            手动部署Kubernetes Prometheus
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/1prometheus_setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Kubernetes使用Prometheus搭建监控平台(2018)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/2prometheus_AlertManager/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 Prometheus报警 && AlertManager实战（2018）
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/3changes_on_Grafana/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 Grafana 显示参数设置(2018)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/4Adv_Prometheus_setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 在 Kubernetes 中手动部署 Prometheus (adv)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/5Adv_Prometheus_monitor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节 应用监控（Metrics/Exporter的配置）
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/6Adv_K8S_Nodes_monitor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 监控K8S集群节点&Node-exporter DaemonSet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/7Adv_K8S_Resource_monitor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第七节 监控常用资源对象（容器/apiserver/Service监控/kube-state-metric）
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/8Adv_K8S_Grafana/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第八节 Grafana 在 Kubernetes 中的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/10Adv_k8s_AlertManger/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第九节 报警神器 AlertManager 的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/16Adv_Prometheus_Del_index/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十节 Prometheus 删除数据指标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/50PrometheusAlert/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十一节 Prometheus中使用PrometheusAlert进行聚合报警
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/12gpu_monitor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十二节 监控Kubernetes集群的GPU资源
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/29AlertManager_SendAlerts_when/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十三节 AlertManager何时报警
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap3/41Prometheus_Monitor_OutCluster/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十四节 Prometheus监控外部Kubernetes集群
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    玩转Prometheus Operator
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            玩转Prometheus Operator
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/11Adv_Prometheus_Operator/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Prometheus Operator 初体验
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/13Adv_Prometheus_Operator_etcd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 使用 Prometheus Operator 监控 etcd
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/14Adv_Prometheus_Operator_alarm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 Prometheus Operator 自定义报警
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/22Customize_Alert_Email/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 Add Custom Alert and Send Alert Email with Alertmanager
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/24Kubernetes_Prometheus_blackbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节 Prometheus 黑盒监控
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/32Prometheus_troubleshoot_Servicemonitor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 Troubleshooting ServiceMonitor changes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/43Prometheus_operator_ssl_exporter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第七节 使用ssl_exporter监控K8S集群证书
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/44Prometheus_KubeNurse/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第八节 Operator2021-使用KubeNurse进行集群网络监控
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/45Prom-operator_2021/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第九节 Prometheus Operator安装配置(2021)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/46Prometheus_traefik/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十节 Traefik之使用Prometheus Operator进行监控报警2021
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/47Prometheus_opt_AlertmanagerConfig/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十一节 Operator使用AlertmanagerConfig进行报警配置
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/49Prometheus_SLI_SLO/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十二节 通过Prometheus来做SLI/SLO监控展示
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/51missing-container-metrics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十三节 Prometheus使用missing-container-metrics监控Pod oomkill
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/chap4_blackbox/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十四节 如何在Prometheus中进行黑盒监控(ICMP/DNS/TCP/HTTP/gRPC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap4/chap4_Operator_probe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第十五节 Prometheus Operator中探针的使用（Blackbox Exporter）
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Prometheus服务发现
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus服务发现
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/53Prometheus_auto_discovery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Prometheus服务的自动发现使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/52Prometheus_Relabeling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 Prometheus Relabeling重新标记的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap5/54prometheus_go_metrics_guideline/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 如何使用Prometheus仪表化应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Jam prometheus Monitor
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Jam prometheus Monitor
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/25Alertmanager_AWS_SES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chap1 Alertmanager alerts with Amazon SES SMTP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/26Prometheus_Monitor_Argocd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chap2 Prometheus Operator Monitor on ArgoCD
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/27Prometheus_Monitor_elasticsearch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chap3 Prometheus Operator Monitor on ElasticSearch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/31Prometheus_Monitor_rabbitmq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chap4 Prometheus Operator Monitor on Rabbitmq
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap6/33Prometheus_Monitor_memcached/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chap5 Prometheus Operator Monitor on Memcached
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Prometheus-Adapter
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus-Adapter
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap7/23Kubernetes_Scale_Prometheus-Adapter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    应用进行自定义指标扩缩容 by Prometheus-Adapter and Flask-Exporter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    PromQL学习
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            PromQL学习
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1Promql_basic1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 初识 PromQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2Promql_basic2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2 PromQL 操作符 & 内置函数
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3Promql_basic3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3 PromQL 内置函数
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4Promql_basic4/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4 PromQL简单示例
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5Promql_basic5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5 在 HTTP API中使用 PromQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6Promql_adv1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6 Prometheus记录规则的使用(Recording Rule)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../56prometheus_promql_rate/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7 PromQL查询之rate函数的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../60prometheus_job/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8 解决Prometheus监控Kubernetes Job误报的坑
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9promql_6errors/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9 使用 Prometheus PromQL时需要避免这6个错误
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Awesome alerts rules
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Awesome alerts rules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/1basic_resource/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 Basic resource monitoring
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/2database_broker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2 Databases and brokers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/3proxy_lb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3 Reverse proxies and load balancers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/4runtimes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4 Runtimes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/5Orchestrators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5 Orchestrators
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/6network_sec_storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6 Network, security and storage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/7other/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7 Others
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap9/8Alerting_sleep/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8 Alert Sleep Peacefully
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    数据可视化&Grafana Plugin
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            数据可视化&Grafana Plugin
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/58grafana_init/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 使用 Grafana 构建你的第一个仪表盘
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/28Grafana_plugin_DevOpsProdigy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2 优秀的Grafana K8S 插件-DevOpsProdigy KubeGraf
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/30Create_Grafana_dashboards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3 用 Kubernetes darks资源对象创建Grafana Dashboard
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/48grafana_Trickster/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4 Grafana 图表加速神器-Trickster
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/5Grafana_Loki/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5 使用读写分离模式扩展 Grafana Loki
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/6Prometheus_grafaa_docker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6 使用 Prometheus 和 Grafana 实现服务器运行状态监控（基于 Docker）
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap10/7loki_promtail_grafana/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7 Docker上部署LPG（loki+promtail+grafana）踩坑复盘
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Prometheus(OpenTelemetry)架构设计与工具平台
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            Prometheus(OpenTelemetry)架构设计与工具平台
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/1deepflow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 DeepFlow AutoTagging之Prometheus标签标准化
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/2Prometheus_opentele/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2 Prometheus与OpenTelemetry该选哪个？
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/3Prometheus_index/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3 Prometheus的四种指标类型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/4OpenTelemetry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4 透彻理解OpenTelemetry
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap13/4OpenTelemetry_tracing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5 使用OpenTelemetry Tracing最大化Kubernetes效率
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Thanos
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            Thanos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/39Thanos_tutorial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 大规模场景下Prometheus的优化手段&Thanos架构详解
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/34Thanos_intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 使用Thanos实现Prometheus的高可用介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/35Thanos_install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 Prometheus高可用Thanos学习-sidercar和query&Thanos部署
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/61thanos_sidecar_receiver/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节（2022）如何选择Thanos的Sidecar和Receiver两种模式？
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/62thanos_query/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节（2022）使用Thanos查询前端优化查询性能
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/63prometheus_optimiztion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 (Thaos1-2022)大规模场景下Prometheus的优化手段
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/64thanos_detail/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第七节 (Thaos2-2022)Thanos架构详解
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/65thanos_setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第八节 (Thaos3-2022)Thanos部署与实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap11/66thanos_ruler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第九节（2022）Thanos Ruler组件的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    VictoriaMetrics
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            VictoriaMetrics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/67vm_intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 Prometheus远程存储VictoriaMetrics简介
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/68vm_setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 Prometheus长期远程存储方案VictoriaMetrics入门实践
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/69vm_cluster/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 VictorialMetrics 集群模式的使用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/70vm_vmagent/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 使用vmagent代替Prometheus采集监控指标
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/71vm_operator/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第五节 使用Victoria Metrics Operator管理VM集群
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/72vm_vmalert/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 使用 vmalert 代替 Prometheus 监控报警
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap12/73vm_pressure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第七节 对Prometheus兼容的时序数据库进行压力测试
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    APM 工具及功能介绍
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            APM 工具及功能介绍
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/1apm_prods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第一节 APM产品落地实战
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/2opentracing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第二节 APM + OpenTracing原理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/3apm_tracing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第三节 怎么理解分布式链路追踪技术？
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/4apm_prod/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第四节 在生产环境中如何选择靠谱的APM系统？
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/6k8s_watching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    第六节 聊聊可观测性之数据模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_17" >
+        
+          
+          <label class="md-nav__link" for="__nav_17" id="__nav_17_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    OpenTelemetry 介绍
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_17_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_17">
+            <span class="md-nav__icon md-icon"></span>
+            OpenTelemetry 介绍
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_ot/0OpenTelemetrey_intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    0 OpenTelemetry保姆入门攻略可PPT-2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_ot/1OpenTelemetry_intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1 云原生可观测 OpenTelemetry 基础知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_ot/1OpenTelemetry_k8s_metrics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2 使用 OpenTelemetry Collector 采集 Kubernetes 指标数据
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_ot/5OpenTelemetry_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3 使用 OpenTelemetry Collector 收集 Kubernetes 日志数据
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/5apm_Sentry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4 Sentry+OpenTelemetry前后端全链路打通
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/2OpenTelemetry_MS.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5 使用 OpenTelemetry Tracing 了解您的微服务
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/3OpenTelemetry_K8S.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6 使用 OpenTelemetry Tracing 最大化Kubernetes效率
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/4OpenTelemetry_datamon.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7 聊聊可观测性之数据模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_apm/6OpenTelemetry_java.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8 Java 应用通过 OpenTelemetry API 实现手动埋点
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chap_ot/7OT_practice/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9 Opentelemetry 采样最佳实践(概率采样器/尾部采样器)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Kubernetes 资源相关
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Kubernetes 资源相关">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-cputhrottlinghigh" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 CPUThrottlingHigh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-kubecpuovercommit" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 KubeCPUOvercommit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-kubememoryovercommit" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 KubeMemoryOvercommit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-kubecpuquotaovercommit" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4 KubeCPUQuotaOvercommit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-kubememoryquotaovercommit" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5 KubeMemoryQuotaOvercommit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-kubememquotaexceeded" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.6 KubeMEMQuotaExceeded
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-kubecpuquotaexceeded" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.7 KubeCPUQuotaExceeded
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Kubernetes 存储相关
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Kubernetes 存储相关">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-kubepersistentvolumefillingup" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 KubePersistentVolumeFillingUp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-kubepersistentvolumefillingup" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 KubePersistentVolumeFillingUp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-kubepersistentvolumeerrors" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 KubePersistentVolumeErrors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-kubernetes-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. kubernetes system 相关
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. kubernetes system 相关">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-kubeversionmismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 KubeVersionMismatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-kubeclienterrors" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 KubeClientErrors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-apiserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. APIServer 相关
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. APIServer 相关">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-kubeapierrorshigh" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 KubeAPIErrorsHigh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-kubeclientcertificateexpiration" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 KubeClientCertificateExpiration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-aggregatedapierrors" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 AggregatedAPIErrors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-kubeapidown" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.4 KubeAPIDown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-kubelet" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. kubelet 相关
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. kubelet 相关">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-kubenodenotready" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 KubeNodeNotReady
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-kubenodeunreachable" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 KubeNodeUnreachable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-kubelettoomanypods" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 KubeletTooManyPods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-kubenodereadinessflapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4 KubeNodeReadinessFlapping
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-kubeletdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.5 KubeletDown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 集群组件
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 集群组件">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-kubeschedulerdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 KubeSchedulerDown
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-kubecontrollermanagerdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 KubeControllerManagerDown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. 应用相关
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. 应用相关">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-kubepodcrashlooping" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 KubePodCrashLooping
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-kubepodnotready" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 KubePodNotReady
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-kubedeploymentgenerationmismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3 KubeDeploymentGenerationMismatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-kubedeploymentreplicasmismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.4 KubeDeploymentReplicasMismatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-kubestatefulsetreplicasmismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.5 KubeStatefulSetReplicasMismatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-kubestatefulsetupdatenotrolledout" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.6 KubeStatefulSetUpdateNotRolledOut
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#77-kubedaemonsetrolloutstuck" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.7 KubeDaemonSetRolloutStuck
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#78-kubedaemonsetmisscheduled" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.8 KubeDaemonSetMisScheduled
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#79-kubecontainerwaiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.9 KubeContainerWaiting
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. 节点相关
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. 节点相关">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-nodeclocknotsynchronising" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1 NodeClockNotSynchronising
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-nodeclockskewdetected" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2 NodeClockSkewDetected
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-nodehighnumberconntrackentriesused" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3 NodeHighNumberConntrackEntriesUsed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-nodenetworkreceiveerrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4 NodeNetworkReceiveErrs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-nodenetworktransmiterrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5 NodeNetworkTransmitErrs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86-nodefilesystemalmostoutoffiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.6 NodeFilesystemAlmostOutOfFiles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#87-nodefilesystemfilesfillingup" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.7 NodeFilesystemFilesFillingUp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#88-nodefilesystemalmostoutofspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.8 NodeFilesystemAlmostOutOfSpace
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#89-nodefilesystemspacefillingup" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.9 NodeFilesystemSpaceFillingUp
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-etcd" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Etcd 相关
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Etcd 相关">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-etcdlived" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.1 Etcdlived
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-etcdcluseterunavailable" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2 EtcdCluseterUnavailable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-etcdleadercheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3 EtcdLeaderCheck
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94-etcdbackendfsync" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.4 EtcdBackendFsync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95-etcdwalfsync" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.5 EtcdWalFsync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96-etcddbsize" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.6 EtcdDbSize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#97-etcdgrpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.7 EtcdGrpc
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-coredns" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. CoreDNS 相关
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. CoreDNS 相关">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-dnsrequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.1 DnsRequest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-dnsrequestfaild" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.2 DnsRequestFaild
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-dnspanic" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.3 DnsPanic
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="9-prometheus-operator"><strong>9 Prometheus Operator 常用指标</strong></h1>
+<p>Prometheus Operator 安装完成后会有很多默认的监控指标，一不注意就大量的报警产生，所以我们非常有必要了解下这些常用的监控指标，有部分指标很有可能对于我们自己的业务可有可无，所以可以适当的进行修改，这里我们就来对常用的几个指标进行简单的说明。</p>
+<h2 id="1-kubernetes"><strong>1. Kubernetes 资源相关</strong></h2>
+<h3 id="11-cputhrottlinghigh"><strong>1.1 CPUThrottlingHigh</strong></h3>
+<p>关于 CPU 的 limit 合理性指标。查出最近5分钟，超过25%的 CPU 执行周期受到限制的容器。表达式：</p>
+<pre><code>sum(increase(container_cpu_cfs_throttled_periods_total{container!=&quot;&quot;, }[5m])) by (container, pod, namespace)
+          /
+sum(increase(container_cpu_cfs_periods_total{}[5m])) by (container, pod, namespace)
+          &gt; ( 25 / 100 )
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>container_cpu_cfs_periods_total</code>：容器生命周期中度过的 cpu 周期总数</li>
+<li><code>container_cpu_cfs_throttled_periods_total</code>：容器生命周期中度过的受限的 cpu 周期总数</li>
+</ul>
+<h3 id="12-kubecpuovercommit"><strong>1.2 KubeCPUOvercommit</strong></h3>
+<p>集群 CPU 过度使用。CPU 已经过度使用无法容忍节点故障，节点资源使用的总量超过节点的 CPU 总量，所以如果有节点故障将影响集群资源运行因为所需资源将无法被分配。</p>
+<p>表达式：</p>
+<pre><code>sum(namespace:kube_pod_container_resource_requests_cpu_cores:sum{})
+          /
+sum(kube_node_status_allocatable_cpu_cores)
+          &gt;
+(count(kube_node_status_allocatable_cpu_cores)-1) / count(kube_node_status_allocatable_cpu_cores)
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_pod_container_resource_requests_cpu_cores</code>：资源 CPU 使用的 cores 数量</li>
+<li><code>kube_node_status_allocatable_cpu_cores</code>：节点 CPU cores 数量</li>
+</ul>
+<h3 id="13-kubememoryovercommit"><strong>1.3 KubeMemoryOvercommit</strong></h3>
+<p>集群内存过度使用。内存已经过度使用无法容忍节点故障，节点资源使用的总量超过节点的内存总量，所以如果有节点故障将影响集群资源运行因为所需资源将无法被分配。表达式：</p>
+<pre><code>sum(namespace:kube_pod_container_resource_requests_memory_bytes:sum{})
+          /
+        sum(kube_node_status_allocatable_memory_bytes)
+          &gt;
+        (count(kube_node_status_allocatable_memory_bytes)-1)
+          /
+        count(kube_node_status_allocatable_memory_bytes)
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_pod_container_resource_requests_memory_bytes</code>：资源内存使用的量</li>
+<li><code>kube_node_status_allocatable_memory_bytes</code>：节点内存量</li>
+</ul>
+<h3 id="14-kubecpuquotaovercommit"><strong>1.4 KubeCPUQuotaOvercommit</strong></h3>
+<p>集群CPU是否超分。查看 CPU 资源分配的额度是否超过进群总额度</p>
+<p>表达式：</p>
+<pre><code>sum(kube_pod_container_resource_limits_cpu_cores{job=&quot;kube-state-metrics&quot;})
+          /
+        sum(kube_node_status_allocatable_cpu_cores)
+          &gt; 1.1
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_pod_container_resource_limits_cpu_cores</code>：资源分配的 CPU 资源额度</li>
+<li><code>kube_node_status_allocatable_cpu_cores</code>：节点 CPU 总量</li>
+</ul>
+<h3 id="15-kubememoryquotaovercommit"><strong>1.5 KubeMemoryQuotaOvercommit</strong></h3>
+<p>集群超分内存，查看内存资源分配的额度是否超过进群总额度</p>
+<p>表达式：</p>
+<pre><code>sum(kube_pod_container_resource_limits_memory_bytes{job=&quot;kube-state-metrics&quot;})
+          /
+        sum(kube_node_status_allocatable_memory_bytes{job=&quot;kube-state-metrics&quot;})
+          &gt; 1.1
+</code></pre>
+<p>相关指标:</p>
+<ul>
+<li><code>kube_pod_container_resource_limits_memory_bytes</code>：资源配额内存量</li>
+<li><code>kube_node_status_allocatable_memory_bytes</code>：节点内存量</li>
+</ul>
+<h3 id="16-kubememquotaexceeded"><strong>1.6 KubeMEMQuotaExceeded</strong></h3>
+<p>命名空间级内存资源使用的比例，关乎资源配额。当使用 request 和 limit 限制资源时，使用值和最大值还是有一点区别，当有 request 时说明最低分配了这么多资源。需要注意当 request 等于 limit 时那么说明资源已经是100%已经分配使用当监控告警发出的时候需要区分。表达式：</p>
+<pre><code>sum (kube_pod_container_resource_requests_memory_bytes{job=&quot;kube-state-metrics&quot;} ) by (namespace)/ (sum(kube_pod_container_resource_limits_memory_bytes{job=&quot;kube-state-metrics&quot;}) by (namespace)) &gt; 0.8
+</code></pre>
+<p>相关指标:</p>
+<ul>
+<li><code>kube_pod_container_resource_requests_memory_bytes</code>：内存资源使用量</li>
+<li><code>kube_pod_container_resource_limits_memory_bytes</code>：内存资源最大值</li>
+</ul>
+<h3 id="17-kubecpuquotaexceeded"><strong>1.7 KubeCPUQuotaExceeded</strong></h3>
+<p>命名空间级 CPU 资源使用的比例，关乎资源配额。当使用 request 和 limit 限制资源时，使用值和最大值还是有一点区别，当有 request 时说明最低分配了这么多资源。需要注意当 request 等于 limit 时那么说明资源已经是100%已经分配使用当监控告警发出的时候需要区分。</p>
+<p>表达式：</p>
+<pre><code>sum (kube_pod_container_resource_requests_cpu_cores{job=&quot;kube-state-metrics&quot;} ) by (namespace)/ (sum(kube_pod_container_resource_limits_cpu_cores{job=&quot;kube-state-metrics&quot;}) by (namespace)) &gt; 0.8
+</code></pre>
+<p>相关指标:</p>
+<ul>
+<li><code>kube_pod_container_resource_requests_cpu_cores</code>：CPU 使用量</li>
+<li><code>kube_pod_container_resource_limits_cpu_cores</code>：CPU 限额最大值</li>
+</ul>
+<h2 id="2-kubernetes"><strong>2. Kubernetes 存储相关</strong></h2>
+<h3 id="21-kubepersistentvolumefillingup"><strong>2.1 KubePersistentVolumeFillingUp</strong></h3>
+<p>PVC 容量监控</p>
+<p>表达式：</p>
+<pre><code>kubelet_volume_stats_available_bytes{job=&quot;kubelet&quot;, metrics_path=&quot;/metrics&quot;}
+          /
+        kubelet_volume_stats_capacity_bytes{job=&quot;kubelet&quot;, metrics_path=&quot;/metrics&quot;}
+          &lt; 0.3
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kubelet_volume_stats_available_bytes</code>：剩余空间</li>
+<li><code>kubelet_volume_stats_capacity_bytes</code>：空间总量</li>
+</ul>
+<h3 id="22-kubepersistentvolumefillingup"><strong>2.2 KubePersistentVolumeFillingUp</strong></h3>
+<p>磁盘空间耗尽预测：通过PVC资源使用6小时变化率预测 接下来4天的磁盘使用率</p>
+<p>表达式：</p>
+<pre><code>(kubelet_volume_stats_available_bytes{job=&quot;kubelet&quot;, metrics_path=&quot;/metrics&quot;}
+            /
+          kubelet_volume_stats_capacity_bytes{job=&quot;kubelet&quot;, metrics_path=&quot;/metrics&quot;}
+        ) &lt; 0.4
+        and
+        predict_linear(kubelet_volume_stats_available_bytes{job=&quot;kubelet&quot;, metrics_path=&quot;/metrics&quot;}[6h], 4 * 24 * 3600) &lt; 0
+</code></pre>
+<p>相关指标:</p>
+<ul>
+<li><code>kubelet_volume_stats_available_bytes</code>：剩余空间</li>
+<li><code>kubelet_volume_stats_capacity_bytes</code>：空间总量</li>
+</ul>
+<h3 id="23-kubepersistentvolumeerrors"><strong>2.3 KubePersistentVolumeErrors</strong></h3>
+<p>PV 使用状态监控。</p>
+<p>表达式：</p>
+<pre><code>kube_persistentvolume_status_phase{phase=~&quot;Failed|Pending&quot;,job=&quot;kube-state-metrics&quot;}
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_persistentvolume_status_phase</code>：PV 使用状态</li>
+</ul>
+<h2 id="3-kubernetes-system"><strong>3. kubernetes system 相关</strong></h2>
+<h3 id="31-kubeversionmismatch"><strong>3.1 KubeVersionMismatch</strong></h3>
+<p>组件版本与当前集群版本是否有差异。对比组件版本是否有差异，默认为1 。</p>
+<p>表达式：</p>
+<pre><code>count(count by (gitVersion) (label_replace(kubernetes_build_info{job!~&quot;kube-dns|coredns&quot;},&quot;gitVersion&quot;,&quot;$1&quot;,&quot;gitVersion&quot;,&quot;(v[0-9]*.[0-9]*.[0-9]*).*&quot;)))
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kubernetes_build_info</code>：获取组件信息</li>
+</ul>
+<h3 id="32-kubeclienterrors"><strong>3.2 KubeClientErrors</strong></h3>
+<p>客户端访问某些接口的错误率。</p>
+<p>表达式：</p>
+<pre><code>(sum(rate(rest_client_requests_total{code=~&quot;5..&quot;}[5m])) by (instance, job)
+          /
+        sum(rate(rest_client_requests_total[5m])) by (instance, job))
+        &gt; 0.01
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>rest_client_requests_total</code>：状态码</li>
+</ul>
+<h2 id="4-apiserver"><strong>4. APIServer 相关</strong></h2>
+<h3 id="41-kubeapierrorshigh"><strong>4.1 KubeAPIErrorsHigh</strong></h3>
+<p>APIServer 请求错误率。5分钟内 APIServer 请求错误率。</p>
+<p>表达式：</p>
+<pre><code>sum(rate(apiserver_request_total{job=&quot;apiserver&quot;,code=~&quot;5..&quot;}[5m])) by (resource,subresource,verb)
+          /
+        sum(rate(apiserver_request_total{job=&quot;apiserver&quot;}[5m])) by (resource,subresource,verb) &gt; 0.0
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>apiserver_request_total：APIServer</code> 请求数</li>
+</ul>
+<h3 id="42-kubeclientcertificateexpiration"><strong>4.2 KubeClientCertificateExpiration</strong></h3>
+<p>kubelet 客户端证书过期。监测证书状态30天告警和7天告警。</p>
+<p>表达式：</p>
+<pre><code>apiserver_client_certificate_expiration_seconds_count{job=&quot;apiserver&quot;} &gt; 0 and on(job) histogram_quantile(0.01, sum by (job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job=&quot;apiserver&quot;}[5m]))) &lt; 2592000
+apiserver_client_certificate_expiration_seconds_count{job=&quot;apiserver&quot;} &gt; 0 and on(job) histogram_quantile(0.01, sum by (job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job=&quot;apiserver&quot;}[5m]))) &lt; 604800
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>apiserver_client_certificate_expiration_seconds_count</code>：证书有效剩余时间</li>
+</ul>
+<h3 id="43-aggregatedapierrors"><strong>4.3 AggregatedAPIErrors</strong></h3>
+<p>自定义注册的 APIServer 服务可用性监控，当检测到自定义注册的 APIServer 五分钟不用次数达到2次。</p>
+<p>表达式：</p>
+<pre><code>sum by(name, namespace)(increase(aggregator_unavailable_apiservice_count[5m])) &gt; 2
+</code></pre>
+<p>相关指标:</p>
+<ul>
+<li><code>aggregator_unavailable_apiservice_count</code>：监测自定义注册的 APIService 不可用次数。</li>
+</ul>
+<h3 id="44-kubeapidown"><strong>4.4 KubeAPIDown</strong></h3>
+<p>APIserver 失联，监控 APIServer 服务，失联原因可能是服务 down 还可能是网络出现状况。</p>
+<p>表达式：</p>
+<pre><code>absent(up{job=&quot;apiserver&quot;} == 1)
+</code></pre>
+<h2 id="5-kubelet"><strong>5. kubelet 相关</strong></h2>
+<h3 id="51-kubenodenotready"><strong>5.1 KubeNodeNotReady</strong></h3>
+<p>节点是否处于就绪状态。检测节点是否为就绪状态，或者可能是 kubelet 服务down 了。</p>
+<p>表达式：</p>
+<pre><code>kube_node_status_condition{job=&quot;kube-state-metrics&quot;,condition=&quot;Ready&quot;,status=&quot;true&quot;} == 0
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_node_status_condition</code>：节点状态监测</li>
+</ul>
+<h3 id="52-kubenodeunreachable"><strong>5.2 KubeNodeUnreachable</strong></h3>
+<p>节点状态为 Unreachable。</p>
+<p>表达式：</p>
+<pre><code>kube_node_spec_unschedulable{job=&quot;kube-state-metrics&quot;} == 1
+</code></pre>
+<h3 id="53-kubelettoomanypods"><strong>5.3 KubeletTooManyPods</strong></h3>
+<p>节点运行过多的 Pod，监测节点上运行的 Pods 数量。</p>
+<p>表达式：</p>
+<pre><code>max(max(kubelet_running_pod_count{job=&quot;kubelet&quot;, metrics_path=&quot;/metrics&quot;}) by(instance) * on(instance) group_left(node) kubelet_node_name{job=&quot;kubelet&quot;, metrics_path=&quot;/metrics&quot;}) by(node) / max(kube_node_status_capacity_pods{job=&quot;kube-state-metrics&quot;} != 1) by(node) &gt; 0.95
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kubelet_running_pod_count</code>：节点运行的 Pods 数量</li>
+<li><code>kubelet_node_name</code>：节点名称</li>
+<li><code>kube_node_status_capacity_pods</code>：节点可运行的最大 Pod 数量</li>
+</ul>
+<h3 id="54-kubenodereadinessflapping"><strong>5.4 KubeNodeReadinessFlapping</strong></h3>
+<p>监测集群状态，查看集群内节点状态改变的频率。</p>
+<p>表达式：</p>
+<pre><code>sum(changes(kube_node_status_condition{status=&quot;true&quot;,condition=&quot;Ready&quot;}[15m])) by (node) &gt; 2
+</code></pre>
+<h3 id="55-kubeletdown"><strong>5.5 KubeletDown</strong></h3>
+<p>监控 kubelet 服务，down 或者网络出现问题。</p>
+<p>表达式：</p>
+<pre><code>absent(up{job=&quot;kubelet&quot;, metrics_path=&quot;/metrics&quot;} == 1)
+</code></pre>
+<h2 id="6"><strong>6. 集群组件</strong></h2>
+<h3 id="61-kubeschedulerdown"><strong>6.1 KubeSchedulerDown</strong></h3>
+<p>KubeScheduler 失联，监测 KubeScheduler 是否正常。</p>
+<p>表达式：</p>
+<pre><code>absent(up{job=&quot;kube-scheduler&quot;} == 1)
+</code></pre>
+<h3 id="62-kubecontrollermanagerdown"><strong>6.2 KubeControllerManagerDown</strong></h3>
+<p>监测 KubeControllerManager 服务，Down 或者网络不通。</p>
+<p>表达式：</p>
+<pre><code>absent(up{job=&quot;kube-controller-manager&quot;} == 1)
+</code></pre>
+<h2 id="7"><strong>7. 应用相关</strong></h2>
+<h3 id="71-kubepodcrashlooping"><strong>7.1 KubePodCrashLooping</strong></h3>
+<p>Pod 重启时间，重启时间超过3m告警。</p>
+<p>表达式：</p>
+<pre><code>rate(kube_pod_container_status_restarts_total{job=&quot;kube-state-metrics&quot;}[5m]) * 60 * 3 &gt; 0
+</code></pre>
+<p>相关指标:</p>
+<ul>
+<li><code>kube_pod_container_status_restarts_total</code>：重启状态0为正常</li>
+</ul>
+<h3 id="72-kubepodnotready"><strong>7.2 KubePodNotReady</strong></h3>
+<p>Pods 没有就绪，检测 Pod 是否就绪。</p>
+<p>表达式：</p>
+<pre><code>sum by (namespace, pod) (max by(namespace, pod) (kube_pod_status_phase{job=&quot;kube-state-metrics&quot;, phase=~&quot;Pending|Unknown&quot;}) * on(namespace, pod) group_left(owner_kind) max by(namespace, pod, owner_kind) (kube_pod_owner{owner_kind!=&quot;Job&quot;})) &gt; 0
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_pod_status_phase</code>：Pod 状态</li>
+</ul>
+<h3 id="73-kubedeploymentgenerationmismatch"><strong>7.3 KubeDeploymentGenerationMismatch</strong></h3>
+<p>Deployment 部署失败，Deployment 生成的资源与定义的资源不匹配。</p>
+<p>表达式：</p>
+<pre><code>kube_deployment_status_observed_generation{job=&quot;kube-state-metrics&quot;}
+          !=
+        kube_deployment_metadata_generation{job=&quot;kube-state-metrics&quot;}
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_deployment_status_observed_generation</code>：Deployment 生成资源数</li>
+<li><code>kube_deployment_metadata_generation</code>：Deployment 定义资源数</li>
+</ul>
+<h3 id="74-kubedeploymentreplicasmismatch"><strong>7.4 KubeDeploymentReplicasMismatch</strong></h3>
+<p>查看 Deplyment 副本是否达到预期。</p>
+<p>表达式：</p>
+<pre><code>(
+          kube_deployment_spec_replicas{job=&quot;kube-state-metrics&quot;}
+            !=
+          kube_deployment_status_replicas_available{job=&quot;kube-state-metrics&quot;}
+        ) and (
+          changes(kube_deployment_status_replicas_updated{job=&quot;kube-state-metrics&quot;}[3m])
+            ==
+          0
+        )
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_deployment_spec_replicas</code>                     资源定义副本数</li>
+<li><code>kube_deployment_status_replicas_available</code>        正在运行副本数</li>
+<li><code>kube_deployment_status_replicas_updated</code>          更新的副本数</li>
+</ul>
+<h3 id="75-kubestatefulsetreplicasmismatch"><strong>7.5 KubeStatefulSetReplicasMismatch</strong></h3>
+<p>监测 StatefulSet 副本是否达到预期。</p>
+<p>表达式：</p>
+<pre><code>(
+          kube_statefulset_status_replicas_ready{job=&quot;kube-state-metrics&quot;}
+            !=
+          kube_statefulset_status_replicas{job=&quot;kube-state-metrics&quot;}
+        ) and (
+          changes(kube_statefulset_status_replicas_updated{job=&quot;kube-state-metrics&quot;}[5m])
+            ==
+          0
+        )
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_statefulset_status_replicas_ready</code>：就绪副本数</li>
+<li><code>kube_statefulset_status_replicas</code>：当前副本数</li>
+<li><code>kube_statefulset_status_replicas_updated</code>：更新的副本数</li>
+</ul>
+<h3 id="76-kubestatefulsetupdatenotrolledout"><strong>7.6 KubeStatefulSetUpdateNotRolledOut</strong></h3>
+<p>StatefulSet  更新失败且未回滚，对比版本号和副本数。</p>
+<p>表达式：</p>
+<pre><code>max without (revision) (
+          kube_statefulset_status_current_revision{job=&quot;kube-state-metrics&quot;}
+            unless
+          kube_statefulset_status_update_revision{job=&quot;kube-state-metrics&quot;}
+        )
+          *
+        (
+          kube_statefulset_replicas{job=&quot;kube-state-metrics&quot;}
+            !=
+          kube_statefulset_status_replicas_updated{job=&quot;kube-state-metrics&quot;}
+        )
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_statefulset_status_replicas</code>：每个 StatefulSet 的副本数。</li>
+<li><code>kube_statefulset_status_replicas_current</code>：每个 StatefulSet 的当前副本数。</li>
+<li><code>kube_statefulset_status_replicas_ready</code>：每个StatefulSet 的就绪副本数。</li>
+<li><code>kube_statefulset_status_replicas_updated</code>：每个StatefulSet 的更新副本数。</li>
+<li><code>kube_statefulset_status_observed_generation</code>：StatefulSet 控制器观察到的生成。</li>
+<li><code>kube_statefulset_replicas</code>：StatefulSet 所需的副本数。</li>
+<li><code>kube_statefulset_metadata_generation</code>：表示 StatefulSet 所需状态的特定生成的序列号。</li>
+<li><code>kube_statefulset_created</code>：创建时间戳。</li>
+<li><code>kube_statefulset_labels</code>：Kubernetes 标签转换为 Prometheus 标签。</li>
+<li><code>kube_statefulset_status_current_revision</code>：指示用于按顺序(0，currentReplicas)生成 Pod 的StatefulSet 的版本。</li>
+<li><code>kube_statefulset_status_update_revision</code>：指示用于按顺序 [replicas-updatedReplicas，replicas] 生成 Pod 的 StatefulSet 的版本。</li>
+</ul>
+<h3 id="77-kubedaemonsetrolloutstuck"><strong>7.7 KubeDaemonSetRolloutStuck</strong></h3>
+<p>监测 DaemonSet 是否处于就绪状态。</p>
+<p>表达式：</p>
+<pre><code>kube_daemonset_status_number_ready{job=&quot;kube-state-metrics&quot;}
+          /
+        kube_daemonset_status_desired_number_scheduled{job=&quot;kube-state-metrics&quot;} &lt; 1.00
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_daemonset_status_number_ready</code>：就绪的 DaemonSet</li>
+<li><code>kube_daemonset_status_desired_number_scheduled</code>：应该调度的 DaemonSet 数量</li>
+</ul>
+<h3 id="78-kubedaemonsetmisscheduled"><strong>7.8 KubeDaemonSetMisScheduled</strong></h3>
+<p>DaemonSet  运行在不该运行的节点上面。</p>
+<p>表达式：</p>
+<pre><code>kube_daemonset_status_number_misscheduled{job=&quot;kube-state-metrics&quot;} &gt; 0
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_daemonset_status_number_misscheduled</code>：运行在不该运行的节点状态</li>
+</ul>
+<h3 id="79-kubecontainerwaiting"><strong>7.9 KubeContainerWaiting</strong></h3>
+<p>监测哪些容器是在等待状态的。</p>
+<p>表达式：</p>
+<pre><code>sum by (namespace, pod, container) (kube_pod_container_status_waiting_reason{job=&quot;kube-state-metrics&quot;}) &gt; 0
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>kube_pod_container_status_waiting_reason</code>：容器声明周期过程中的状态，无论是创建成功还是失败都应该是0。</li>
+</ul>
+<h2 id="8"><strong>8. 节点相关</strong></h2>
+<h3 id="81-nodeclocknotsynchronising"><strong>8.1 NodeClockNotSynchronising</strong></h3>
+<p>主机与时间服务器失联。</p>
+<p>表达式：</p>
+<pre><code>min_over_time(node_timex_sync_status[5m]) == 0
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>node_timex_sync_status</code>：同步状态。</li>
+</ul>
+<h3 id="82-nodeclockskewdetected"><strong>8.2 NodeClockSkewDetected</strong></h3>
+<p>本地时间偏移量。</p>
+<p>表达式：</p>
+<pre><code>(node_timex_offset_seconds &gt; 0.05
+        and
+          deriv(node_timex_offset_seconds[5m]) &gt;= 0
+        )
+        or
+        (
+          node_timex_offset_seconds &lt; -0.05
+        and
+          deriv(node_timex_offset_seconds[5m]) &lt;= 0)
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>node_timex_offset_seconds</code>：误差</li>
+</ul>
+<h3 id="83-nodehighnumberconntrackentriesused"><strong>8.3 NodeHighNumberConntrackEntriesUsed</strong></h3>
+<p>链接状态跟踪。</p>
+<p>表达式：</p>
+<pre><code>(node_nf_conntrack_entries / node_nf_conntrack_entries_limit) &gt; 0.75
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>node_nf_conntrack_entries</code>：链接状态跟踪表分配的数量</li>
+<li><code>node_nf_conntrack_entries_limit</code>：表总量</li>
+</ul>
+<h3 id="84-nodenetworkreceiveerrs"><strong>8.4 NodeNetworkReceiveErrs</strong></h3>
+<p>网卡接收错误量。</p>
+<p>表达式：</p>
+<pre><code>increase(node_network_receive_errs_total[2m]) &gt; 10
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>node_network_receive_errs_total</code>：接收错误总量</li>
+</ul>
+<h3 id="85-nodenetworktransmiterrs"><strong>8.5 NodeNetworkTransmitErrs</strong></h3>
+<p>网卡传输错误量。</p>
+<p>表达式：</p>
+<pre><code>increase(node_network_transmit_errs_total[2m]) &gt; 10
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>node_network_transmit_errs_total</code>：传输错误总量</li>
+</ul>
+<h3 id="86-nodefilesystemalmostoutoffiles"><strong>8.6 NodeFilesystemAlmostOutOfFiles</strong></h3>
+<p>inode 数量监测</p>
+<p>表达式：</p>
+<pre><code>(
+          node_filesystem_files_free{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} / node_filesystem_files{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} * 100 &lt; 5
+        and
+          node_filesystem_readonly{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} == 0
+        )
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>node_filesystem_files_free</code>：空闲的 inode</li>
+<li><code>node_filesystem_files</code>：inodes 总量</li>
+</ul>
+<h3 id="87-nodefilesystemfilesfillingup"><strong>8.7 NodeFilesystemFilesFillingUp</strong></h3>
+<p>inode 耗尽预测，以6小时曲线变化预测接下来24小时和4小时可能使用的 inodes。</p>
+<p>表达式：</p>
+<pre><code>(node_filesystem_files_free{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} / node_filesystem_files{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} * 100 &lt; 20
+        and
+          predict_linear(node_filesystem_files_free{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;}[6h], 4*60*60) &lt; 0
+        and
+          node_filesystem_readonly{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} == 0)
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>node_filesystem_files_free</code>：空闲的 inode</li>
+<li><code>node_filesystem_files</code>：inodes 总量</li>
+</ul>
+<h3 id="88-nodefilesystemalmostoutofspace"><strong>8.8 NodeFilesystemAlmostOutOfSpace</strong></h3>
+<p>分区容量使用率。</p>
+<p>表达式：</p>
+<pre><code>(node_filesystem_avail_bytes{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} / node_filesystem_size_bytes{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} * 100 &lt; 10
+        and
+          node_filesystem_readonly{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} == 0
+        )
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>node_filesystem_avail_bytes</code>：空闲容量</li>
+<li><code>node_filesystem_size_bytes</code>：总容量</li>
+</ul>
+<h3 id="89-nodefilesystemspacefillingup"><strong>8.9 NodeFilesystemSpaceFillingUp</strong></h3>
+<p>分区容量耗尽预测，以6小时曲线变化预测接下来24小时和4小时可能使用的容量。</p>
+<p>表达式：</p>
+<pre><code>(node_filesystem_avail_bytes{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} / node_filesystem_size_bytes{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} * 100 &lt; 15
+        and
+          predict_linear(node_filesystem_avail_bytes{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;}[6h], 4*60*60) &lt; 0
+        and
+          node_filesystem_readonly{job=&quot;node-exporter&quot;,fstype!=&quot;&quot;} == 0)
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>node_filesystem_avail_bytes</code>：空闲容量</li>
+<li><code>node_filesystem_size_bytes</code>：总容量</li>
+</ul>
+<h2 id="9-etcd"><strong>9. Etcd 相关</strong></h2>
+<h3 id="91-etcdlived"><strong>9.1 Etcdlived</strong></h3>
+<p>etcd 存活检测。</p>
+<p>表达式：</p>
+<pre><code>up{job=&quot;etcd&quot;} &lt; 1
+</code></pre>
+<h3 id="92-etcdcluseterunavailable"><strong>9.2 EtcdCluseterUnavailable</strong></h3>
+<p>etcd 集群健康检查，down 数量大于集群可允许故障数量。</p>
+<p>表达式：</p>
+<pre><code>count(up{job=&quot;etcd&quot;} == 0) &gt; (count(up{job=&quot;etcd&quot;}) / 2 - 1)
+</code></pre>
+<h3 id="93-etcdleadercheck"><strong>9.3 EtcdLeaderCheck</strong></h3>
+<p>检查 leader。</p>
+<p>表达式：</p>
+<pre><code>max(etcd_server_has_leader) != 1
+</code></pre>
+<h3 id="94-etcdbackendfsync"><strong>9.4 EtcdBackendFsync</strong></h3>
+<p>etcd io 监测，后端提交 延时。</p>
+<p>表达式：</p>
+<pre><code>histogram_quantile(0.99, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket[5m])) by (instance, le)) &gt; 100
+</code></pre>
+<h3 id="95-etcdwalfsync"><strong>9.5 EtcdWalFsync</strong></h3>
+<p>etcd io 监测，文件同步到磁盘延时。</p>
+<p>表达式：</p>
+<pre><code>histogram_quantile(0.99, sum(rate(etcd_disk_wal_fsync_duration_seconds_bucket[5m])) by (instance, le)) &gt; 100
+</code></pre>
+<h3 id="96-etcddbsize"><strong>9.6 EtcdDbSize</strong></h3>
+<p>检测数据库大小。</p>
+<p>表达式：</p>
+<pre><code>etcd_debugging_mvcc_db_total_size_in_bytes/1024/1024 &gt; 1024
+</code></pre>
+<h3 id="97-etcdgrpc"><strong>9.7 EtcdGrpc</strong></h3>
+<p>Grpc 调用速率。表达式：</p>
+<pre><code>sum(rate(grpc_server_handled_total{grpc_type=&quot;unary&quot;}[1m])) &gt; 100
+</code></pre>
+<h2 id="10-coredns"><strong>10. CoreDNS 相关</strong></h2>
+<h3 id="101-dnsrequest"><strong>10.1 DnsRequest</strong></h3>
+<p>DNS 查询速率，每分钟查询超过100告警。</p>
+<p>表达式：</p>
+<pre><code>sum(irate(coredns_dns_request_count_total{zone !=&quot;dropped&quot;}[1m])) &gt; 100
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>coredns_dns_request_count_total</code>：总查询数</li>
+</ul>
+<h3 id="102-dnsrequestfaild"><strong>10.2 DnsRequestFaild</strong></h3>
+<p>异常查询，异常状态码，不是 NOERROR。</p>
+<p>表达式：</p>
+<pre><code>irate(coredns_dns_response_rcode_count_total{rcode!=&quot;NOERROR&quot;} [1m]) &gt; 0
+</code></pre>
+<p>相关指标：</p>
+<ul>
+<li><code>coredns_dns_response_rcode_count_total</code>：查询返回状态码</li>
+</ul>
+<p>DNS-Rcode：</p>
+<p>DNS-Rcode 作为 DNS 应答报文中有效的字段，主要用来说明 DNS 应答状态，是排查域名解析失败的重要指标。通常常见的 Rcode 值如下：</p>
+<ul>
+<li>Rcode 值为0，对应的 DNS 应答状态为 NOERROR，意思是成功的响应，即这个域名解析是成功</li>
+<li>Rcode 值为2，对应的 DNS 应答状态为 SERVFAIL，意思是服务器失败，也就是这个域名的权威服务器拒绝响应或者响应 REFUSE，递归服务器返回 Rcode 值为 2 给 CLIENT</li>
+<li>Rcode 值为3，对应的 DNS 应答状态为 NXDOMAIN，意思是不存在的记录，也就是这个具体的域名在权威服务器中并不存在</li>
+<li>Rcode 值为5，对应的 DNS 应答状态为 REFUSE，意思是拒绝，也就是这个请求源IP不在服务的范围内</li>
+</ul>
+<h3 id="103-dnspanic"><strong>10.3 DnsPanic</strong></h3>
+<p>DNS 恐慌值，可能收到攻击。</p>
+<p>表达式：</p>
+<pre><code>irate(coredns_panic_count_total[1m]) &gt; 100
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021-9999 Jacob Xi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+    
+  </body>
+</html>
